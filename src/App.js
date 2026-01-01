@@ -17,65 +17,28 @@ const App = (props) => {
         document.getElementById("loader").style.display = "none";
     }, []);
 
-    useEffect(() => {
-        let lastReset = localStorage.getItem("lastReset");
-    }, []);
 
     return (
         <>
             <Loader />
-            <ToastContainer
-                position="top-center"
-                autoClose={1500}
-                transition={Flip}
-            />
+            <ToastContainer position="top-center" autoClose={1500} transition={Flip} />
             <Routes>
                 {/* Student */}
-                <Route
-                    path="/student/verifyEmail"
-                    element={<VerifyEmailConfirmation />}
-                />
+                <Route path="/student/verifyEmail" element={<VerifyEmailConfirmation />} />
 
-                <Route
-                    path="/emailVerified"
-                    element={<EmailVerified />}
-                />
+                <Route path="/emailVerified" element={<EmailVerified />} />
 
-                <Route
-                    path="/student/*"
-                    element={
-                        <ProtectedRoute authRole={["Student"]}>
-                            <Student />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="/student/*" element={ <ProtectedRoute authRole={["Student"]}> <Student /> </ProtectedRoute> } />
 
                 {/* Teacher */}
-                <Route
-                    path="/teacher/verifyEmail"
-                    element={<VerifyEmailConfirmation />}
-                />
+                <Route path="/teacher/verifyEmail" element={<VerifyEmailConfirmation />} />
 
-                <Route
-                    path="/teacher/*"
-                    element={
-                        <ProtectedRoute authRole={["Teacher"]}>
-                            <Teacher />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="/teacher/*" element={ <ProtectedRoute authRole={["Teacher"]}> <Teacher /> </ProtectedRoute> } />
 
                 {/* Admin */}
-                <Route
-                    path="/admin/*"
-                    element={
-                        <ProtectedRoute authRole={["Admin", "Tutor", "Payment"]}>
-                            <Admin />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="/admin/*" element={ <ProtectedRoute authRole={["Admin", "Tutor", "Payment"]}> <Admin /> </ProtectedRoute> } />
 
-                <Route path="/*" element={<Main />} />
+                <Route path="*" element={<Main />} />
             </Routes>
         </>
     );
