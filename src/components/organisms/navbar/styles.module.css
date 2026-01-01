@@ -1,0 +1,177 @@
+@import url("./../../../assets/_settings.css");
+
+.navbarInner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white-main);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  z-index: 10;
+}
+
+.navbarInnerLeft {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.navbarInnerLeftlogo {
+  width: 18rem;
+  height: 4rem;
+}
+
+.navbarInnerRight {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.navbarInnerRightFindTeacher {
+  width: 10rem;
+  height: 3rem;
+  background-color: var(--white-main);
+  font-family: var(--bold);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+}
+.navbarInnerRightLogin {
+  width: 6rem;
+  height: 2.5rem;
+  background-color: var(--white-main);
+  font-family: var(--bold);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+}
+.navbarInnerRightSignup {
+  width: 6rem;
+  height: 2.5rem;
+  background-color: var(--primary-main);
+  font-family: var(--bold);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+/* mobile varsion */
+
+.navbarInnerRightMobile {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.navbarInnerRightMobileMenu {
+  width: 60%;
+  height: 60%;
+}
+
+/* media quary for responsive navbar */
+
+@media only screen and (min-width: 2559px) {
+  .navbarInnerRight {
+    width: 20%;
+  }
+  .navbarInnerLeft {
+    width: 13%;
+  }
+}
+@media only screen and (max-width: 1583px) {
+  .navbarInnerRight {
+    width: 30%;
+  }
+  .navbarInnerLeft {
+    width: 20%;
+  }
+}
+@media only screen and (max-width: 1440px) {
+  .navbarInnerRight {
+    width: 35%;
+  }
+  .navbarInnerLeft {
+    width: 30%;
+  }
+}
+
+@media only screen and (max-width: 1088px) {
+  .navbarInnerRight {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .navbarInnerRight {
+    width: 45%;
+  }
+  .navbarInnerLeftlogo {
+    width: 13rem;
+    height: 3rem;
+  }
+  .navbarInnerRightFindTeacher {
+    width: 10rem;
+    height: 2.5rem;
+  }
+  .navbarInnerRightLogin {
+    width: 5rem;
+    height: 2.5rem;
+  }
+  .navbarInnerRightSignup {
+    width: 5rem;
+    height: 2.5rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .navbarInnerRight {
+    width: 50%;
+  }
+  .navbarInnerLeft {
+    width: 38%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .navbarInnerRight {
+    display: none;
+  }
+  .navbarInnerRightMobile {
+    display: flex;
+  }
+  .navbarInnerLeft {
+    width: 38%;
+  }
+}
+@media only screen and (max-width: 586px) {
+  .navbarInnerLeft {
+    width: 50%;
+  }
+}
+@media only screen and (max-width: 442px) {
+  .navbarInnerLeft {
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 426px) {
+  .navbarInnerLeft {
+    width: 68%;
+  }
+}

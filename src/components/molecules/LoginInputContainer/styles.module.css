@@ -1,0 +1,48 @@
+.inputContainer{
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    /* width: 100px; */
+}
+
+.error{
+    color:red;
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+/* .errorField{
+    border: 1px solid red;
+} */
+
+.forgotPassword{
+    margin-top: .5rem;
+    text-align: end;
+    text-decoration: none;
+    /* font-size: .9rem; */
+    font-size: 15px;
+}
+
+@media screen and (min-width:700px) {
+    .inputContainer{
+        height: max-content;
+        margin-top:-1vw
+    }
+    .inputContainer>button{
+        padding: 0.8vw;
+        /* font-size: 1vw; */
+        font-size: 20px;
+    }
+}
+
+@media screen  and (max-width:700px)  {
+    .inputContainer{
+        margin-top:-8vw
+    }
+    .inputContainer>button{
+        padding: 2.5vw;
+        /* font-size: 4.5vw; */
+    }
+}
+
+

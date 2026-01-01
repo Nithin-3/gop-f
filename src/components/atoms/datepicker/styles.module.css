@@ -1,0 +1,15 @@
+@import url("./../../../assets/_settings.css");
+.calender {
+  color: var(--primary-main);
+}
+.react-calendar__tile--now.react-calendar__tile--active {
+  background: var(--primary-main);
+}
+.react-calendar__tile--now {
+  background: var(--primary-main);
+}
+.calendar .react-calendar{
+  border-radius: 10px;
+  padding: 0.5em;
+}
+

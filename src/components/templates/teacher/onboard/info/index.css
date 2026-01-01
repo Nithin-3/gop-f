@@ -1,0 +1,183 @@
+.infoContainer {
+  width: 80%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 100%;
+  margin: 4% 0;
+}
+.newDetails {
+  width: 71%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1vw;
+  margin-bottom: 1vw;
+}
+.addDetails {
+  height: 35px;
+  border-radius: 5px;
+  border: none;
+  background-color: white;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+  padding: 8px 15px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+.infoInput {
+  resize: none !important;
+  height: 50px !important;
+  width: 250px !important;
+  margin-bottom: 1vw !important;
+  background-color: white !important;
+  border: 0 !important;
+  font-size: 17px !important;
+}
+input {
+  background-color: white;
+  border: 0;
+}
+.infoInput.Date {
+  margin-top: 1vw;
+  border: 0;
+  border-radius: 8px;
+  font-size: 17px;
+}
+
+.infoInput.Date input{
+    padding: 14px; 
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: var(--regular);
+
+}
+.infoInputSelect {
+  width: 250px;
+  /* margin-top: 1vw; */
+  font-family: "AvenirNextLTPro-Regular";
+}
+.infoInputSelect .select__control {
+  border-style: none;
+  border-radius: 10px;
+  height: 50px;
+}
+.infoInputSelectLocation {
+  border: none;
+  border-radius: 10px;
+  height: 50px;
+  /* margin-top: 1vw; */
+  padding-left: 10px;
+  width: 250px;
+  -webkit-appearance: none;
+  background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right #fff;
+  background-position-x: 95%;
+}
+
+.infoFormContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.infoFormContainer .col_75 {
+  margin-top: 0px !important;
+  display: none;
+}
+.styles_col_25__17vdd {
+  display: none;
+}
+
+.infoFormContainer .react-datepicker-wrapper {
+  display: unset;
+  width: 250px;
+  /* margin-top: 1vw; */
+}
+.certificateDiv {
+  width: 79%;
+}
+.uploadCertificate {
+  width: 100%;
+  background-color: #ff1849;
+  border: none;
+  border-radius: 10px;
+  height: 47px;
+  text-align: left;
+  color: white;
+  cursor: pointer;
+  padding: 10px 15px;
+}
+.uploadCertificateLabel {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.uploadCertificateImg {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+.infoTableDiv {
+  display: flex;
+  justify-content: center;
+  width: 72%;
+  /* margin-top: 1vw; */
+}
+.infoTableDiv table {
+  width: 100%;
+  border-spacing: 0px;
+  font-family: "AvenirNextLTPro-Regular";
+}
+.infoTableDiv tr th {
+  padding-bottom: 10px;
+}
+.infoTableDiv tr td {
+  background-color: #ff1849;
+  border: none;
+  width: 200px;
+  text-align: center;
+  padding: 5px;
+  color: white;
+  font-size: 12px;
+}
+.infoTableDiv tr td:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.infoTableDiv tr td:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+/* //responsive  */
+@media only screen and (max-width: 450px) {
+  .infoInput,
+  .infoInputSelect,
+  .infoInputSelectLocation,
+  .infoContainer input,
+  .infoInput.Date {
+    width: 100% !important;
+    display: block;
+    margin: 2% 0 !important;
+  }
+  .infoFormContainer {
+    justify-content: flex-start;
+  }
+  .certificateDiv {
+    width: 100%;
+  }
+  .newDetails {
+    width: 90%;
+  }
+  .uploadCertificate {
+    margin: 1em 0;
+    width: 100%;
+    display: block;
+  }
+  .uploadCertificateLabel {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,224 @@
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-radius: 0.4rem;
+  background-color: white;
+}
+
+/* header section */
+.header {
+  display: flex;
+  /* align-items: center; */
+  gap: 0.4rem;
+  width: 100%;
+}
+
+/* personal info section  */
+.pInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.imgContainer {
+  position: relative;
+}
+
+.flag {
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  top: 60%;
+  left: 80%;
+}
+
+.pcontent {
+  display: flex;
+  flex-direction: column;
+}
+
+.teachername {
+  font-size: large;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.rating {
+  display: flex;
+  gap: 0.5rem
+}
+
+.stars {
+  display: flex;
+  gap: 0.2rem
+}
+
+/* .btncontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+} */
+
+/* .btnContainerMobile{
+  display: block
+} */
+
+.moreOptions {
+  /* margin-left: 5em; */
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.moreOptionsIcon {
+  /* padding: 0.1rem;
+  border-radius: 20px; */
+  /* background-color: #ed224c; */
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: black;
+}
+
+.otherOptions {
+  list-style: none;
+  position: absolute;
+  background-color: #ed224c;
+  border-radius: 10px;
+  left: -175px;
+  top: 110%;
+  display: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.showOptions {
+  display: block;
+}
+
+.otherOptions li {
+  padding: 0.3em 1em;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.otherOptions li span {
+  width: 150px;
+}
+
+.otherOptions li:hover {
+  background-color: #2c92c8;
+}
+
+.otherOptions li i {
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+
+.belowPortion {
+  margin-top: 1.2rem;
+}
+
+.selfIntro {
+  background-color: rgb(227, 232, 237);
+  color: gray;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  box-shadow: inset;
+}
+
+.languageSec {
+  margin-top: 1rem;
+}
+
+.teaches,
+.speaks,
+.rate,
+.scheduleBtnContainer {
+  margin-top: 1.2rem;
+}
+
+.scheduleBtn {
+  padding: 0.5rem;
+  text-align: center;
+  background-color: #ed224c;
+  border-radius: 0.4rem;
+  border: none;
+  width: 100%;
+  /* font-size: 1.1rem; */
+  color: white;
+}
+
+.scheduleBtn:hover {
+  background-color: #e94e6d;
+}
+
+@media only screen and (min-width: 992px) {
+  .cardContainer {
+    flex-direction: row;
+    gap:0.5rem;
+  }
+
+  .header{
+    width: 50%;
+  }
+
+  .selfIntro {
+    display: none;
+  }
+
+  .rate {
+    display: none;
+  }
+
+  .languageSec, .teaches, .belowPortion{
+    margin-top: 0;
+  }
+
+  .btnContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+  }
+
+  .scheduleBtn {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    background-color: #ed224c;
+    cursor: pointer;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    border-radius: 50px;
+    color: #fffefe;
+    border: none;
+    /* padding: 10px 20px; */
+    padding: 0.5rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .moreOptions {
+    /* margin-left: 5em; */
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .moreOptionsIcon {
+    padding: 0.5rem;
+    border-radius: 20px;
+    background-color: #ed224c;
+    font-size: 1rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    cursor: pointer;
+    color: white
+  }
+
+}

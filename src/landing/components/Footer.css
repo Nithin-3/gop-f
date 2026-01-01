@@ -1,0 +1,127 @@
+.footer_section {
+  width: 100%;
+  border-radius: 70px 70px 0px 0px;
+  background: #98cdea33 0% 0% no-repeat padding-box;
+}
+.footer_link {
+  color: #000;
+  text-decoration: none;
+}
+
+.footer_center {
+  width: 100%;
+  /* display: flex;
+  justify-content: center;
+  align-items: flex-start; */
+}
+.footer_left,
+.footer_f_right {
+  width: 50% !important;
+  justify-content: space-evenly !important;
+}
+
+.footer_c {
+  width: 90%;
+  margin: 0 auto;
+  /* justify-content: space-between !important;
+  flex-wrap: wrap; */
+}
+.footer_section ul {
+  width: max-content;
+  padding: 0;
+}
+.footer_section li {
+  cursor: pointer;
+  list-style: none;
+  font-size: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+.footer_head {
+  font-weight: bold;
+  margin-top: 40px !important;
+}
+.footer_social {
+  width: 30px;
+  height: 30px;
+}
+.footer_cp {
+  margin: 0 auto;
+  width: 90%;
+  justify-content: space-between;
+  line-height: 1.5cm;
+  border-top: 2px solid #000;
+  text-align: center;
+}
+.footer_cp > h2 {
+  font-size: 20px;
+}
+.footer_section h2 {
+  font-weight: 400;
+  /* margin-left: 5%; */
+}
+.footer_redirect {
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  gap: 10px;
+}
+.footer_redirect > i {
+  font-size: 26px;
+}
+
+@media (max-width: 691px) {
+  .footer_left,
+  .footer_f_right {
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer_f_right {
+    flex-direction: column-reverse;
+  }
+  .footer_left > ul,
+  .footer_f_right > ul {
+    width: 100%;
+    display: flex;
+    /* justify-content: center; */
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .footer_left > ul > li,
+  .footer_f_right > ul > li {
+    margin: 10px 0% 10px 30%;
+  }
+  .footer_f {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    /* height: 350px; */
+  }
+  .footer_f > li {
+    margin: 8px 0 8px 20%;
+  }
+  .footer_f > .footer_head {
+    margin-top: 30px !important;
+  }
+
+  .footer_cp > h2 {
+    font-size: 20px !important;
+    margin-left: 10% !important;
+  }
+}
+@media (max-width: 425px) {
+  .footer_head {
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 800;
+  }
+  li {
+    font-size: 16px !important;
+  }
+  .footer_cp > h2 {
+    font-size: 16px !important;
+  }
+}

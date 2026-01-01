@@ -1,0 +1,263 @@
+.sessionTabs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sessionTab {
+  font-size: 1.1em;
+  color: #ed224c;
+  cursor: pointer;
+  border-radius: 50px;
+  padding: 10px 25px;
+  font-weight: bold;
+  transition: background-color 0.5s, color 0.1s;
+}
+
+.sessionTabActive,
+.sessionTab:hover {
+  background-color: #ed224c;
+  color: #fff;
+}
+
+.fa-caret-down,
+.fa-caret-up {
+  color: #ed224c;
+  font-size: 30px;
+}
+
+.cardContainer {
+  border: 2px solid #ed224c;
+  padding: 1.2rem 1.5rem;
+  margin: 30px;
+  border-radius: 10px;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 1fr 0.8fr;
+  gap: 1rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.courseimg{
+  display: grid;
+  place-items: center;
+}
+
+.cardContainer:hover{
+  transform: scale(1.01);
+}
+
+.cardImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.div1{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.div2{
+  display: flex;
+  flex-direction: column;
+}
+
+.cardText1 {
+  color: #ed224c;
+  font-weight: bold;
+  /* padding: 5px 0; */
+}
+
+.btnContainer{
+  display: grid;
+  place-items: center;
+}
+
+.btnMobileContainer{
+  display: flex;
+  width: "100%";
+}
+
+.btncontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+}
+
+.btn,
+.btnDrop,
+.CancelBtn,
+.btn1 {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  background-color: #ed224c;
+  cursor: pointer;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  border-radius: 50px;
+  color: #fffefe;
+  border: none;
+  /* padding: 10px 20px; */
+  padding: 0.5rem
+}
+
+.btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn:hover{
+  background-color: #ff6584;
+}
+
+.viewButton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  color: #fffefe;
+  background-color: #ed224c;
+  padding: 10px 20px;
+  height: max-content;
+}
+
+.viewDropdown {
+  margin-top: 5px;
+  position: absolute;
+}
+
+.dropdownButton {
+  cursor: pointer;
+}
+
+.cardMobileContainer {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  box-shadow: 10px 10px 20px #aaaaaa;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.moreOptions {
+  /* margin-left: 5em; */
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.moreOptionsIcon {
+  padding: 0.5rem;
+  border-radius: 20px;
+  background-color: #ed224c;
+  font-size: 1rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  cursor: pointer;
+  color: white
+}
+
+.otherOptions {
+  list-style: none;
+  position: absolute;
+  background-color: #ed224c;
+  border-radius: 10px;
+  left: -175px;
+  top: 110%;
+  display: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.showOptions {
+  display: block;
+}
+
+.otherOptions li {
+  padding: 0.3em 1em;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.otherOptions li span {
+  width: 150px;
+}
+
+.otherOptions li:hover {
+  background-color: #2c92c8;
+}
+
+.otherOptions li i {
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 992px) {
+  .sessionTabs {
+    border-radius: 5px;
+    background-color: #ed224c;
+    color: #fff;
+    display: flex;
+    align-items: center;
+  }
+
+  .btncontainer{
+    justify-content: flex-end;
+  }
+
+  .sessionTab {
+    text-align: center;
+    width: 85%;
+    margin-bottom: 1px;
+  }
+
+  .sessionTabHeading {
+    border-right: 2px solid #fff;
+    padding: 10px;
+    text-align: center;
+    width: 85%;
+    font-size: 18px;
+  }
+
+  .sessionTabActive {
+    background-color: #ed224c;
+    color: #fff;
+  }
+
+  .sessionTabActiveDropdown {
+    border-radius: 50px;
+    background-color: #ed224c;
+    color: #fff;
+  }
+
+  .arrowIcon {
+    cursor: pointer;
+    text-align: center;
+    width: 15%;
+  }
+
+  .mobileDropdown {
+    position: absolute;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 5px;
+    outline: 2px solid #ed224c;
+    background-color: #fff;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .viewDropdown {
+    position: relative;
+  }
+}

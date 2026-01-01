@@ -1,0 +1,190 @@
+/* Join Page  */
+.joinScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5rem;
+}
+
+.msgForStu {
+  background-color: rgb(245, 245, 245);
+  padding: 1.5rem;
+  display: flex;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.cardSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.joinCallWrapper {
+  height: 45%;
+  width: 30%;
+  background-color: rgb(245, 245, 245);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border-radius: 0.4rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.field {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.fieldName {
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: gray;
+  margin-bottom: 0.2rem;
+}
+
+.fieldValue {
+  font-weight: 700;
+  font-size: 1.5rem;
+  /* color: aliceblue; */
+  margin-bottom: 1.2rem;
+}
+
+/* Controls Component css */
+.Ccontainer {
+  display: grid;
+  grid-template-columns: 0.2fr 0.2fr 1fr;
+  gap: 1rem;
+}
+
+.Citem > button {
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.Citem > button:hover {
+  cursor: pointer;
+}
+
+.Citem:nth-child(3) > button {
+  border-radius: 0.4rem;
+}
+
+/* Video Call Page Css */
+.VCPage {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  /* padding-top: 3rem; */
+}
+
+.heading {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-radius: 0 0 0.5rem 0.5rem;
+  color: black;
+  font-size: 1.5rem;
+  padding: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.vidCallPortion {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.VideoContainer {
+  background-color: brown;
+  height: 100%;
+  width: 77%;
+}
+
+.vidHolder {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.remoteVideo {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.localVideo {
+  position: absolute;
+  top: 5%;
+  left: 76%;
+  height: 175px;
+  width: 250px;
+  background-color: blue;
+  z-index: 4;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.controlsWrapper {
+  display: flex;
+  background-color: transparent;
+  position: absolute;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 1.5rem;
+  z-index: 4;
+}
+
+.rightPortion {
+  padding: 1rem;
+  height: 100%;
+  width: 23%;
+}
+
+.rightCard {
+  background-color: rgb(255, 251, 251);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  height: 100%;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+@media only screen and (max-width: 679px) {
+  .VideoContainer {
+    width: 100%;
+  }
+  .localVideo {
+    position: absolute;
+    top: 5%;
+    left: 40%;
+    height: 175px;
+    width: 250px;
+    background-color: blue;
+    z-index: 4;
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+  .rightPortion {
+    display: none;
+  }
+  .joinCallWrapper {
+    width: 100%;
+  }
+}

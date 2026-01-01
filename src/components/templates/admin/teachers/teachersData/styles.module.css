@@ -1,0 +1,313 @@
+.teachersData {
+  padding: 2rem 1rem;
+  width: 25%;
+  position: relative;
+  outline: 4px solid #ff8da4;
+  margin: 0.5em;
+  border-radius: 20px;
+}
+
+.closeBtn {
+  display: none;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  height: 30px;
+  width: 30px;
+  padding: 0.55em 0.5em 0.45em 0.6em;
+  background-color: #f24e1e;
+  border-radius: 50%;
+  border: 0;
+  align-items: center;
+  justify-content: center;
+}
+.teachersData input {
+  width: 15px;
+  height: 15px;
+}
+
+.teacherProfile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.teacherProfile img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.courseImg {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+.courseImg img {
+  width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: fill;
+}
+
+.courseImg input {
+  margin-bottom: 0 !important ;
+}
+.basicDetails {
+  margin-top: 1rem;
+  font-size: 0.9em;
+}
+
+.basicDetails div{
+  align-items: center;
+  display: flex;
+}
+
+.basicDetails i {
+  color: #ff0000;
+  font-size: 20px;
+}
+
+.basicDetails div span:nth-child(3){
+width: 45%;
+display: inline-block;
+}
+
+.detailHeading {
+  font-weight: 600;
+  width: 40%;
+  display: inline-block;
+}
+
+.otherDetailsContainer {
+  border: 1px solid rgb(190, 190, 190);
+  margin-top: 1em;
+  padding: 0.5em 0;
+  border-radius: 10px;
+  /* display: flex; */
+  flex-wrap: wrap;
+}
+
+.otherDetails {
+  display: flex;
+  flex-direction: row;
+  font-size: 0.9em;
+  margin: 0.5em 1em;
+}
+
+.otherDetails div {
+  display: flex;
+}
+
+.otherDetails input {
+  margin: auto 1em auto 0;
+}
+
+.otherDetailsHeading {
+  font-weight: 600;
+  margin-bottom: 5px;
+  margin-right: 10px;
+  width: 40%;
+}
+.otherDetailsHeadingAge{
+  margin-left: 2em;
+}
+
+.certificatedDetailsContainer {
+  border: 1px solid rgb(190, 190, 190);
+  margin-top: 1em;
+  padding: 0.5em 0;
+  border-radius: 10px;
+}
+
+.certificatedDetailsTabs {
+  display: flex;
+  padding-bottom: 0.6em;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.certificatedDetailsTabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* .certificatedDetailsTabs::-webkit-scrollbar { 
+  width: 0;
+  height: 0;
+} */
+
+.certificatedDetailsTabs button {
+  font-weight: 600;
+  padding: 0.3em 1em;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  margin: 0 0.5em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* .certificatedDetailsTabs button:hover {
+  background-color: #ff8da4;
+} */
+
+.certificatedDetailsTabs .active {
+  background-color: #ff8da4;
+}
+
+.certificatedDetails {
+  padding: 0.5em;
+}
+
+.about {
+  display: flex;
+}
+
+.about input {
+  margin: 0;
+  width: 25px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.about p {
+  display: block;
+  overflow-y: auto;
+  height: 100px;
+  width: 90%;
+}
+
+.educations {
+  overflow-y: auto;
+  max-height: 10em;
+  font-size: 0.9em;
+  display: none;
+}
+
+.educations::-webkit-scrollbar {
+  width: 5px; 
+}
+
+.education {
+  border-bottom: 1px solid rgb(190, 190, 190);
+  margin: 0.7em 0;
+  padding-bottom: 0.7em;
+}
+
+.education div{
+  padding: 0 1em;
+}
+
+.actions {
+  display: flex;
+  margin-top: 1.5em;
+  justify-content: center;
+}
+
+.actions button {
+  padding: 0.5em 1.5em;
+  border: 0;
+  border-radius: 5px;
+  background-color: #5fd65b;
+  font-size: 1em;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* //////// UnverifiedFieilds Modal //////////// */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.modal {
+  padding: 1em 1em;
+  background-color: #fff;
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+  top: 10vh;
+  border-radius: 10px;
+  max-width: 90vw;
+  width: 300px;
+}
+
+.modal ul{
+  padding: 1em;
+  padding-bottom: 0;
+}
+
+.modalCloseBtn {
+  font-weight: 800;
+  margin-left: auto;
+  background-color: #fa6b58;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.8em;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+
+@media screen and (max-width: 992px) {
+  .teachersData {
+    position: absolute;
+    background-color: #f4f4f4;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    max-width: 90vw;
+    top: 80px;
+    bottom: 50px;
+    overflow: auto;
+    padding: 2em;
+    margin: 0;
+    border: 0;
+    box-shadow: 0px 0px 21px 0px grey;
+  }
+  .closeBtn {
+    display: flex;
+  }
+  .courseImg {
+    margin-top: 3em;
+  }
+}
+
+@media screen and (max-width: 578px) {
+  .teachersData {
+    padding: 1em;
+    /* left: 60%; */
+    top: 70px;
+    bottom: 10px;
+    height: 90vh;
+    width: 500px;
+    z-index: 3;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .teachersData {
+    /* left: 54%; */
+    width: 350px;
+    max-width: 100%;
+  }
+}
+
+/* @media screen and (max-width: 378px) {
+  .teachersData {
+    left: 61%;
+  }
+} */

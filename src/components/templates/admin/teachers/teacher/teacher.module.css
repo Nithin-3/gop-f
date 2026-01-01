@@ -1,0 +1,33 @@
+@import "./../__root.css";
+.teacher{
+    cursor: pointer;
+}
+.teacher td .contact {
+    color: var(--icon-color);
+    padding: 5px ;
+    background-color: var(--bg-theme-light);
+    border-radius: 50%;
+}
+.teacher .youtube{
+    color: red;
+
+}
+@media screen and (max-width:991px) {
+    .teacher td .contact {
+        padding: 2px ;
+        font-size: 9px;
+    }
+    .teacher{
+        font-size: 12px;
+        
+    }
+    .teacher td i {
+        font-size: 10px;
+        color: var(--icon-color);
+    }
+    .teacher .youtube{
+        color: red;
+        font-size: 12px;
+    }
+    
+}

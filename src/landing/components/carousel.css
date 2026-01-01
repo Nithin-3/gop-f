@@ -1,0 +1,135 @@
+.carousel_section {
+  width: 100%;
+  /* max-height: 450px; */
+  font-family: var(--regular);
+}
+.carousel_teacher_prev_btn,
+.carousel_teacher_next_btn {
+  box-sizing: border-box;
+  padding: 12px 18px;
+  border-radius: 15px;
+  background-color: #ff1849;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.carousel_teacher_prev_btn {
+  margin-left: auto;
+  margin-right: 10px;
+}
+.carousel_teacher_next_btn {
+  margin-right: auto;
+}
+
+.carousel_head {
+  display: block;
+  font-size: 38px;
+  font-weight: 700;
+  text-align: center;
+  margin: 100px 0 60px 0;
+}
+.carousel_t {
+  margin: 80px 0 0;
+}
+.carousel_small {
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 60px;
+}
+.carousel_mySwiper {
+  padding: 10px;
+}
+.carousel_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.carousel_s {
+  width: 250px;
+  /* height: max-content; */
+  border-radius: 30px;
+  flex-direction: column;
+}
+.carousel_s > img {
+  width: 100%;
+  height: 285px;
+  object-fit: cover;
+  border-radius: 30px;
+}
+.carousel_details {
+  width: 90%;
+  height: 100px;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 30px;
+  position: relative;
+  top: -40px;
+  background-color: white;
+  flex-direction: column;
+  /* z-index: 5; */
+}
+.carousel_flag {
+  width: 30px;
+  height: 30px;
+  background-color: #ff1849;
+  color: white;
+  border-radius: 50%;
+}
+.carousel_section h4,
+.carousel_section h5 {
+  margin: 10px;
+}
+.carousel_review {
+  width: 450px !important;
+  min-height: 260px !important;
+  margin: 10px 0;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: -3px 3px 20px #0000001a;
+  border-radius: 30px;
+  flex-direction: column;
+  padding: 20px;
+}
+.carousel_review > h2 {
+  margin: 15px 0 0;
+}
+.carousel_review_text {
+  font-size: 24px;
+  text-align: left;
+  font-weight: 400;
+}
+.react-multi-carousel-item {
+  width: max-content !important;
+  padding: 10px;
+  margin: 0 20px;
+}
+.react-multi-carousel-track {
+  width: max-content;
+}
+.carousel_arrows {
+  width: 15px;
+}
+@media (max-width: 727px) {
+  .carousel_head {
+    font-size: 34px;
+  }
+}
+@media (max-width: 620px) {
+  .carousel_head {
+    font-size: 24px;
+  }
+  .carousel_review {
+    width: 80vw;
+  }
+  .carousel_review_text {
+    font-size: 18px;
+  }
+}
+@media (max-width: 460px) {
+  .carousel_review {
+    width: 80vw !important;
+  }
+  .carousel_review_text {
+    font-size: 18px;
+  }
+} ;

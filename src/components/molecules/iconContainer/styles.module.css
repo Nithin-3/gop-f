@@ -1,0 +1,31 @@
+.iconContainer{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+ 
+}
+.iconContainer>img{
+    padding: 1rem 0;
+    height: 1.5rem;
+    width:1.5rem;
+    cursor: pointer;
+}
+
+@media screen and (min-width:700px) {
+    .iconContainer{
+        height: 1.5vw;
+    }
+
+    .iconContainer>img{
+        width:1.5vw;
+        height:2vw
+    }
+}
+
+@media screen and (max-width:700px) {
+    .iconContainer>img{
+        padding: 1vw;
+        height: 5vw;
+        width:5vw;
+    }
+}

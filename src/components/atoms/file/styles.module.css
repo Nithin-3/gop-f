@@ -1,0 +1,32 @@
+@import url("./../../../assets/_settings.css");
+.img {
+  opacity: 0.3;
+  border-width: 0;
+  border-radius: 50%;
+  position: absolute;
+}
+.cloudImg {
+  opacity: 0.9;
+  position: absolute;
+  left: 95px;
+  top: 105px;
+  justify-content: baseline;
+  width: 130;
+  height: 130;
+}
+.txt {
+  position: absolute;
+  left: 90px;
+  font-family: var(--regular);
+  top: 250px;
+}
+.fup {
+  background-color: var(--primary-main);
+  width: 300px;
+  height: 40px;
+  border-radius: 12px;
+}
+.fupImg {
+  position: relative;
+  left: 250px;
+}

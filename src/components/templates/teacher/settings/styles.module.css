@@ -1,0 +1,132 @@
+.mainSection {
+  padding: 1rem;
+  position: relative;
+  background-color: rgb(240, 240, 240);
+  min-height: 90vh;
+}
+
+.tabsContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 2em;
+  overflow-x: auto;
+  padding-bottom: 0.5em;
+}
+
+.tabsContainer button {
+  min-width: 180px;
+  padding: 0.6em 1.5em;
+  border: 0;
+  border-radius: 20px;
+  margin-right: 2em;
+  font-size: 1.1em;
+  background-color: rgb(235, 235, 235);
+  color: #359dd6;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.tabsContainer button.active {
+  background-color: #9ecde7;
+  color: #fff;
+}
+
+.tabsContainer button:hover {
+  background-color: #9ecde7;
+  color: #fff;
+}
+
+.tabs {
+  margin-top: 1.5em;
+  padding: 0 1em;
+}
+
+.tab {
+  display: none;
+}
+/* //////// Tabs //////// */
+.tabs input,
+.tabs textarea,
+.tabs select {
+  border: 1px solid #9a9a9a;
+  border-radius: 5px !important;
+  font-size: 1em;
+  min-width: 90%;
+  height: auto !important;
+  margin: 0;
+  background-color: #e2e8ff;
+  padding: 19px 18px !important;
+  /* font-weight: bold !important; */
+  border: 1px solid white !important;
+  border-radius: 5px !important;
+  outline: none !important;
+}
+
+.title {
+  text-align: center;
+  color: #359dd6;
+  font-size: 1.2em;
+  margin: 0.5em 0 2em;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+.formGroup label {
+  padding: 0;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.formGroup select {
+  -webkit-appearance: none;
+  background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right #e2e8ff;
+  background-position-x: 95%;
+}
+
+.submitButtonContainer {
+  text-align: center;
+  margin-top: 3em;
+}
+
+.submitButton {
+  margin-left: auto;
+  padding: 0.6em 2em;
+  border: 0;
+  border-radius: 20px;
+  background-color: #04cf00;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.tabsContainer::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (min-width: 992px) {
+  .mainSection {
+    padding: 2em 4rem;
+    padding-left: 230px;
+    width: 100%;
+    background-color: transparent;
+    min-height: 100vh;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tabsContainer {
+    margin-top: 1em;
+  }
+}
+@media screen and (max-width: 578px) {
+  .tabs input,
+  .tabs textarea,
+  .tabs select {
+    min-width: 85%;
+  }
+}

@@ -1,0 +1,390 @@
+.event {
+  position: relative;
+}
+
+.studentCalendar .rbc-today {
+  background: none !important;
+}
+
+.event p {
+  z-index: -1;
+  overflow: hidden;
+  display: none;
+}
+
+.rbc-event {
+  overflow: visible !important;
+}
+
+/* .rbc-event:hover .popup {
+  display: block;
+} */
+
+.event .popup {
+  position: absolute;
+  top: 0;
+  left: -2em;
+  border-radius: 10px;
+  background-color: #d7eff8;
+  color: #000;
+  padding: 1em 0;
+  z-index: 10;
+  width: 13em !important;
+  margin-top: 20px
+    /* max-width: 90%; */
+}
+
+.event .popup .header {
+  padding: 0 1em;
+  display: flex;
+  align-items: center;
+}
+
+.event .popup .header img {
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
+  border-radius: 40%;
+}
+
+.event .popup .popup-body {
+  padding: 1em 1em 1em;
+  line-height: 23px;
+}
+
+.event .popup .popup-body span {
+  font-weight: 500;
+}
+
+
+
+.slotBtn {
+  text-align: center;
+}
+
+.slotBtn button {
+  background-color: #0699cd;
+  color: #fff;
+  padding: .6em 1.5em;
+  border: 0;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.rbc-month-row,
+.rbc-row-segment .rbc-event-content {
+  overflow: visible !important;
+}
+
+/* .rbc-toolbar span:first-child button:first-child {
+  display: none;
+} */
+
+.rbc-toolbar span:nth-child(3) button:nth-child(3) {
+  display: none;
+}
+
+.rbc-toolbar .prev, .rbc-toolbar .prev:hover {
+  background-color: rgb(254, 24, 72);
+  color: #fff;
+  cursor: pointer;
+}
+.rbc-toolbar .next, .rbc-toolbar .next:hover {
+  background-color: #9ecde6;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+/* .studentCalendar .rbc-toolbar span:nth-child(3) button:nth-child(1) {
+  display: none;
+} */
+
+.studentCalendar .rbc-toolbar span:nth-child(3) button:nth-child(4) {
+  display: none;
+}
+
+.studentCalendar .rbc-row-segment .rbc-event-content {
+  white-space: inherit !important;
+}
+
+.studentCalendar .rbc-row-content,
+.studentCalendar .rbc-month-row,
+.studentCalendar .rbc-row,
+.studentCalendar .rbc-date-cell,
+.studentCalendar .rbc-date-cell a {
+  z-index: 0;
+}
+
+.studentCalendar .rbc-event-label,
+.studentCalendar .rbc-event-content .event p {
+  display: none;
+}
+
+.model-show {
+  display: block;
+}
+
+.model-hide {
+  display: none;
+}
+
+/*
+.popup{
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  padding: 16px;
+  border: 16px solid orange;
+  background-color: white;
+  z-index: 1002;
+  overflow: auto;
+} */
+.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1060;
+  max-width: 276px;
+  padding: 1px;
+  font-family: MBGrotesk, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 1.5;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 16px;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgb(0 0 0 / 20%);
+  box-shadow: 0 5px 10px rgb(0 0 0 / 20%);
+}
+
+.popover {
+  position: absolute;
+  top: 6px;
+  left: -3.6em;
+  border-radius: 10px;
+  color: #000;
+  z-index: 10;
+  margin-top: 20px
+}
+
+#book-lesson {
+  color: #000;
+}
+
+.BookLessonHoverCard .ProfilePicc {
+  border: 2px solid #fff;
+}
+
+.ProfilePic.round {
+  border-radius: 50%;
+}
+
+.ProfilePic.small {
+  height: 50px;
+  width: 50px;
+}
+
+.popover.top>.arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999;
+  border-top-color: fadein(rgba(0, 0, 0, .2), 5%);
+  top: -11px;
+}
+
+.popover>.arrow {
+  border-width: 11px;
+}
+
+.popover>.arrow,
+.popover>.arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+.BookLessonHoverCard .popover-content {
+  padding: 0;
+  width: 200px;
+}
+
+.BookLessonHoverCard header {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 5px;
+  background-color: #ecf0f1;
+}
+
+.flex-align-center {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.flex-direction-row {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  margin: 6px 0 10px 0;
+}
+
+element.style {}
+
+.BookLessonHoverCard header {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 5px;
+  background-color: #ecf0f1;
+}
+
+.rbc-calendar *,
+.rbc-calendar *:before,
+.rbc-calendar *:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+.flex-align-center {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.flex-direction-row {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.BookLessonHoverCard .btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+element.style {}
+
+.BookLessonHoverCard .btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.rbc-calendar *,
+.rbc-calendar *:before,
+.rbc-calendar *:after {
+  box-sizing: inherit;
+}
+
+.rbc-calendar *,
+.rbc-calendar *:before,
+.rbc-calendar *:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-default {
+  color: #fff;
+  background-color: #9ecde6;
+  border-color: #fff;
+  border-color: hsla(0, 0%, 100%, 0);
+}
+.btn-danger {
+  color: #fff;
+  background-color:#dc3545;
+  border-color: #fff;
+  border-color: hsla(0, 0%, 100%, 0);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: inherit;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.BookLessonHoverCard strong {
+  display: block;
+  margin-right: 5px;
+}
+
+.flex-direction-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.BookLessonHoverCard .BookLessonHoverCard--body {
+  padding: 10px;
+}
+@media screen and (max-width: 600px) {
+.rbc-toolbar button{
+  padding: 5px 5px;
+}
+.rbc-header{
+  font-size: 11px;
+  margin-top: 3px;
+}
+.rbc-label{
+  font-size: 13px;
+}
+}

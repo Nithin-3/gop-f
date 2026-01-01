@@ -1,0 +1,21 @@
+.checkStatement {
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkStatement input {
+    margin-right: 10px;
+    background-color: red;
+}
+
+.checkStatement label {
+    font-size: 0.7em;;
+}
+
+.check {
+    /* background-color: yellow; */
+    width: 1em !important;
+    height: 1em !important;
+}

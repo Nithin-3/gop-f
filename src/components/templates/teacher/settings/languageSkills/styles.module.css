@@ -1,0 +1,94 @@
+.languageSkills {
+  margin: auto;
+  width: 90%;
+  /* border: 1px solid #ccc; */
+  /* border-radius: 10px; */
+  padding: 1em 3em;
+  max-width: 90vw;
+}
+
+.languageSkills form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 110px;
+  row-gap: 0px;
+}
+
+.sectionHeading {
+  margin-top: 2em;
+  grid-column: 1 / span 2;
+}
+.sectionSubHeading {
+  margin-top: 1em;
+}
+
+.languageInput {
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  width: 110%;
+}
+
+.languageInput select {
+  width: 91%;
+  margin-right: 10px;
+}
+
+.languageInput button {
+  background-color: #fc879e;
+  padding: 0.4em 0.6em;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: 0;
+  border-radius: 50%;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #fff;
+}
+
+.languageChip {
+  border: 1px solid rgb(148, 148, 148);
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0.5em 1em 0.5em 0;
+  border-radius: 20px;
+  padding: 0.4em 0.7em;
+  font-size: 0.9em;
+}
+
+.languageChip i {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.selectedLanguagesContainer {
+  margin-top: 0.5em;
+  border: 1px solid rgb(116, 116, 116);
+  border-radius: 10px;
+  padding: 0 0.5em;
+  font-size: 0.9em;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 992px) {
+  .languageSkills {
+    padding: 1em;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .languageSkills form {
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 0px;
+  }
+
+  .sectionHeading {
+    margin-top: 2em;
+    grid-column: 1 / span 1;
+  }
+}

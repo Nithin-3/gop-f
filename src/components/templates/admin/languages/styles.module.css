@@ -1,0 +1,106 @@
+.mainSection {
+  padding: 1rem;
+}
+
+.createLanguageForm {
+  margin-top: 2em;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 50px;
+  row-gap: 40px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+}
+
+.selectedPrograms{
+  max-height: 10em;
+  overflow-y: auto;
+}
+
+.formGroup label {
+  font-size: 1em;
+  padding: 0 ;
+  padding-bottom:10px;
+}
+
+.createLanguageForm input,
+.createLanguageForm select {
+  border: 1px solid #9a9a9a;
+  border-radius: 5px !important;
+  font-size: 0.9em;
+  padding: 13px;
+  min-width: 85%;
+}
+.programInput {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.programInput button {
+  background-color: #fc879e;
+  padding: 0.4em 0.6em;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: 0;
+  border-radius: 50%;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #fff;
+}
+
+.program{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.program p{
+  width: 90%;
+  border-radius: 10px;
+  background: #6ABDFF4A;
+  padding: .8em 1em;
+  font-size: .9em;
+}
+
+.program i{
+  color: #ED224C;
+  cursor: pointer;
+}
+.buttonGroup {
+  margin-top: 3em;
+  text-align: center;
+}
+.buttonGroup button {
+  background-color: #fc879e;
+  padding: 0.9em 3em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: 0;
+  border-radius: 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #fff;
+}
+@media screen and (min-width: 992px) {
+  .mainSection {
+    padding: 2rem;
+    padding-left: 235px;
+    width: 75%;
+  }
+}
+
+@media screen and (max-width: 578px) {
+  .createLanguageForm {
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: 1em;
+    row-gap: 0px;
+  }
+  .createLanguageForm select {
+    min-width: 90%;
+  }
+}

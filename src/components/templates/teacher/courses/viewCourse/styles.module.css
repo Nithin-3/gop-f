@@ -1,0 +1,160 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.modal {
+  padding: 1em 1.5em;
+  background-color: #fff;
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+  top: 10vh;
+  border-radius: 10px;
+  max-width: 90vw;
+}
+.closeBtn {
+  font-weight: 800;
+  margin-left: auto;
+  background-color: #fa6b58;
+  color: #fff;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.8em;
+  cursor: pointer;
+  font-size: 0.7em;
+  float: right;
+}
+
+.heading {
+  /* background-color: #e7f3f9; */
+  padding: 0em 0.8em 0.5em;
+  border-radius: 10px;
+  /* width: fit-content; */
+  margin: 0em auto 1em;
+  font-size: 1.3em;
+  text-align: center;
+}
+.course {
+  display: flex;
+  align-items: center;
+}
+.coverImg {
+  width: 200px;
+  margin-right: 2em;
+  border-radius: 15px;
+  height: 100%;
+}
+
+.courseImgInput {
+  display: none;
+}
+.courseDetails div {
+  display: flex;
+  margin: 0 0 0.5em;
+  align-items: center;
+}
+
+.courseDetails h4 {
+  width: 150px;
+  text-align: left;
+}
+.courseDetails input,
+.courseDetails select,
+.courseDetails textarea,
+.courseName,
+.courseDesc {
+  width: 100%;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px !important;
+  font-size: 0.9em;
+  padding: 8px 10px;
+}
+
+.courseDetails select:disabled {
+  color: #000;
+  opacity: 1;
+  border: 0;
+  -webkit-appearance: none;
+}
+
+.modal input:focus-visible,
+.modal textarea:focus-visible {
+  outline: #636363;
+}
+.courseName {
+  text-align: left;
+  color: #349ed2;
+  margin-top: 1em;
+  width: fit-content;
+  display: block;
+  padding: 8px 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.courseDesc {
+  text-align: left;
+  width: 500px;
+  max-width: 100%;
+  margin-top: 0.5em;
+  font-size: 0.9em;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0 1em 0 0;
+  min-height: 100px;
+}
+.submitButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+.submitButtonContainer button {
+  padding: 0.6em 1.5em;
+  font-size: 1em;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background-color: #5ad056;
+  cursor: pointer;
+}
+@media screen and (max-width: 578px) {
+  .coverImg {
+    width: 100px;
+    margin-right: 1em;
+  }
+
+  .courseDetails div {
+    display: flex;
+  }
+  .modal {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .course {
+    flex-direction: column;
+  }
+  .coverImg {
+    margin: 0 auto 1em;
+  }
+  .courseDetails {
+    padding: 0 1em;
+  }
+  .courseDetails h4 {
+    width: 150px;
+  }
+}

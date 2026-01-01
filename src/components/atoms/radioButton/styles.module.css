@@ -1,0 +1,75 @@
+@import url("../../../assets/_settings.css");
+
+
+.radioComponent{
+    height:max-content;
+    width: max-content;
+}
+
+.radio_label{
+    height: max-content;
+    width:max-content;
+    margin:1rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px 6px #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.radio_label>input{
+    display: none;
+}
+
+.radio_container{
+    height:max-content;
+    width:100%;
+    padding: 1rem 0.5rem;
+    font-family: var(--regular);
+    font-size: 0.8vmax;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+}
+
+.radio_container:hover{
+    border-radius: 20px;
+    box-shadow: 10px 10px 5px #93c7e4;
+    transition: all 0.25s; 
+
+}
+
+.radio_label>input[type=radio]:checked + .radio_container{
+    border-radius: 20px;
+    box-shadow: 3px 2px 11px 0px #665454;
+}
+
+.radio_container_withoutIcon{
+    width:20rem;
+    height: auto;
+}
+
+
+
+
+
+@media screen and (max-width:550px) {
+    .radio_container{
+        display: flex;
+        /* flex-direction: row; */
+        justify-content: space-evenly;
+        align-items: center;
+        padding:0.25rem 0.5rem;
+        font-size: 0.5rem;
+        cursor: pointer;
+       
+    }
+
+    .radio_label{
+       width: 15rem;
+    }
+   
+}

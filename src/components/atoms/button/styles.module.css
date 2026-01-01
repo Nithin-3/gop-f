@@ -1,0 +1,95 @@
+@import url("./../../../assets/_settings.css");
+
+.button {
+  -webkit-appearance: none;
+  outline: 0;
+  display: block;
+  font-size: 1rem;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+/* Size */
+.small {
+  padding: 0.3em 2.2em;
+}
+
+.medium {
+  padding: 0.7em 1.6em;
+}
+
+.large {
+  padding: 1em 2em;
+}
+
+/* Theme */
+.primary {
+  color: var(--white-main);
+  background: var(--primary-main);
+  border: 1px solid var(--primary-main);
+  border-radius: 10px;
+}
+
+.block {
+  width: 100%;
+  display: block;
+}
+
+.primary-border {
+  color: var(--primary-color);
+  background: transparent;
+  border: 1px solid var(--primary-main);
+}
+
+.primary-icon-left {
+  background: var(--primary-main);
+  color: var(--white-main);
+  font-family: var(--regular);
+  font-size: 20px;
+  border-width: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  width: 126px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding-left: 25px;
+  font-weight: bold;
+}
+.primary-icon-right {
+  background: var(--primary-main);
+  color: var(--white-main);
+  font-family: var(--regular);
+  font-size: 20px;
+  font-weight: bold;
+  border-width: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  width: 126px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding-right: 25px;
+}
+.primary-icon-right:hover,
+.primary-icon-left:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.icons-right-success {
+  width: 25px;
+  height: 25px;
+}
+
+.icons {
+  width: 12px;
+  margin: 0 10px;
+}
+
+.secondary {
+  color: var(--white-main);
+  background: var(--secondary-main);
+  border: 1px solid var(--secondary-main);
+}

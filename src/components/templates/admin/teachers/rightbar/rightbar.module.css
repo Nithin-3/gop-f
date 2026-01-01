@@ -1,0 +1,82 @@
+*{
+  word-break: break-all;
+}
+.rightbar .ProfileImg img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+.rightbar {
+  /* border: 1px solid pink; */
+  height: 100vh;
+}
+.rightbar .ProfileDataOne table tbody tr td {
+  font-weight: 500;
+
+}
+.rightbar .ProfileDataTwo span {
+  font-weight: 500;
+
+}
+.rightbar .ProfileDataTwo  {
+  border-radius: 10px;
+  font-size: 14px;
+}
+.rightbar .ProfileDataThree span {
+  font-weight: 500;
+
+}
+.rightbar .ProfileDataThree  {
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.rightbar .SubmitStatus .submitBtn ,.rightbar .SubmitStatus .rejectBtn,.saveBtn{
+  border-radius: 10px;
+  font-size: var(--default-size);
+  background-color: rgb(0, 255, 0);
+  font-weight: 500;
+  color: var(--white-main);
+}
+.rightbar .SubmitStatus .rejectBtn {
+  background-color: rgb(255, 0, 0);
+}
+
+.tabContent {
+  /* display: none; */
+  /* background-color: blue; */
+  height: 100px;
+  overflow-y: auto;
+}
+.tabContent .certificate .Info{
+  height: 72px;
+  overflow-y: auto;
+}
+
+.tabContent::-webkit-scrollbar {
+  width: 7px;
+}
+
+.tabContent::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+}
+
+.tabContent::-webkit-scrollbar-thumb {
+  background-color: rgb(226, 226, 226);
+  border-radius: 5px;
+}
+
+.tabContent .certificate .Info::-webkit-scrollbar {
+  width: 7px;
+}
+
+.tabContent .certificate .Info::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+}
+
+.tabContent .certificate .Info::-webkit-scrollbar-thumb {
+  background-color: rgb(226, 226, 226);
+  border-radius: 5px;
+}

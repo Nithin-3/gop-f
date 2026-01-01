@@ -1,0 +1,219 @@
+.mainSection {
+  padding: 1rem;
+  position: relative;
+  background-color: rgb(240, 240, 240);
+  min-height: 90vh;
+}
+
+.tableStyles {
+  margin-top: 60px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableStyles,
+.tableStyles tr {
+  border: 1px solid black;
+}
+
+.tableStyles td {
+  border-right: 1px solid black;
+}
+
+@media screen and (min-width: 992px) {
+  .mainSection {
+    padding: 2em 4rem;
+    padding-left: 230px;
+    width: 100%;
+    background-color: transparent;
+    min-height: 100vh;
+  }
+}
+.mainSection {
+  padding: 1rem;
+  position: relative;
+  background-color: rgb(240, 240, 240);
+  min-height: 90vh;
+}
+
+.sessionTabs {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f5f9d0;
+  padding: 20px;
+  border-radius: 20px;
+  /* gap: 10px; */
+}
+.sessionshow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sessionTab {
+  font-size: 1.1em;
+  color: #51addc;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 35px;
+  font-weight: bold;
+  transition: background-color 0.5s, color 0.1s;
+  display: flex;
+  align-items: center;
+  /* background-color: #daf4ff; */
+  margin: 0px 15px;
+}
+.sessionTabAdd {
+  font-size: 1.1em;
+  color: #51addc;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 10px 15px;
+  font-weight: bold;
+  transition: background-color 0.5s, color 0.1s;
+  display: flex;
+  align-items: center;
+  background-color: #daf4ff;
+}
+
+.sessionTabActive,
+.sessionTab:hover {
+  background-color: #9ecde7;
+  color: #fff;
+}
+
+.fa-caret-down,
+.fa-caret-up {
+  color: #9ecde7;
+  font-size: 30px;
+}
+
+.cardContainer {
+  border: 1px solid #359cd7;
+  padding: 20px 30px;
+  margin: 30px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-left: 8px solid #359cd7;
+}
+
+.cardImg {
+  width: 40px;
+  height: 40px;
+}
+
+.cardText1 {
+  color: #51addc;
+  font-weight: bold;
+}
+
+.viewButton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  color: #fffefe;
+  background-color: #359cd7;
+  padding: 10px 20px;
+}
+
+.viewDropdown {
+  margin-top: 5px;
+  position: absolute;
+  /* width: 200px; */
+  left: -60px;
+}
+
+.dropdownButton {
+  cursor: pointer;
+}
+
+.cardMobileContainer {
+  padding: 20px 20px 40px 20px;
+  background-color: #fff;
+  box-shadow: 10px 10px 20px #aaaaaa;
+  border-radius: 10px;
+}
+
+.scrollBarNone::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (min-width: 992px) {
+  .mainSection {
+    padding: 2em 4rem;
+    padding-left: 230px;
+    width: 100%;
+    background-color: transparent;
+    min-height: 100vh;
+  }
+}
+
+@media screen and (max-width: 1150px) {
+  .sessionTab {
+    padding: 10px 20px !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .sessionTabs {
+    border-radius: 5px;
+    background-color: #9ecde7;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 15px 0px;
+  }
+
+  .sessionTab {
+    width: 100%;
+    margin-bottom: 5px;
+    justify-content: center;
+    background-color: #daf4ff;
+  }
+
+  .sessionTabHeading {
+    border-right: 2px solid #fff;
+    text-align: center;
+    width: 85%;
+    font-size: 18px;
+  }
+
+  .sessionTabActive {
+    background-color: #9ecde7;
+    color: #fff;
+  }
+
+  .sessionTabActiveDropdown {
+    border-radius: 50px;
+    background-color: #9ecde7;
+    color: #fff;
+  }
+
+  .arrowIcon {
+    cursor: pointer;
+    text-align: center;
+    width: 15%;
+  }
+
+  .mobileDropdown {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 5px;
+    outline: 2px solid #9ecde7;
+    background-color: #fff;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .viewDropdown {
+    position: relative;
+  }
+}

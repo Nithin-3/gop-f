@@ -1,0 +1,15 @@
+@import "./__root.css";
+* {
+  box-sizing: border-box;
+}
+
+.adminDashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 992px) {
+  .adminDashboard {
+    flex-direction: row;
+  }
+}

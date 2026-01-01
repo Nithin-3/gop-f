@@ -1,0 +1,22 @@
+.mainSection {
+  padding: 1rem;
+  position: relative;
+}
+
+.coursesDashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 992px) {
+  .coursesDashboard {
+    flex-direction: row;
+  }
+}
+@media screen and (min-width: 992px) {
+  .mainSection {
+    padding: 2em 4rem;
+    padding-left: 218px;
+    width: 80%;
+  }
+}

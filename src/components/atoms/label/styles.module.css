@@ -1,0 +1,43 @@
+@import url("./../../../assets/_settings.css");
+.imgFile {
+  opacity: 0.3;
+  border-width: 0;
+  border-radius: 50%;
+  position: absolute;
+}
+.cloudImg {
+  opacity: 0.9;
+  position: absolute;
+  left: 95px;
+  top: 105px;
+  justify-content: baseline;
+  width: 130;
+  height: 130;
+}
+.label {
+  cursor: pointer;
+}
+.txt {
+  position: absolute;
+  left: 90px;
+  font-family: var(--regular);
+  top: 250px;
+}
+.docLabel {
+  font-family: var(--regular);
+  color: var(--primary-color);
+  position: relative;
+  bottom: 52px;
+  left: 10px;
+}
+.fup {
+  background-color: var(--primary-main);
+  width: 300px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--white-main);
+}
+.fupImg {
+  position: relative;
+  left: 250px;
+}

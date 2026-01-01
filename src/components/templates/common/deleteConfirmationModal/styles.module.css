@@ -1,0 +1,44 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 100000;
+  overflow-y: auto;
+}
+
+.modal {
+  padding: 1em;
+  background-color: #fff;
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+  margin: auto;
+  border-radius: 10px;
+  text-align: end;
+  max-width: 90vw;
+}
+
+.actions {
+  display: flex;
+  margin-top: 1em;
+  justify-content: flex-end;
+}
+
+.deleteButton {
+  margin-left: 0.5em;
+  color: red;
+  background-color: rgb(255, 164, 164) !important;
+}
+.actions button {
+  padding: 0.6em 1em;
+  border: 0;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #fff;
+}

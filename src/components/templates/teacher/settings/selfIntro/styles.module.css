@@ -1,0 +1,71 @@
+.selfIntro {
+  margin: auto;
+  width: 70%;
+  /* border: 1px solid #ccc; */
+  /* border-radius: 10px; */
+  padding: 1em 3em;
+  max-width: 90vw;
+}
+
+/* .selfIntro form{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 50px;
+  row-gap: 20px;
+} */
+
+.profilePicContainer {
+  text-align: center;
+  /* display: flex;
+  flex-direction: column; */
+  margin-bottom: 2em;
+}
+
+.selfIntro p{
+    margin-bottom: .3em;
+    font-size: 1em;
+}
+.profilePicContainer p {
+  text-align: left;
+}
+.profilePicContainer img {
+  width: 8em;
+  margin-top: .5em;
+}
+
+.profilePicContainer button{
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    margin-top: .5em;
+    font-size: 1em;
+    padding: .5em 2em;
+    border: 0 !important;
+    border-radius: 5px;
+    background-color: #9ECDE7;
+    cursor: pointer;
+}
+.profilePicContainer button input{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+@media screen and (max-width: 992px) {
+  .selfIntro {
+    padding: 1em;
+    width: 100%;
+  }
+}
+
+/* @media screen and (max-width: 768px) {
+  
+  .selfIntro form {
+    grid-template-columns: repeat(1, 1fr);
+    column-gap: 50px;
+    row-gap: 0px;
+  }
+} */

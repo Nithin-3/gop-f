@@ -1,0 +1,213 @@
+.faq_t {
+    width: 100%;
+    flex-direction: column;
+    background-color: #f0f8fc;
+    /* padding: 20vh 0 50px; */
+}
+.faq_arrow_up,
+.faq_arrow_down,
+.faq_icons{
+  width:22px;
+  height:22px;
+  margin-bottom: 4px;
+}
+.faq_icon_flag{
+  width: 30px;
+  height: 30px;
+}
+.faq_t>.faq_head {
+  margin: 50px 0;
+  font-size: 32px;
+  font-weight: bolder;
+}
+.faq_t>.faq_ques {
+  width: 60%;
+}
+.faq_t>.faq_title {
+  font-size: 30px;
+  font-weight: normal;
+  margin: 40px 0;
+  text-align: left;
+}
+.faq_box {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px 0 20px;
+  padding: 25px 20px;
+  background-color: white;
+  box-shadow: 0 0 10px 0px #eae4e4;
+  border-radius: 15px;
+  font-size: 20px;
+}
+.faq_box>.faq_question {
+  font-weight: bolder;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.faq_box>.faq_ans {
+  font-size: 18px;
+  margin-top: 10px;
+}
+.faq_t>.faq_mar {
+  margin-bottom: 100px;
+}
+
+  .faq_resource_section2_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 50px 0;
+  }
+  .faq_resource_question {
+    width: 80%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto 0;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .faq_resource_question:hover {
+    transition: all 0.5s ease-in;
+  }
+
+  .faq_resource_question > h2 {
+    padding: 0;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .faq_resource_question > span {
+    margin-right: 1.5rem;
+    font-size: 18px;
+  }
+
+  .faq_resources_dropdown {
+    /* color: darkgrey; */
+    width: 78%;
+    /* height: 100px; */
+    /* padding-left: 3rem !important; */
+    display: flex;
+    /* background: rgba(245, 166, 35, 0.15); */
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    /* border-bottom: 2px solid gray; */
+    /* border-top: 2px solid gray; */
+  }
+
+  .faq_resources_dropdown > p {
+    margin: 30px 0;
+    font-size: 20px;
+    font-weight: 300;
+    color: #000;
+  }
+
+  .faq_resources_card {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+  }
+
+  .faq_resource_card {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    margin: 5px 0;
+    border: 1px solid #f19c12;
+  }
+
+  .faq_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .faq_content {
+    height: 64vh;
+    background-color: #ff1849;
+    margin-top: 10vh;
+    background-image: url("https://neurolingua.in/assets_school_front/img/faq.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    padding-top: 260px;
+}
+.faq_content>.faq_home {
+  display: block;
+  position: relative;
+  color: #ffffff;
+  margin-left: 50px;
+}
+.faq_content>.faq_faq {
+  margin-left: 50px;
+  color: #ffffff;
+  font-size: 42px;
+  font-weight: 700;
+}
+  .faq_question_tab {
+    margin: 6vh 0 75px;
+}
+.faq_question_tab>ul {
+  width: 80%;
+  flex-wrap: wrap;
+  margin: 0 auto 40px auto ;
+  padding: 0;
+}
+.faq_question_tab>ul>li {
+  margin: 10px auto;
+  min-width: 100px;
+  min-height: 80px;
+  list-style: none;
+  border-radius: 5px;
+  padding: 20px;
+  -webkit-box-shadow: 2px 8px 20px 0 rgb(25 42 70 / 13%) !important;
+  box-shadow: 2px 8px 20px 0 rgb(25 42 70 / 13%) !important;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: space-evenly;
+  cursor: pointer;
+}
+.faq_question_tab>li>i {
+  font-size: 26px;
+}
+  .faq_type {
+    background: #fff;
+    flex-direction: column;
+}
+.faq_type>.MuiSvgIcon-root {
+  margin-bottom:10px;
+}
+  .faq_current {
+    background-color: #ff1849;
+    color: #fff;
+  }
+  @media (max-width: 559px) {
+    .faq_resource_question {
+      width: 90%;
+    }
+    .faq_resources_dropdown {
+      width: 88%;
+    }
+    .faq_resource_question > h2 {
+      font-size: 16px;
+    }
+
+    .faq_resources_dropdown > p {
+      font-size: 16px;
+    }
+  }
+  @media (max-width:400px){
+    .faq_t>.faq_ques{
+        width:88%;
+      }
+      .faq_t>.faq_head{
+        font-size:28px;
+      }
+  }

@@ -1,0 +1,242 @@
+.mainSection {
+  padding: 0 1rem 0 1rem;
+  position: relative;
+  background-color: rgb(240, 240, 240);
+  height: 100vh;
+}
+
+.mainWrapper {
+  display: flex;
+  width: 100%;
+  padding-left: 200px;
+  gap: 1rem;
+}
+
+.MS_wrapper {
+  display: flex;
+  flex-direction: column;
+  /* background-color: #9ECDE6; */
+  width: 75%;
+  height: 98vh;
+  border-radius: 0.6rem;
+  padding: 0.6rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  gap: 1rem;
+}
+
+.MS_head {
+  width: 100%;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.MS_head_left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+}
+
+.MS_head_right {
+  font-size: small;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  padding: 0 0.4rem 0.4rem 0;
+}
+
+
+.MS_studentName {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.MS_msgs,
+.MS_msgsStudent {
+  width: 100%;
+  padding: 0.6rem 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 78vh;
+  overflow-y: scroll;
+  flex: 1;
+}
+
+.MS_msgs::-webkit-scrollbar{
+  background-color: #0c76af;
+  display: none;
+}
+
+/* .MS_msgsStudent::-webkit-scrollbar-thumb {
+  background-color: #ff97b1;
+} */
+
+.MS_in {
+  position: relative
+}
+
+.MS_inMsg {
+  /* background-color: #76bbe0; */
+  width: 100%;
+  border-radius: 0.8rem;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.2rem;
+}
+
+.MS_inMsg:focus {
+  border: 2px solid #0c76af;
+}
+
+.MS_sendBtn {
+  position: absolute;
+  /* background-color: #0c76af; */
+  top: 0.5%;
+  left: 95%;
+  height: 47px;
+  width: 47px;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  display: grid;
+  place-items: center;
+}
+
+.MS_sendBtn:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.MS_nochat {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.AC_wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 25%;
+  height: 100vh;
+  background-color: #9ECDE6;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-radius: 0.6rem;
+  overflow-y: auto;
+}
+
+.AC_heading {
+  /* background-color: rgb(255, 140, 140); */
+  text-align: center;
+  padding: 1rem 0;
+  border-radius: 0.6rem;
+}
+
+.AC_search {
+  position: relative;
+  padding: 0.5rem;
+}
+
+.AC_searchIn {
+  /* background-color: #76bbe0; */
+  width: 100%;
+  border-radius: 0.6rem;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.2rem;
+}
+
+.AC_searchIn:focus {
+  border: #0c76af;
+}
+
+.AC_searchIcon {
+  position: absolute;
+  top: 29%;
+  left: 85%;
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+}
+
+.AC_results {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.AC_field {
+  padding: 0.7rem 0.7rem 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  display: flex;
+  /* background-color: #3eaeea; */
+  border-radius: 0.8rem;
+  margin-bottom: 0.3rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.AC_field:hover {
+  /* background-color: #0c76af; */
+  cursor: pointer;
+}
+
+.MSG_wrapper {
+  width: max-content;
+}
+
+.MSG_msg {
+  /* background-color: #3eaeea; */
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+}
+
+.MSG_time {
+  float: right;
+  padding: 0.3rem 0.5rem;
+  font-size: small;
+}
+
+@media only screen and (max-width: 992px){
+  .mainSection{
+    height:90vh;
+  }
+  .mainWrapper{
+    padding-left: 0;
+    display: block;
+  }
+
+  .MS_wrapper{
+    width: 100%;
+    height: 89vh;
+  }
+
+  .MS_sendBtn{
+    left: 91%
+  }
+
+  .MS_backBtn:hover{
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+
+  .AC_wrapper{
+    width: 100%;
+    height: 89vh;
+  }
+
+  .AC_searchIcon{
+    left: 90%;
+  }
+}
+
+@media only screen and (max-width: 426px){
+  .MS_sendBtn{
+    left: 87%
+  }
+}

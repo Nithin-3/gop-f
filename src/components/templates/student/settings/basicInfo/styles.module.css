@@ -1,0 +1,31 @@
+.basicInfo {
+  margin: 0 auto;
+  width: 90%;
+  /* border: 1px solid #ccc; */
+  /* border-radius: 10px; */
+  /* padding: 1em 3em; */
+  max-width: 90vw;
+}
+
+.basicInfo form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 50px;
+  row-gap: 20px;
+}
+
+@media screen and (max-width: 992px) {
+  .basicInfo {
+    /* padding: 1em; */
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  
+  .basicInfo form {
+    grid-template-columns: repeat(1, 1fr);
+    column-gap: 50px;
+    /* row-gap: 0px; */
+  }
+}

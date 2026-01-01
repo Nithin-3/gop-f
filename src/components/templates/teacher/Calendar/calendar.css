@@ -1,0 +1,40 @@
+.event {
+  position: relative;
+}
+.rbc-day-slot .rbc-events-container{
+  margin-right:0px !important;
+}
+.event p {
+  z-index: -1;
+  overflow: hidden;
+  font-size: .8em;
+  display: none !important;
+}
+
+.rbc-month-row,
+.rbc-row-segment .rbc-event-content {
+  overflow: visible !important;
+}
+
+/* .rbc-toolbar span:first-child button:first-child {
+  display: none;
+} */
+
+.rbc-toolbar span:nth-child(3) button:nth-child(3) {
+  display: none;
+}
+
+.teacherCalendar .rbc-event {
+  /* background-color: green !important; */
+}
+.rbc-row-content{
+  display: none;
+}
+/* .teacherCalendar .rbc-btn-group button:first-child{
+  display: none;
+}  */
+@media screen and (max-width: 600px) {
+.rbc-time-content{
+  overflow-x: hidden;
+}
+}

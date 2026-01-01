@@ -1,0 +1,142 @@
+main input,
+main textarea,
+main select {
+  border: 1px solid #9a9a9a;
+  border-radius: 5px;
+  font-size: 1em;
+  /* min-width: 90%; */
+  height: auto;
+  margin: 0;
+  /* background-color: #e2e8ff; */
+  background-color: #fde5ea;
+  padding: 19px 18px;
+  /* font-weight: bold !important; */
+  border: 1px solid white;
+  border-radius: 5px;
+  outline: none;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+.formGroup label {
+  padding: 0;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.formGroup select {
+  -webkit-appearance: none;
+  background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png)
+    no-repeat right #fde5ea;
+  background-position-x: 95%;
+}
+
+.submitButtonContainer {
+  text-align: center;
+  margin-top: 3em;
+}
+
+.submitButton {
+  margin-left: auto;
+  padding: 0.6em 2em;
+  border: 0;
+  border-radius: 20px;
+  background-color: #04cf00;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.title {
+  text-align: center;
+  color: #ed224c;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0.5em 0 2em;
+}
+
+.settingsTabs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.settingsTab {
+  font-size: 1.1em;
+  color: #ed224c;
+  cursor: pointer;
+  border-radius: 50px;
+  padding: 10px 30px;
+  font-weight: bold;
+  transition: background-color 0.5s, color 0.1s;
+}
+
+.settingsTabActive,
+.settingsTab:hover {
+  background-color: #ed224c;
+  color: #fff;
+}
+.fa-caret-down,
+.fa-caret-up {
+  color: #ed224c;
+  font-size: 30px;
+}
+
+@media screen and (max-width: 992px) {
+  .settingsTabs {
+    border-radius: 5px;
+    background-color: #ed224c;
+    color: #fff;
+    display: flex;
+    align-items: center;
+  }
+
+  .settingsTab {
+    text-align: center;
+    width: 85%;
+    margin-bottom: 1px;
+  }
+
+  .settingsTabHeading {
+    border-right: 2px solid #fff;
+    padding: 10px;
+    text-align: center;
+    width: 85%;
+    font-size: 18px;
+  }
+
+  .settingsTabActive {
+    background-color: #ed224c;
+    color: #fff;
+  }
+
+  .settingsTabActiveDropdown {
+    border-radius: 50px;
+    background-color: #ed224c;
+    color: #fff;
+  }
+
+  .arrowIcon {
+    cursor: pointer;
+    text-align: center;
+    width: 15%;
+  }
+
+  .mobileDropdown {
+    position: absolute;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 5px;
+    outline: 2px solid #ed224c;
+    background-color: #fff;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

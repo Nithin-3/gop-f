@@ -1,0 +1,42 @@
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-family: var(--regular);
+}
+  
+.divider::after,.divider::before {
+    content: "";
+    border-bottom: 1.5px solid var(--secondary-main);
+    flex: 1;
+}
+  
+.divider:not(:empty)::before  {
+    margin-right: 3vw;
+}
+  
+.divider:not(:empty)::after {
+    margin-left: 3vw;
+}
+
+@media screen and (min-width:700px) {
+    .divider{
+        font-size: 1.2vw;
+        margin: 1.5vw 0;
+    }
+}
+
+@media screen and (max-width:700px) {
+    .divider{
+        padding: 4vw 0;
+        font-size: 5vw;
+    }
+
+    .divider:not(:empty)::before {
+        margin-right: 10vw;
+    }
+      
+      .divider:not(:empty)::after {
+        margin-left: 10vw;
+    }
+}

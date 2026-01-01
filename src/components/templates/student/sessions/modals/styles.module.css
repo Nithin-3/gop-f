@@ -1,0 +1,79 @@
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    overflow-y: auto;
+  }
+  
+.modal {
+    padding: 2em 2em;
+    background-color: #fff;
+    height: fit-content;
+    width: fit-content;
+    position: relative;
+    border-radius: 10px;
+    width: 50vw;
+}
+
+.modalHeading {
+    text-align: center;
+    margin-top: -1em;
+}
+
+.closeBtn {
+    font-weight: 800;
+    margin-left: auto;
+    background-color: #fa6b58;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0.8em;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.cancelModalCloseIcon {
+    font-size: 60px;
+    background-color: #fc4545;
+    color: #fff;
+    border-radius: 50%;
+    padding: 20px;
+}
+
+.cancelModalReverseIcon {
+    font-size: 60px;
+    background-color: #0599d0;
+    color: #fff;
+    border-radius: 50%;
+    padding: 20px;
+}
+.iconSize{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+@media screen and (max-width: 992px) {
+    .modal {
+        width: 70vw;
+    }
+}
+
+@media screen and (max-width: 578px) {
+    .modal {
+        width: 90vw;
+    }
+}
+.react-stars-wrapper-02513077740836942{
+    justify-content: center;
+}

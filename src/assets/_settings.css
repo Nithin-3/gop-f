@@ -1,0 +1,35 @@
+@font-face {
+  font-family: "AvenirNextLTPro-Regular";
+  src: local("AvenirNextLTPro-Regular"),
+    url("./fonts/AvenirNextLTPro-Regular.otf");
+}
+
+@font-face {
+  font-family: "AvenirNextLTPro-It";
+  src: local("AvenirNextLTPro-It"), url("./fonts/AvenirNextLTPro-It.otf");
+}
+
+@font-face {
+  font-family: "AvenirNextLTPro-Bold";
+  src: local("AvenirNextLTPro-Bold"), url("./fonts/AvenirNextLTPro-Bold.otf");
+}
+
+:root {
+    /* Colors */
+    --primary-main: #FF1849;
+    --primary-light: #F3F3F3;
+    --primary-dark: #000000;
+    --secondary-main:  #999999;
+    --secondary-light: #b6b4b6;
+    --secondary-dark:#9F9F9F ;
+    --white-main: #ffffff;
+    --dark-main: ;
+    
+    /* Fonts */
+    --regular: 'AvenirNextLTPro-Regular';
+    --italic: 'AvenirNextLTPro-It';
+    --bold: 'AvenirNextLTPro-Bold';
+
+  /* Size */
+  --default-size: 16px;
+}

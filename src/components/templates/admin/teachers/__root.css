@@ -1,0 +1,39 @@
+:root {
+    /* Colors */
+    --primary-main: #ff1849;
+    --primary-light: #f3f3f3;
+    --primary-dark: #000000;
+    --secondary-main: #999999;
+    --secondary-light: #b6b4b6;
+    --secondary-dark: #9f9f9f;
+    --white-main: #ffffff;
+    --dark-main: ;
+    --statusInc: red;
+    --statusCom: lightgreen;
+    --icon-color: rgb(5, 136, 153);
+    --theme-color: rgb(0, 95, 107);
+    /* Background */
+    --bg-theme: rgb(0, 204, 255);
+    --bg-theme-dark: rgb(0, 191, 216);
+    --bg-theme-medium: rgb(77, 230, 250);
+    --bg-theme-light: rgb(155, 230, 240);
+    --bg-light: white;
+    --bg-light-pink: pink;
+    --bg-dark-pink: rgb(252, 72, 102);
+    /* --secondary-main:  #999999; */
+    --bg-secondary-light: #eceaec;
+
+    /* border */
+    --border-red: 2px solid red;
+
+    /* Fonts */
+    --regular: "AvenirNextLTPro-Regular";
+    --italic: "AvenirNextLTPro-It";
+    --bold: "AvenirNextLTPro-Bold";
+
+    /* Size */
+    --default-size: 16px;
+}
+*{
+    font-family: var(--regular);
+}

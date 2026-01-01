@@ -1,0 +1,91 @@
+.certifications {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 50px;
+}
+
+.certificateForm {
+  margin-top: 1em;
+  border-bottom: 1px solid rgb(129, 129, 129);
+  padding: 0em 1em 1em;
+}
+
+.certificateForm h5{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+}
+.certificateForm h5 i{
+    color: red;
+    cursor: pointer;
+}
+.certificateForm input {
+  width: 100%;
+}
+
+.uploadCerti {
+  text-align: center;
+  /* display: flex;
+    flex-direction: column; */
+  margin-top: 1em;
+}
+.uploadCerti button {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  margin-top: 0.5em;
+  font-size: 1em;
+  padding: 0.5em 2em;
+  border: 0 !important;
+  border-radius: 5px;
+  background-color: #9ecde7;
+  cursor: pointer;
+}
+
+.uploadCerti button i{
+  margin-left: 10px;
+}
+.uploadCerti button input {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+.addNewDetailButtonContainer{
+    text-align: center;
+}
+.addNewDetailButton{
+    margin: auto;
+    margin-top: 2em;
+    padding: .5em 1em;
+    font-size: 1em;
+    border: 0;
+    border-radius: 5px;
+    background-color: #9c9c9c;
+    cursor: pointer;
+}
+
+.viewFile{
+  text-decoration: none;
+  font-size: .9em;
+  margin-bottom: 1em;
+}
+@media screen and (max-width:768px) {
+    .certifications {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 50px;
+        row-gap: 50px;
+      }
+}
+@media screen and (max-width:578px) {
+    .certifications {
+        grid-template-columns: repeat(1, 1fr);
+        /* column-gap: 50px; */
+        row-gap: 50px;
+      }
+}

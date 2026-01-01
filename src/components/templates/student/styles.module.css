@@ -1,0 +1,15 @@
+.mainSection {
+  padding: 1rem;
+  position: relative;
+  background-color: rgb(240, 240, 240);
+  min-height: 100vh;
+}
+
+@media screen and (min-width: 992px) {
+  .mainSection {
+    padding: 2em 4rem;
+    padding-left: 230px;
+    background-color: transparent;
+    width: 80%;
+  }
+}

@@ -1,0 +1,142 @@
+.Role_Container {
+  display: flex;
+  width: 85%;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+}
+
+.roleWrapper {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.popupBtn {
+  margin: 1vw 0;
+}
+
+.roleWrapper > label {
+  height: max-content;
+  width: max-content;
+  box-shadow: none;
+  margin: 1vw;
+}
+
+.roleWrapper > label > span > h2 {
+  font-size: 2vw;
+  margin-top: 2vw;
+  opacity: 0.6;
+}
+.roleWrapper > label > span > img {
+  height: 9vw;
+  width: 9vw;
+}
+
+.roleWrapper > label > span {
+  border-radius: 20px;
+  border: 1px solid pink;
+  padding: 1.5vw 3vw;
+}
+
+.roleWrapper > label > span:hover {
+  box-shadow: 5px 3px 6px 3px #665454;
+}
+
+/* .popupBtn > button {
+  border-radius: 20px;
+  font-size: 1.2rem;
+  padding: 10px 30px;
+} */
+
+.roleWrapper .radio_container {
+  border: 1px solid rgb(187, 187, 187);
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.roleWrapper img {
+  width: 100px;
+  margin-bottom: 0.5rem;
+}
+
+.roleWrapper h2 {
+  font-size: 1.5rem;
+  color: grey;
+}
+
+.continueBtn {
+  width: max-content;
+  padding: 15px 20px;
+  background: #ff1849 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 20px;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: var(--regular);
+  cursor: pointer;
+}
+.continueBtn img {
+  width: 18px;
+  margin-left: 10px;
+}
+
+.selectedRole{
+  border-color: #ff1849 !important;
+  box-shadow: 0px 0px 42px -24px #ff1849;
+}
+
+@media screen and (max-width: 700px) {
+  .Role_Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: auto;
+  }
+
+  .roleWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+  }
+
+  .roleWrapper .radio_container {
+    padding: 1rem 2rem;
+    margin: .5rem;
+  }
+
+  .roleWrapper img {
+  width: 100px;
+}
+
+.roleWrapper h2 {
+  font-size: 1.1rem;
+}
+  .roleWrapper > label > span {
+    padding: 4vw;
+  }
+  .roleWrapper > label > span > img {
+    height: 25vw;
+    width: 25vw;
+  }
+  .roleWrapper > label > span > h2 {
+    font-size: 5vw;
+    margin-top: 4vw;
+    opacity: 0.6;
+  }
+  .popupBtn > button {
+    font-size: 4vw;
+    padding: 2vw 5vw;
+  }
+}

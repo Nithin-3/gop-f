@@ -1,0 +1,30 @@
+@import "./../__root.css";
+.MenuList{
+    border-radius: 15px 0 0 15px;
+    color:white ;
+    margin: 7px;
+}
+@media screen and (max-width:992px){
+    .MenuList{
+        border-radius: 0 15px 15px 0;
+        /* display: ; */
+        margin: 1px 0px;
+    }
+}
+.MenuList .item{
+    color: white;
+}
+.MenuList:hover{
+    background-color: var(--bg-secondary-light);
+    color: var(--theme-color);
+}
+.MenuList:hover > .item{
+    color: var(--theme-color);
+}
+#activeStyle{
+    background-color: var(--bg-secondary-light);
+    color: var(--theme-color);
+}
+#activeStyle>.item{
+    color: var(--theme-color);
+}

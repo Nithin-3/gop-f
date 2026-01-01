@@ -1,0 +1,35 @@
+.changePassword {
+  margin: auto;
+  width: 60%;
+  /* border: 1px solid #ccc; */
+  /* border-radius: 10px; */
+  padding: 1em 3em;
+  max-width: 90vw;
+}
+
+.oldPasswordGroup{
+  grid-column: 1/span 2;
+} 
+
+.changePassword form {
+  /* display: grid; */
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 50px;
+  row-gap: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .changePassword {
+    padding: 1em;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  
+  .changePassword form {
+    grid-template-columns: repeat(1, 1fr);
+    column-gap: 50px;
+    row-gap: 0px;
+  }
+}

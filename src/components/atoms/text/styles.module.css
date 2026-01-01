@@ -1,0 +1,56 @@
+@import url("./../../../assets/_settings.css");
+
+/* Theme */
+.heading1 {
+  font-size: 60px;
+}
+.heading2 {
+  font-size: 50px;
+}
+.heading3 {
+  font-size: 40px;
+}
+.heading4 {
+  font-size: 30px;
+}
+.heading5 {
+  font-weight: 600;
+  font-size: 25px;
+}
+.title1 {
+  font-size: 24px;
+}
+.title2 {
+  font-size: 20px;
+}
+.body1 {
+  font-size: 19px;
+}
+.body2 {
+  font-size: var(--default-size);
+}
+.small1 {
+  font-size: 13px;
+}
+
+/* text color */
+.black {
+  color: var(--primary-dark);
+}
+.white {
+  color: var(--white-main);
+}
+.main{
+  color: var(--primary-main);
+}
+
+/* font weight */
+.bold {
+  font-family: var(--bold);
+}
+.regular {
+  font-family: var(--regular);
+}
+.italic {
+  font-family: var(--italic);
+}

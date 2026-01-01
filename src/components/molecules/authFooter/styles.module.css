@@ -1,0 +1,47 @@
+.authFooter{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--regular);
+    margin-top:10px
+}
+
+.authFooter>p{
+    margin: 2rem 0;
+    font-size: 1rem;
+    color:var(--primary-main);
+    cursor:pointer
+}
+
+
+@media screen and (min-width:700px) {
+    .authFooter{
+        margin-top: -1vw;
+        height: 4vw;
+    }
+    .authFooter>p{
+        font-size: 1vw;
+    }
+    .authFooter>div>p{
+        font-size: 1vw;
+    }   
+}
+
+@media screen and (max-width:700px) {
+
+    .authFooter>p{
+        margin:5vw 0;
+        font-size:3.75vw
+    }
+
+    .authFooter>div>p{
+        font-size: 4vw;
+        margin:0;
+
+    }
+    .authFooter{
+        flex-direction: column;
+        align-items: center;
+    }
+}

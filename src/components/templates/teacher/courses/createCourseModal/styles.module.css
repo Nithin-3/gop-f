@@ -1,0 +1,187 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.modal {
+  padding: 1.5em 1em;
+  background-color: #fff;
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+  top: 10vh;
+  border-radius: 10px;
+  text-align: end;
+  max-width: 95vw;
+}
+
+.closeBtn {
+  font-weight: 800;
+  margin-left: auto;
+  background-color: #fa6b58;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.8em;
+  cursor: pointer;
+  font-size: 1.1em;
+}
+
+.heading {
+  color: #349ed2;
+  background-color: #e7f3f9;
+  padding: 0.5em 0.8em;
+  border-radius: 10px;
+  width: fit-content;
+  margin: 0.5em auto;
+  font-size: 1.3em;
+}
+
+.createCourseForm1,
+.createCourseForm2 {
+  margin-top: 3em;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 100px;
+  grid-row-gap: 50px;
+
+  padding: 0 3em;
+}
+.createCourseForm2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.createCourseForm1 input,
+.createCourseForm2 input,
+.createCourseForm2 textarea,
+.createCourseForm1 select {
+  width: 250px;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px !important;
+  font-size: 0.9em;
+  padding: 13px;
+}
+
+.createCourseForm2 textarea {
+  grid-column: 1 / span 2;
+  width: 100%;
+}
+
+.createCourseForm1 input:focus-visible,
+.createCourseForm1 select:focus-visible,
+.createCourseForm2 textarea:focus-visible,
+.createCourseForm2 input:focus-visible {
+  outline: #636363;
+}
+
+.nextButton,
+.prevButton,
+.submitButton {
+  background-color: #fc879e;
+  padding: 0.7em 3em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: 0;
+  margin-top: 3em;
+  border-radius: 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #fff;
+}
+
+.page2Footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submitButton {
+  background-color: #5ad056;
+  padding: 0.7em 1.5em;
+}
+
+.submitButton i {
+  margin-left: 15px;
+  font-size: 1.1em;
+}
+
+.coverPhotoDiv {
+  height: 45px;
+  padding: 13px;
+  width: 250px;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px !important;
+  font-size: 0.9em;
+  text-align: left;
+  color: #626262;
+  cursor: pointer;
+}
+
+.fileInp {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .createCourseForm1,
+  .createCourseForm2 {
+    grid-template-columns: repeat(1, minmax(200px, 1fr));
+    grid-row-gap: 20px;
+    padding: 0 10px;
+  }
+
+  .createCourseForm2 textarea {
+    grid-column: 1 / span 1;
+  }
+
+  .createCourseForm1 input,
+  .createCourseForm2 input,
+  .createCourseForm2 textarea,
+  .createCourseForm1 select,
+  .coverPhotoDiv {
+    width: 100%;
+  }
+
+  .modal {
+    width: 85%;
+  }
+}
+
+@media screen and (max-width: 578px) {
+  .modal {
+    width: 85%;
+  }
+
+  /* .createCourseForm1 input,
+  .createCourseForm2 input,
+  .createCourseForm2 textarea,
+  .createCourseForm1 select {
+    width: 90%;
+  } */
+
+  .createCourseForm1,
+  .createCourseForm2 {
+    grid-template-columns: repeat(1, minmax(180px, 1fr));
+  }
+
+  /* .createCourseForm1 input,
+  .createCourseForm2 input,
+  .createCourseForm2 textarea,
+  .createCourseForm1 select {
+    width: 250px;
+  } */
+
+  .prevButton,
+  .submitButton {
+    padding: 0.7em 1em;
+  }
+}

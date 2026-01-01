@@ -1,0 +1,125 @@
+.couponCard {
+  display: flex;
+  align-items: center;
+  /* background-color: antiquewhite; */
+  height: 200px;
+  width: 400px;
+  margin: 2rem;
+  color: white;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1.5rem;
+  width: 75%;
+  height: 100%;
+  text-align: center;
+  background-color: #34aadc;
+  position: relative;
+  border-bottom-left-radius: 1rem;
+  border-top-left-radius: 1rem;
+}
+
+.left::after, .left::before{
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  left: 96.5%;
+}
+
+.left::before{
+  top: -5%;
+}
+
+.left::after{
+  top:95%;
+}
+
+.coupon{
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.info{
+  margin-bottom: 1rem;
+  /* padding: 0.5rem; */
+  font-size: 0.9rem;
+  display: flex;
+  gap: 0.3rem
+}
+
+.line{
+  height: 2px;
+  background-color: white;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.name{
+  border: 2px solid white;
+  padding: 0.5rem 1rem;
+  width: 80%;
+}
+
+.rightCC {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 25%;
+  height:100%;
+  background-color:rgb(254, 24, 72);
+  text-align: center;
+  border-top-left-radius: -50%;
+  border-bottom-right-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-left: dashed;
+  border-left-color: white;
+}
+
+.rotate{
+  transform: rotate(-90deg);
+}
+
+.rightCoupon{
+ font-size: 1.1rem;
+ font-weight: 900;
+}
+
+.price{
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+@media only screen and (max-width: 992px){
+  .couponCard{
+    height: 200px;
+    width: 330px;
+    margin: 0;
+    margin-top: 1rem ;
+  }
+
+  .left::after, .left::before{
+    background-color: rgb(240, 240, 240);
+  }
+}
+
+@media only screen and (max-width: 426px){
+  .coupon{
+    font-size: 1.5rem;
+  }
+
+  .line, .info{
+    margin-bottom: 0.5rem;
+  }
+
+  .left::before, .left::after{
+    background-color: rgb(255 255 255)
+  }
+}

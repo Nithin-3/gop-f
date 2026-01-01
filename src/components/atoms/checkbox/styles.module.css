@@ -1,0 +1,68 @@
+@import url("../../../assets/_settings.css");
+
+input[type="checkbox"] {
+  margin: 12px;
+  width: max-content;
+}
+
+.check_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.check_col_75 > label {
+  font-size: 12px;
+  padding: 12px 5px;
+  font-family: var(--regular);
+}
+
+.check_col_75 a:hover {
+  color: #0068a0;
+}
+
+.check_col_25 {
+  float: left;
+  margin-top: 6px;
+}
+
+.check_col_75 {
+  float: left;
+  margin-top: 6px;
+}
+
+.check_col_75 a {
+  text-decoration: none;
+  color: black;
+}
+
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (min-width: 550px) {
+  input[type="checkbox"] {
+    width: 1vw;
+    height: 1vw;
+    margin: 10px 1vw;
+  }
+
+  .check_col_75 > label {
+    font-size: 1vw;
+    padding: 0 0.5vw;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  input[type="checkbox"] {
+    width: 3vw;
+    height: 3vw;
+    /* margin:1vw */
+  }
+  .check_col_75 > label {
+    font-size: 3.5vw;
+    padding: 4vw 1vw;
+  }
+}

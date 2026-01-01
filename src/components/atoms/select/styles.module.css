@@ -1,0 +1,9 @@
+@import url("./../../../assets/_settings.css");
+.select {
+  width: 250px;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  font-family: var(--regular);
+  cursor: pointer;
+}

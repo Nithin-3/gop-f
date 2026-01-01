@@ -1,0 +1,91 @@
+@import url("../../../../assets/_settings.css");
+
+*{
+    margin:0;
+}
+
+.form{
+    text-align: center;
+    margin: 0;
+    width:66%;
+    border-radius: 10px;
+    background-color: var(--primary-light);
+    padding-bottom: 10px;
+}
+
+.form>p{
+    font-family: var(--regular);
+    color: var(--primary-dark);
+    margin:5rem 0 3rem 0
+}
+
+
+.mainContainer{
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    height: 90vh;
+}
+
+.leftContainer{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.rightContainer{
+   width: 40%;
+   display: flex;
+   justify-content: center;
+}
+
+.rightContainer>img{
+    width: 85%;
+}
+
+@media screen and (min-width:700px) {
+    /* .mainContainer{
+        margin-top: 4vw;
+    } */
+
+    .form{
+        width:70%;
+        height: max-content;
+    }
+
+    .form>p{
+        margin: 2vw 0 2.5vw 0;
+        /* font-size: 1.5vw; */
+        font-size: 20px;
+    }
+    
+}
+
+@media screen and (max-width: 992px) {
+    .leftContainer{
+        width:100%
+    }
+
+    .rightContainer{
+        display: none;
+    }
+}
+
+@media screen and (max-width:700px) {
+    .mainContainer{
+         margin-top: 120px;
+    }
+    
+    .form{
+        width:100%;
+        background-color: var(--white-main);
+    }
+
+    .form>p{
+        display: none;
+    }
+}
+
+
