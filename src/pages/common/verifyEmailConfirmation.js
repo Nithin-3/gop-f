@@ -5,10 +5,11 @@ import classes from "./styles.module.css";
 import Blob1 from "../../assets/image/verification_blob.svg";
 import Blob2 from "../../assets/image/verification_blob2.svg";
 import Svg from "../../assets/image/Mar-Business_18 1.svg";
+import { getRole } from "../../utils/util";
+
 
 const VerifyEmailConfirmation = (props) => {
-  const path = props.match.path;
-  const value = path.split("/")[1];
+  const value = getRole();
   return (
     <main className={classes.verification_page}>
       <Navigation />
