@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Main from "./pages/main";
 import Teacher from "./pages/teacher";
@@ -13,9 +13,12 @@ import "react-toastify/dist/ReactToastify.css";
 import EmailVerified from "./pages/common/emailVerified";
 
 const App = (props) => {
+    const location = useLocation();
+
     useEffect(() => {
-        document.getElementById("loader").style.display = "none";
-    }, []);
+        const loader = document.getElementById("loader");
+        if (loader) loader.style.display = "none";
+    }, [location]);
 
 
     return (
@@ -28,15 +31,15 @@ const App = (props) => {
 
                 <Route path="/emailVerified" element={<EmailVerified />} />
 
-                <Route path="/student/*" element={ <ProtectedRoute authRole={["Student"]}> <Student /> </ProtectedRoute> } />
+                <Route path="/student/*" element={<ProtectedRoute authRole={["Student"]}> <Student /> </ProtectedRoute>} />
 
                 {/* Teacher */}
                 <Route path="/teacher/verifyEmail" element={<VerifyEmailConfirmation />} />
 
-                <Route path="/teacher/*" element={ <ProtectedRoute authRole={["Teacher"]}> <Teacher /> </ProtectedRoute> } />
+                <Route path="/teacher/*" element={<ProtectedRoute authRole={["Teacher"]}> <Teacher /> </ProtectedRoute>} />
 
                 {/* Admin */}
-                <Route path="/admin/*" element={ <ProtectedRoute authRole={["Admin", "Tutor", "Payment"]}> <Admin /> </ProtectedRoute> } />
+                <Route path="/admin/*" element={<ProtectedRoute authRole={["Admin", "Tutor", "Payment"]}> <Admin /> </ProtectedRoute>} />
 
                 <Route path="*" element={<Main />} />
             </Routes>

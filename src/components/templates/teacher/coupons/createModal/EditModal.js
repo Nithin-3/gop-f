@@ -10,14 +10,14 @@ const EditModal = ({ setEditModal, width, editUser, setEditUser, setApiCall }) =
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    async function fetchCourses() {
+    const fetchCourses = async () => {
       try {
         const result = await dispatch(getMyCourses());
-        if (result.data) setCourses(result.data);
+        if (result?.data) setCourses(result.data);
       } catch (err) {
         console.error(err);
       }
-    }
+    };
     fetchCourses();
   }, [dispatch]);
 
@@ -35,12 +35,12 @@ const EditModal = ({ setEditModal, width, editUser, setEditUser, setApiCall }) =
   };
 
   const handleCheckboxChange = (checked, courseId) => {
-    setEditUser(prev => {
-      const updatedCourses = checked
+    setEditUser(prev => ({
+      ...prev,
+      courses: checked
         ? [...prev.courses, courseId]
-        : prev.courses.filter(id => id !== courseId);
-      return { ...prev, courses: updatedCourses };
-    });
+        : prev.courses.filter(id => id !== courseId)
+    }));
   };
 
   return (

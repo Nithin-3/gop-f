@@ -8,9 +8,10 @@ import { getTeacherFreeSessions } from "../../../../../store/actions/session";
 
 function FreeCourses(props) {
   let { width, arr } = props;
+  if (!Array.isArray(arr)) arr = [];
   const [rescheduleModal, setRescheduleModal] = React.useState(false);
   const [addLessonModal, setAddlessonModal] = React.useState(false);
-  const [freeArr, setFreeArr] = React.useState(false);
+  const [setFreeArr] = React.useState(false);
 
   const dropDownArr = [
     { text: "Request to Reschedule", modal: setRescheduleModal },
@@ -31,7 +32,7 @@ function FreeCourses(props) {
     getFreeSessions();
   }, []);
   const todayDate = new Date()
-  arr = arr?.filter((item) => item.isFree && new Date(item.from)-todayDate >=0  )
+  arr = arr?.filter((item) => item.isFree && new Date(item.from) - todayDate >= 0)
   console.log(arr)
 
   return (

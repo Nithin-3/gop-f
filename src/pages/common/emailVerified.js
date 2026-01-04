@@ -11,8 +11,8 @@ const EmailVerified = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const path = location.pathname;
-    const value = path.split("/")[1]; // optional if needed
+
+
 
     const profile = JSON.parse(localStorage.getItem("profile"));
     if (profile && profile.role) {

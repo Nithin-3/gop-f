@@ -9,7 +9,7 @@ var FormData = require("form-data");
 const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }) => {
   const dispatch = useDispatch();
   const courseImgInput = useRef();
-  const [imgUrl, setImageUrl] = useState("");
+  const [imgUrl, setImgUrl] = useState("");
   const [formValues, setFormValues] = useState({
     title: "",
     courseImage: "",
@@ -22,32 +22,6 @@ const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }
     description: "",
   });
   const [programs, setPrograms] = useState([]);
-
-  const setProgramsInput = () => {
-    if (!formValues.language || !formValues.course) return;
-    const progs = languages[formValues.language][formValues.course];
-    setPrograms(progs);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "course" || name === "language") {
-      setProgramsInput();
-    }
-  };
-
-  const handleFileInput = (e) => {
-    if (e.target.files.length > 0) {
-      setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.files[0] }));
-      setImageUrl(URL.createObjectURL(e.target.files[0]));
-    }
-  };
-
-  const imageClick = () => {
-    if (modalType === "Edit") courseImgInput.current.click();
-  };
 
   useEffect(() => {
     if (!courseData) return;
@@ -62,9 +36,30 @@ const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }
       price2: courseData.price2?.data || "",
       description: courseData.description?.data || "",
     });
-    setImageUrl(courseData.courseImage?.data || "");
+    setImgUrl(courseData.courseImage?.data || "");
     setPrograms(languages[courseData.language?.data]?.[courseData.course?.data] || []);
   }, [courseData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "language" || name === "course") {
+      setPrograms(languages[name === "language" ? value : formValues.language]?.[name === "course" ? value : formValues.course] || []);
+      setFormValues((prev) => ({ ...prev, program: "" }));
+    }
+  };
+
+  const handleFileInput = (e) => {
+    if (e.target.files.length) {
+      setFormValues((prev) => ({ ...prev, courseImage: e.target.files[0] }));
+      setImgUrl(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const imageClick = () => {
+    if (modalType === "Edit") courseImgInput.current.click();
+  };
 
   const handleSubmit = async () => {
     const { title, course, language, program, price, description, courseImage, price1, price2 } = formValues;
@@ -96,8 +91,8 @@ const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }
       } else {
         toast.error("Failed to update");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to update");
     }
   };
@@ -109,44 +104,33 @@ const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }
           {activeTab}
           <i className={`${styles.closeBtn} fas fa-close`} onClick={() => setModal(false)}></i>
         </h3>
+
         <form>
           <div className={styles.course}>
-            <img src={imgUrl} className={styles.coverImg} alt="coverImg" onClick={imageClick} />
-            <input
-              type="file"
-              name="courseImage"
-              className={styles.courseImgInput}
-              ref={courseImgInput}
-              onChange={handleFileInput}
-              style={{ display: "none" }}
-            />
+            <img src={imgUrl} alt="coverImg" className={styles.coverImg} onClick={imageClick} />
+            <input type="file" name="courseImage" ref={courseImgInput} style={{ display: "none" }} onChange={handleFileInput} />
             <div className={styles.courseDetails}>
               <div>
                 <h4>Language:</h4>
-                <select name="language" onChange={handleChange} disabled={modalType === "View"}>
+                <select name="language" value={formValues.language} onChange={handleChange} disabled={modalType === "View"}>
                   {Object.keys(languages).map((lang) => (
-                    <option key={lang} value={lang} selected={formValues.language === lang}>
-                      {lang}
-                    </option>
+                    <option key={lang} value={lang}>{lang}</option>
                   ))}
                 </select>
               </div>
               <div>
                 <h4>Course:</h4>
-                <select name="course" onChange={handleChange} disabled={modalType === "View"}>
-                  <option value="Academics" selected={formValues.course === "Academics"}>Academics</option>
-                  <option value="Spoken Languages" selected={formValues.course === "Spoken Languages"}>Spoken Languages</option>
-                  <option value="Test Preparation" selected={formValues.course === "Test Preparation"}>Test Preparation</option>
+                <select name="course" value={formValues.course} onChange={handleChange} disabled={modalType === "View"}>
+                  {["Academics","Spoken Languages","Test Preparation"].map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
                 <h4>Program:</h4>
-                <select name="program" onChange={handleChange} disabled={modalType === "View"}>
-                  {programs.map((prog) => (
-                    <option key={prog} value={prog} selected={formValues.program === prog}>{prog}</option>
-                  ))}
+                <select name="program" value={formValues.program} onChange={handleChange} disabled={modalType === "View"}>
+                  {programs.map((prog) => <option key={prog} value={prog}>{prog}</option>)}
                 </select>
               </div>
+
               {activeTab === "Courses" && (
                 <>
                   <div>
@@ -165,26 +149,11 @@ const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }
               )}
             </div>
           </div>
-          <input
-            type="text"
-            name="title"
-            value={formValues.title}
-            onChange={handleChange}
-            disabled={modalType === "View"}
-            className={styles.courseName}
-            placeholder="Title"
-            style={{ padding: "10px", width: "100%", textAlign: "center" }}
-          />
-          <textarea
-            name="description"
-            value={formValues.description}
-            onChange={handleChange}
-            disabled={modalType === "View"}
-            className={styles.courseDesc}
-            placeholder="Description"
-            style={{ padding: "10px", width: "100%" }}
-          ></textarea>
+
+          <input type="text" name="title" value={formValues.title} onChange={handleChange} disabled={modalType === "View"} className={styles.courseName} placeholder="Title" />
+          <textarea name="description" value={formValues.description} onChange={handleChange} disabled={modalType === "View"} className={styles.courseDesc} placeholder="Description"></textarea>
         </form>
+
         {modalType === "Edit" && (
           <div className={styles.submitButtonContainer}>
             <button onClick={handleSubmit}>Submit</button>

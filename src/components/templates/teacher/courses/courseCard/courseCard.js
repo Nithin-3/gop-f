@@ -1,25 +1,44 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./styles.module.css";
 
-const CourseCard = (props) => {
+const CourseCard = ({
+  courseData,
+  activeTab,
+  setSelectedCourse,
+  openViewCourse,
+  setViewCourseType,
+  setShowConfirmationModal,
+}) => {
   const [showOtherOptions, setShowOtherOptions] = useState(false);
-  const otherOptions = useRef();
+  const otherOptionsRef = useRef();
 
   useEffect(() => {
-    const handleClick = (e) => {
-      if (otherOptions.current && !otherOptions.current.contains(e.target)) {
+    const handleClickOutside = (e) => {
+      if (otherOptionsRef.current && !otherOptionsRef.current.contains(e.target)) {
         setShowOtherOptions(false);
       }
     };
-    window.addEventListener("mousedown", handleClick);
-    return () => window.removeEventListener("mousedown", handleClick);
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => window.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const { courseData, activeTab } = props;
+  const handleAction = (type) => {
+    setSelectedCourse(courseData);
+    if (type === "View" || type === "Edit") {
+      openViewCourse(true);
+      setViewCourseType(type);
+    } else if (type === "Delete") {
+      setShowConfirmationModal(true);
+    }
+    setShowOtherOptions(false);
+  };
+
+  const isVerified = courseData.isVerified;
 
   return (
     <div className={styles.courseCard}>
       <div className={styles.content}>
+        {/* Course Image */}
         <img
           className={styles.flag}
           src={courseData.courseImage.data}
@@ -27,122 +46,88 @@ const CourseCard = (props) => {
           style={{ borderRadius: "50%", border: "3px solid grey" }}
         />
 
+        {/* Course Details */}
         <div className={styles.courseName}>
           <h3>{courseData.title.data}</h3>
           <p className={styles.courseDescDesktop}>{courseData.description.data}</p>
 
-          <div className={styles.courseStatusPhone}>
-            {activeTab === "Courses" && (
-              <>
-                <h3>Status:</h3>
-                <p>
-                  {courseData.isVerified ? (
-                    <>
-                      Verified <i className="fa-solid fa-circle-check"></i>
-                    </>
-                  ) : (
-                    <>Not Verified</>
-                  )}
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.courseStatus}>
           {activeTab === "Courses" && (
-            <>
+            <div className={styles.courseStatusPhone}>
               <h3>Status:</h3>
               <p>
-                {courseData.isVerified ? (
+                {isVerified ? (
                   <>
-                    Verified
-                    <i className="fa-solid fa-circle-check" style={{ marginLeft: "10px" }}></i>
+                    Verified <i className="fa-solid fa-circle-check"></i>
                   </>
                 ) : (
                   <>Not Verified</>
                 )}
               </p>
-            </>
+            </div>
           )}
         </div>
+
+        {activeTab === "Courses" && (
+          <div className={styles.courseStatus}>
+            <h3>Status:</h3>
+            <p>
+              {isVerified ? (
+                <>
+                  Verified <i className="fa-solid fa-circle-check" style={{ marginLeft: "10px" }}></i>
+                </>
+              ) : (
+                <>Not Verified</>
+              )}
+            </p>
+          </div>
+        )}
 
         <div className={styles.courseDescPhone}>
           <h3>Course Description:</h3>
           <p>{courseData.description.data}</p>
         </div>
 
-        <div className={styles.moreOptions} ref={otherOptions}>
+        {/* More Options Dropdown */}
+        <div className={styles.moreOptions} ref={otherOptionsRef}>
           <i
             className={`${styles.moreOptionsIcon} fas fa-ellipsis-h`}
-            onClick={() => setShowOtherOptions(true)}
+            onClick={() => setShowOtherOptions((prev) => !prev)}
           ></i>
           <ul className={`${styles.otherOptions} ${showOtherOptions ? styles.showOptions : ""}`}>
-            <li
-              onClick={() => {
-                props.setSelectedCourse(courseData);
-                props.openViewCourse(true);
-                props.setViewCourseType("View");
-              }}
-            >
-              <span>View</span> <i className="fas fa-eye"></i>
-            </li>
-            <li
-              onClick={() => {
-                props.setSelectedCourse(courseData);
-                props.openViewCourse(true);
-                props.setViewCourseType("Edit");
-              }}
-            >
-              <span>Edit</span> <i className="fas fa-pencil"></i>
-            </li>
-            <li
-              onClick={() => {
-                props.setSelectedCourse(courseData);
-                props.setShowConfirmationModal(true);
-              }}
-            >
-              <span>Delete</span> <i className="fas fa-trash"></i>
-            </li>
+            {["View", "Edit", "Delete"].map((action) => (
+              <li key={action} onClick={() => handleAction(action)}>
+                <span>{action}</span>{" "}
+                <i
+                  className={
+                    action === "View"
+                      ? "fas fa-eye"
+                      : action === "Edit"
+                      ? "fas fa-pencil"
+                      : "fas fa-trash"
+                  }
+                ></i>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
 
+      {/* Buttons for Desktop */}
       <div className={styles.menuBtns}>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            props.setSelectedCourse(courseData);
-            props.openViewCourse(true);
-            props.setViewCourseType("View");
-          }}
-        >
-          <div>View</div>
-          <i className="fas fa-eye"></i>
-        </button>
-
-        <button
-          className={styles.btn}
-          onClick={() => {
-            props.setSelectedCourse(courseData);
-            props.openViewCourse(true);
-            props.setViewCourseType("Edit");
-          }}
-        >
-          <div>Edit</div>
-          <i className="fas fa-pencil"></i>
-        </button>
-
-        <button
-          className={styles.btn}
-          onClick={() => {
-            props.setSelectedCourse(courseData);
-            props.setShowConfirmationModal(true);
-          }}
-        >
-          <div>Delete</div>
-          <i className="fas fa-trash"></i>
-        </button>
+        {["View", "Edit", "Delete"].map((action) => (
+          <button key={action} className={styles.btn} onClick={() => handleAction(action)}>
+            <div>{action}</div>
+            <i
+              className={
+                action === "View"
+                  ? "fas fa-eye"
+                  : action === "Edit"
+                  ? "fas fa-pencil"
+                  : "fas fa-trash"
+              }
+            ></i>
+          </button>
+        ))}
       </div>
     </div>
   );

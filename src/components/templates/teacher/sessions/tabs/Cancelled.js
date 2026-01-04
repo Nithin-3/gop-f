@@ -4,6 +4,7 @@ import { Card, CardMobile } from "../commonUtils";
 
 function Cancelled(props) {
   let { width, arr } = props;
+  if (!Array.isArray(arr)) arr = [];
 
   //   const arr = [
   //     {
@@ -46,7 +47,7 @@ function Cancelled(props) {
   //       desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
   //     },
   //   ];
-  arr = arr?.filter((item) => item.status === "Cancelled" )
+  arr = arr?.filter((item) => item.status === "Cancelled")
   console.log(arr)
 
   return (
@@ -54,8 +55,8 @@ function Cancelled(props) {
       {width >= 992 ? (
         <div style={{ marginTop: "50px" }}>
           {arr && arr.length > 0 ? (
-            arr.map((item, index) => ( <Card width={width} cardInfo={item} />
-          ))) : (
+            arr.map((item, index) => (<Card width={width} cardInfo={item} />
+            ))) : (
             <div style={{ textAlign: "center" }}>No Cancelled Sessions</div>
           )}
         </div>

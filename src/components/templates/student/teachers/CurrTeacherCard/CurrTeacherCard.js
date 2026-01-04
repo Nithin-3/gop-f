@@ -13,6 +13,8 @@ const CurrTeacherCard = ({ tinfo }) => {
   const dispatch = useDispatch();
   const { width } = useWindowDimensions();
 
+
+
   const openMessage = async () => {
     const userProfile = JSON.parse(window.localStorage.getItem("profile"));
 
@@ -49,6 +51,8 @@ const CurrTeacherCard = ({ tinfo }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if (!tinfo) return null; // Safe guard against missing prop
 
   const CardContent = () => (
     <>

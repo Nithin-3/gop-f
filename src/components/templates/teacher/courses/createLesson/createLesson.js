@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import styles from "./styles.module.css";
 import UploadMaterial from "./uploadMaterial";
 
-const CreateLesson = (props) => {
-  const materialOptions = useRef();
+const CreateLesson = ({ showModal, setModal, modalType }) => {
+  const materialOptionsRef = useRef();
   const [materialType, setMaterialType] = useState("Link");
   const [showMaterialModal, setShowMaterialModal] = useState(false);
 
   const handleClickOutside = (e) => {
-    if (materialOptions.current && !materialOptions.current.contains(e.target)) {
-      materialOptions.current.style.display = "none";
+    if (materialOptionsRef.current && !materialOptionsRef.current.contains(e.target)) {
+      materialOptionsRef.current.style.display = "none";
     }
   };
 
@@ -18,39 +18,53 @@ const CreateLesson = (props) => {
     return () => window.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return props.showModal ? (
+  if (!showModal) return null;
+
+  return (
     <>
       <div className={styles.modalBackdrop}>
         <div className={styles.modal}>
-          {/* Header */}
           <i
             className={`${styles.closeBtn} fas fa-close`}
-            onClick={() => props.setModal(false)}
+            onClick={() => setModal(false)}
           ></i>
-          <h3 className={styles.heading}>Create {props.modalType}</h3>
+          <h3 className={styles.heading}>Create {modalType}</h3>
 
-          {/* Body */}
-          <textarea placeholder="Course Description"></textarea>
-          {props.modalType === "Lesson" && (
-            <input type="text" placeholder="Course Level" />
+          <textarea
+            placeholder="Course Description"
+            className={styles.textarea}
+          ></textarea>
+
+          {modalType === "Lesson" && (
+            <input
+              type="text"
+              placeholder="Course Level"
+              className={styles.input}
+            />
           )}
 
           <div className={styles.chooseFiles}>
-            <button>
+            <label className={styles.fileUploadBtn}>
               Cover Image <i className="fas fa-upload"></i>
-              <input type="file" />
-            </button>
-            <button
-              onClick={() => {
-                if (materialOptions.current) materialOptions.current.style.display = "block";
-              }}
-            >
-              Add Material <i className="fas fa-add"></i>
-              <ul className={styles.materialOptions} ref={materialOptions}>
+              <input type="file" style={{ display: "none" }} />
+            </label>
+
+            <div className={styles.addMaterialWrapper}>
+              <button
+                type="button"
+                className={styles.addMaterialBtn}
+                onClick={() => {
+                  if (materialOptionsRef.current) materialOptionsRef.current.style.display = "block";
+                }}
+              >
+                Add Material <i className="fas fa-plus"></i>
+              </button>
+              <ul className={styles.materialOptions} ref={materialOptionsRef}>
                 <li
                   onClick={() => {
                     setMaterialType("Link");
                     setShowMaterialModal(true);
+                    materialOptionsRef.current.style.display = "none";
                   }}
                 >
                   Link
@@ -59,12 +73,13 @@ const CreateLesson = (props) => {
                   onClick={() => {
                     setMaterialType("File");
                     setShowMaterialModal(true);
+                    materialOptionsRef.current.style.display = "none";
                   }}
                 >
                   File
                 </li>
               </ul>
-            </button>
+            </div>
           </div>
 
           <button className={styles.submitButton}>
@@ -79,7 +94,7 @@ const CreateLesson = (props) => {
         setShowMaterialModal={setShowMaterialModal}
       />
     </>
-  ) : null;
+  );
 };
 
 export default CreateLesson;

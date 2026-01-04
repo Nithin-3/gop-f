@@ -38,9 +38,9 @@ const AdminCourses = () => {
         if (loader) loader.style.display = "none";
 
         if (result?.status === 200) {
-          setAllCourses(result.data.data);
+          setAllCourses(result?.data?.data || []);
           if (!selectedCourse) {
-            setSelectedCourse(result.data.data[0] || null);
+            setSelectedCourse(result?.data?.data?.[0] || null);
           }
         } else {
           setAllCourses([]);

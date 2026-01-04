@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.css";
 
 const TeacherRow = ({
@@ -10,34 +10,25 @@ const TeacherRow = ({
   setSelectedCourse,
   setSelectedTeacher,
 }) => {
-  useEffect(() => {
-    // Effect runs when selectedCourse or selectedTeacher changes
-  }, [selectedCourse, selectedTeacher]);
-
   const isSelected =
-    (selectedCourse && selectedCourse.id === course.id) ||
-    (selectedTeacher && selectedTeacher.id === teacher.id);
+    (verificationType === "Course" && selectedCourse?.id === course.id) ||
+    (verificationType === "Teacher" && selectedTeacher?.id === teacher.id);
+
+  const handleClick = () => {
+    verificationType === "Course" ? setSelectedCourse(course) : setSelectedTeacher(teacher);
+  };
 
   return (
-    <tr
-      className={isSelected ? styles.selectedRow : ""}
-      onClick={() => {
-        verificationType === "Course"
-          ? setSelectedCourse(course)
-          : setSelectedTeacher(teacher);
-      }}
-    >
+    <tr className={isSelected ? styles.selectedRow : ""} onClick={handleClick}>
       <td className={styles.col1}>
-        {verificationType === "Teacher" ? (
-          <i
-            className={
-              "fas fa-circle " +
-              (teacher.approvalStatus === "verified" ? styles.verified : "")
-            }
-          ></i>
-        ) : (
-          <i className={"fas fa-circle " + (course.isVerified ? styles.verified : "")}></i>
-        )}
+        <i
+          className={
+            "fas fa-circle " +
+            (verificationType === "Teacher"
+              ? teacher.approvalStatus === "verified" && styles.verified
+              : course.isVerified && styles.verified)
+          }
+        ></i>
       </td>
 
       <td className={styles.col2}>
@@ -47,7 +38,7 @@ const TeacherRow = ({
             <p>{teacher.firstName.data}</p>
           </>
         ) : (
-          <>{course.title.data}</>
+          course.title.data
         )}
       </td>
 
@@ -61,7 +52,7 @@ const TeacherRow = ({
             <i className="fab fa-youtube"></i>
           </a>
         ) : (
-          <>{course.language.data}</>
+          course.language.data
         )}
       </td>
 
@@ -76,14 +67,12 @@ const TeacherRow = ({
             </a>
           </>
         ) : (
-          <>$ {course.price.data}</>
+          `$ ${course.price.data}`
         )}
       </td>
 
       <td className={styles.col6}>
-        {verificationType === "Teacher"
-          ? teacher.region.fromCountry.data
-          : new Date().toDateString()}
+        {verificationType === "Teacher" ? teacher.region.fromCountry.data : new Date().toDateString()}
       </td>
     </tr>
   );

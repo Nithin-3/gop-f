@@ -359,6 +359,56 @@ input[type="number"] {
   color: #fff;
 }
 
+.myEarnings {
+  width: 100%;
+}
+.secondRowHeadings {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.earningsRow {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #359DD6;
+  background-color: #9ECDE6;
+}
+.earningsBlock {
+  width: 50%;
+  border-right: 1px solid #359DD6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  color: black;
+}
+.earningsBlock:last-child {
+  border-right: none;
+}
+.earningsTitle {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+.earningsValue {
+  text-align: center;
+}
+.withdrawSection {
+  background-color: #FC879E;
+  border-radius: 0 0 20px 20px;
+  text-align: center;
+  padding: 10px 0;
+}
+.withdrawBtn {
+  display: inline-block;
+  background-color: #359DD6;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 20px;
+  cursor: pointer;
+}
+
+
+
 @media only screen and (max-width: 992px){
   .mainSection{
     padding-left: 0;

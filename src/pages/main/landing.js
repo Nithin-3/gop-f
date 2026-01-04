@@ -10,8 +10,8 @@ import Footer from './../../landing/components/Footer'
 
 const Landing = props => {
 	React.useEffect(() => {
-		var $zoho = $zoho || {};
-		$zoho.salesiq = $zoho.salesiq || {
+		window.$zoho = window.$zoho || {};
+		window.$zoho.salesiq = window.$zoho.salesiq || {
 			widgetcode:
 				"e1a813777c016ef97a4922aa83d278ccebde3865c51db470b1f5c24462a201d33f8ead544833d0f81a0616d8118b5110",
 			values: {},

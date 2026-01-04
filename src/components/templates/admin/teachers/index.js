@@ -34,9 +34,9 @@ const AdminTeachers = () => {
       console.log(result)
       // Hide Loader
       document.getElementById('loader').style.display = 'none'
-      if (result.status === 200) {
-        setAllTeachers(result.data.data);
-        setSelectedTeacher(result.data.data[0]);
+      if (result?.status === 200) {
+        setAllTeachers(result?.data?.data || []);
+        setSelectedTeacher(result?.data?.data?.[0]);
       }
       else {
         setAllTeachers(null);

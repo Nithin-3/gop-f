@@ -7,38 +7,31 @@ import { getMyCourses } from '../../../../../store/actions/course';
 
 const CreateModal = ({ setCreateModal, width, setApiCall }) => {
   const dispatch = useDispatch();
-
-  const [formData, setFormData] = useState({
-    couponCode: '',
-    validTill: '',
-    discountAmt: '',
-  });
+  const [formData, setFormData] = useState({ couponCode: '', validTill: '', discountAmt: '' });
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    async function fetchCourses() {
+    const fetchCourses = async () => {
       try {
         const result = await dispatch(getMyCourses());
-        if (result.data) setCourses(result.data);
+        if (result?.data) setCourses(result.data);
       } catch (err) {
         console.error(err);
       }
-    }
+    };
     fetchCourses();
   }, [dispatch]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = { ...formData, courses: selectedCourses };
-
     try {
       const result = await dispatch(addCouponSlot(data));
       if (result.status) toast.success(result.msg);
       else toast.error(result.msg);
-
       setFormData({ couponCode: '', validTill: '', discountAmt: '' });
+      setSelectedCourses([]);
       setCreateModal(false);
       setApiCall(false);
     } catch (err) {
@@ -48,10 +41,9 @@ const CreateModal = ({ setCreateModal, width, setApiCall }) => {
   };
 
   const handleCheckboxChange = (checked, courseId) => {
-    setSelectedCourses(prev => {
-      if (checked) return [...prev, courseId];
-      return prev.filter(id => id !== courseId);
-    });
+    setSelectedCourses(prev =>
+      checked ? [...prev, courseId] : prev.filter(id => id !== courseId)
+    );
   };
 
   return (
@@ -99,7 +91,6 @@ const CreateModal = ({ setCreateModal, width, setApiCall }) => {
               <div key={course.id}>
                 <input
                   type='checkbox'
-                  className='mr-2 mt-1 accent-purple-500'
                   checked={selectedCourses.includes(course.id)}
                   onChange={e => handleCheckboxChange(e.target.checked, course.id)}
                   id={`course-${course.id}`}
@@ -109,7 +100,7 @@ const CreateModal = ({ setCreateModal, width, setApiCall }) => {
             ))}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '10px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
             <div
               onClick={() => setCreateModal(false)}
               style={{

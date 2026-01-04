@@ -8,6 +8,7 @@ import { Card, CardMobile } from '../commonUtils';
 function Incompleted(props) {
 
     let { width, arr } = props;
+    if (!Array.isArray(arr)) arr = [];
 
     const [rescheduleModal, setRescheduleModal] = React.useState(false);
     const [addLessonModal, setAddlessonModal] = React.useState(false);

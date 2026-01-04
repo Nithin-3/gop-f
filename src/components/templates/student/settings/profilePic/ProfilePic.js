@@ -1,134 +1,72 @@
-import React from 'react';
-import styles from './styles.module.css';
-import commonStyles from '../styles.module.css';
+import React from "react";
+import styles from "./styles.module.css";
+import commonStyles from "../styles.module.css";
 import { toast } from "react-toastify";
-import professor from '../../../../../assets/icons/professor_icon.svg';
-import { useDispatch } from 'react-redux';
-import { updateStudentProfile } from '../../../../../store/actions/student';
-let FormData = require("form-data")
+import professor from "../../../../../assets/icons/professor_icon.svg";
+import { useDispatch } from "react-redux";
+import { updateStudentProfile } from "../../../../../store/actions/student";
 
-function ProfilePic(props) {
-  const [imgUrl, setImageUrl] = React.useState('');
-  const [formValues, setFormValues] = React.useState({
-    profilePic: professor,
-  });
-  const dispatch = useDispatch()
+const ProfilePic = ({ myDetails }) => {
+  const dispatch = useDispatch();
+  const [preview, setPreview] = React.useState(professor);
+  const [file, setFile] = React.useState(null);
 
-  const handleFileInput = (e) => {
-    if (e.target.files.length > 0) {
+  React.useEffect(() => {
+    if (myDetails?.profilePic) setPreview(myDetails.profilePic);
+  }, [myDetails]);
 
-      var fileName = e.target.files[0].name;
-      var ext = fileName.split('.').pop();
-      if (ext === "png" || ext === "jpg" || ext === "jpeg") {
-        setFormValues({ ...formValues, [e.target.name]: e.target.files[0] })
-        console.log(e.target.files[0]);
-      }
-      else {
-        toast.error('Image Type not supported');
-      }
-      setImageUrl(URL.createObjectURL(e.target.files[0]));
+  const handleFileInput = e => {
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+    const ext = selected.name.split(".").pop().toLowerCase();
+    if (!["png", "jpg", "jpeg"].includes(ext)) {
+      toast.error("Image type not supported");
+      return;
     }
+    setFile(selected);
+    setPreview(URL.createObjectURL(selected));
   };
 
   const handleSubmit = async () => {
-    if (formValues.profilePic === "") {
-      toast.warn("All Fields are mandatory.");
+    if (!file) {
+      toast.warn("Please upload an image");
       return;
     }
-
-    let form = new FormData();
+    const form = new FormData();
     form.append("type", "profilePic");
-    form.append("studentId", props.myDetails.id);
-    form.append("profilePic", formValues.profilePic);
+    form.append("studentId", myDetails.id);
+    form.append("profilePic", file);
     try {
-      const res = await dispatch(updateStudentProfile(form))
-      toast.success('Profile Pic Uploaded');
-      console.log(res)
-    } catch (error) {
-      console.log(error)
+      const res = await dispatch(updateStudentProfile(form));
+      res?.status ? toast.success("Profile Pic Uploaded") : toast.error("Upload failed");
+    } catch {
+      toast.error("Upload failed");
     }
-  }
-  console.log(imgUrl)
-  React.useEffect(() => {
-    setFormValues({
-      profilePic: props.myDetails ? props.myDetails?.profilePic?.data: "",
-    });
-    setImageUrl(props.myDetails.profilePic);
-  }, [props.myDetails]);
+  };
 
   return (
     <>
       <div className={styles.title}>Profile Pic</div>
       <div className={styles.profilePicContainer}>
-        <img src={imgUrl ? typeof imgUrl === "object" ? imgUrl.data : imgUrl : professor} alt='' />
-        <button style={{cursor: "pointer"}}>
-          Upload &nbsp; <i className='fas fa-upload'></i>
-          <input
-            type='file'
-            name='profilePic'
-            onChange={e => {
-              handleFileInput(e);
-            }}
-          />
+        <img src={preview} alt="profile" />
+        <button style={{ cursor: "pointer" }}>
+          Upload &nbsp;<i className="fas fa-upload"></i>
+          <input type="file" accept="image/*" onChange={handleFileInput} />
         </button>
       </div>
-      <div>
-        <div className={styles.guidelines}>
-          <p>Guidelines</p>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '10px',
-            }}
-          >
-            <div>
-              <i style={{ color: 'green' }} class='fas fa-check-circle'></i>
-            </div>
-            <div>
-              Make a strong first impression with a good profile picture
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '10px',
-            }}
-          >
-            <div>
-              <i style={{ color: 'green' }} class='fas fa-check-circle'></i>
-            </div>
-            <div>
-              Make sure your picture is clear, professional, and personal
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '10px',
-            }}
-          >
-            <div>
-              <i style={{ color: 'red' }} class='fas fa-times-circle'></i>
-            </div>
-            <div>Do not impersonate others</div>
-          </div>
-        </div>
+
+      <div className={styles.guidelines}>
+        <p>Guidelines</p>
+        <div><i className="fas fa-check-circle" style={{ color: "green" }} /> Make a strong first impression</div>
+        <div><i className="fas fa-check-circle" style={{ color: "green" }} /> Use a clear and professional photo</div>
+        <div><i className="fas fa-times-circle" style={{ color: "red" }} /> Do not impersonate others</div>
       </div>
+
       <div className={commonStyles.submitButtonContainer}>
-        <button
-          className={commonStyles.submitButton}
-          onClick={() => {
-              handleSubmit();
-          }}
-        >
-          Submit
-        </button>
+        <button className={commonStyles.submitButton} onClick={handleSubmit}>Submit</button>
       </div>
     </>
   );
-}
+};
 
 export default ProfilePic;

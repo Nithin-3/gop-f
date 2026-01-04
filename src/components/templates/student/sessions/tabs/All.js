@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import RescheduleModal from '../modals/RescheduleModal';
 import IssueModal from '../modals/IssueModal';
@@ -6,88 +6,45 @@ import HomeworkModal from '../modals/HomeworkModal';
 
 import { Card, CardMobile } from '../commonUtils';
 
-function All(props) {
+const All = ({ width, arr = [] }) => {
+  // Modal states
+  const [modals, setModals] = useState({
+    reschedule: false,
+    issue: false,
+    homework: false,
+  });
 
-    const { width, arr } = props;
+  // Dropdown actions
+  const dropDownArr = [
+    { text: "Request to Reschedule", modal: (val) => setModals({ ...modals, reschedule: val }) },
+    // Add other actions if needed:
+    // { text: "Report Issue", modal: (val) => setModals({ ...modals, issue: val }) },
+    // { text: "Complete HW", modal: (val) => setModals({ ...modals, homework: val }) },
+  ];
 
-    const [rescheduleModal, setRescheduleModal] = React.useState(false);
-    const [issueModal, setIssueModal] = React.useState(false);
-    const [homeworkModal, setHomeworkModal] = React.useState(false);
+  return (
+    <>
+      {/* Modals */}
+      {modals.reschedule && <RescheduleModal setRescheduleModal={(val) => setModals({ ...modals, reschedule: val })} width={width} />}
+      {modals.issue && <IssueModal setIssueModal={(val) => setModals({ ...modals, issue: val })} width={width} />}
+      {modals.homework && <HomeworkModal setHomeworkModal={(val) => setModals({ ...modals, homework: val })} width={width} />}
 
-    console.log("aaa", arr);
-
-    // const arr = [
-    //     { heading: 'Upcoming', time: '8:00 AM', date: 'Tuesday - 7 September, 2021', lang: 'English', duration: '1 hour' },
-    //     { heading: 'Trial', time: '8:00 AM', date: 'Tuesday - 7 September, 2021', lang: 'English', duration: '1 hour' },
-    //     { heading: 'Completed', time: '8:00 AM', date: 'Tuesday - 7 September, 2021', lang: 'English', duration: '1 hour' },
-    // ]
-
-    const arrMobile = [
-        { heading: 'Upcoming', time: '8:00 PM', date: 'Tuesday - September 14, 2021', ago: '2 months ago', lang: 'Turkish', duration: '60 - Minute Lesson', teacher: 'Seray - Venkat', sessionName: 'Conversational Turkish 1', desc: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen." },
-        { heading: 'Trial', time: '8:00 PM', date: 'Tuesday - September 14, 2021', ago: '2 months ago', lang: 'Turkish', duration: '60 - Minute Lesson', teacher: 'Seray - Venkat', sessionName: 'Conversational Turkish 1', desc: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen." },
-        { heading: 'Completed', time: '8:00 PM', date: 'Tuesday - September 14, 2021', ago: '2 months ago', lang: 'Turkish', duration: '60 - Minute Lesson', teacher: 'Seray - Venkat', sessionName: 'Conversational Turkish 1', desc: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen." }
-    ]
-
-    const dropDownArr = [
-        { text: "Request to Reschedule", modal: setRescheduleModal },
-      ];
-
-    return (
-        <>
-            {/* Schedule Modal */}
-            {rescheduleModal ?
-                <RescheduleModal setRescheduleModal={setRescheduleModal} width={width} />
-                :
-                <></>
-            }
-
-            {/* Issue Modal */}
-            {issueModal ?
-                <IssueModal setIssueModal={setIssueModal} width={width} />
-                :
-                <></>
-            }
-
-            {/* Homework Modal */}
-            {homeworkModal ?
-                <HomeworkModal setHomeworkModal={setHomeworkModal} width={width} />
-                :
-                <></>
-            }
-
-            {width >= 992 ?
-                <div style={{ marginTop: '50px' }}>
-                    {arr?.length !== 0 ?
-                        arr?.map((item, index) => (
-                            <Card
-                                width={width}
-                                key={index}
-                                cardInfo={item}
-                                dropDown={dropDownArr}
-                            />
-                        ))
-                        :
-                        <div style={{ textAlign: 'center' }}>No Sessions</div>
-                    }
-                </div>
-                :
-                <div style={{ marginTop: '30px' }}>
-                    {arr?.length !== 0 ?
-                        arr?.map((item, index) => (
-                            <CardMobile
-                                width={width}
-                                key={index}
-                                cardInfo={item}
-                                dropDown={dropDownArr}
-                            />
-                        ))
-                        :
-                        <div style={{ textAlign: 'center' }}>No Sessions</div>
-                    }
-                </div>
-            }
-        </>
-    )
-}
+      {/* Sessions */}
+      <div style={{ marginTop: width >= 992 ? '50px' : '30px' }}>
+        {arr.length > 0 ? (
+          arr.map((item, index) =>
+            width >= 992 ? (
+              <Card key={index} width={width} cardInfo={item} dropDown={dropDownArr} />
+            ) : (
+              <CardMobile key={index} width={width} cardInfo={item} dropDown={dropDownArr} />
+            )
+          )
+        ) : (
+          <div style={{ textAlign: 'center' }}>No Sessions</div>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default All;

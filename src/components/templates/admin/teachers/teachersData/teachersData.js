@@ -29,7 +29,7 @@ const TeachersData = (props) => {
 
   React.useEffect(() => {
     if (props.verificationType === "Teacher") {
-       console.log(props.selectedTeacher)
+      console.log(props.selectedTeacher)
       setFormValues(props.selectedTeacher);
       console.log(formValues)
     } else {
@@ -72,12 +72,12 @@ const TeachersData = (props) => {
     // } else
     if (e.target.name === "languageTeach" || e.target.name === "languageSpeak") {
       newForm[e.target.name][0]["is_verified"] = e.target.checked;
-   } else {
+    } else {
       newForm[e.target.name]["is_verified"] = e.target.checked;
     }
 
     setFormValues(newForm);
-   
+
   }
 
   async function handleSubmit() {
@@ -163,21 +163,21 @@ const TeachersData = (props) => {
 
             {props.verificationType === "Teacher" ? (
               <>
-              {console.log(formValues.approvalStatus === "verified" && formValues.teacherProfilePic.is_verified)}
-                <input type="checkbox" onClick={handleChange} name="teacherProfilePic" defaultChecked={formValues.teacherProfilePic.is_verified} />
-                <img src={formValues.teacherProfilePic.data} alt="" style={{ borderRadius: "50%", border: "3px solid grey" }} />
+                {console.log(formValues.approvalStatus === "verified" && formValues.teacherProfilePic.is_verified)}
+                <input type="checkbox" onClick={handleChange} name="teacherProfilePic" defaultChecked={formValues?.teacherProfilePic?.is_verified} />
+                <img src={formValues?.teacherProfilePic?.data} alt="" style={{ borderRadius: "50%", border: "3px solid grey" }} />
                 &nbsp;
                 &nbsp;
-                <button title="Delete User" style={{ cursor: "pointer" }} type="button" onClick={() => deleteUser(formValues.userId._id)}>
+                <button title="Delete User" style={{ cursor: "pointer" }} type="button" onClick={() => deleteUser(formValues?.userId?._id)}>
                   <i className="fa fa-trash"></i>
                 </button>
               </>
             ) : (
               //Course
               <>
-                <input type="checkbox" onClick={handleChange} name="courseImage" defaultChecked={formValues.courseImage.is_verified} />
+                <input type="checkbox" onClick={handleChange} name="courseImage" defaultChecked={formValues?.courseImage?.is_verified} />
 
-                <img src={formValues.courseImage.data} style={{ objectFit: 'contain' }} alt="course_img" />
+                <img src={formValues?.courseImage?.data} style={{ objectFit: 'contain' }} alt="course_img" />
               </>
             )}
           </div>
@@ -187,48 +187,48 @@ const TeachersData = (props) => {
               // ---------------Teacher----------------
               <>
                 <div>
-                  <input type="checkbox" onChange={handleChange} name="firstName" defaultChecked={formValues.firstName.is_verified} />
+                  <input type="checkbox" onChange={handleChange} name="firstName" defaultChecked={formValues?.firstName?.is_verified} />
                   <span className={styles.detailHeading}>Name</span>
-                  <span>{formValues.firstName.data}</span>
+                  <span>{formValues?.firstName?.data}</span>
                 </div>
                 <div>
-                  <input type="checkbox" onClick={handleChange} name="teacherType" defaultChecked={formValues.teacherType.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="teacherType" defaultChecked={formValues?.teacherType?.is_verified} />
                   <span className={styles.detailHeading}>Teacher Type</span>
-                  <span>{formValues.teacherType.data}</span>
+                  <span>{formValues?.teacherType?.data}</span>
                 </div>
                 <div>
-                  <input type="checkbox" onClick={handleChange} name="videoURL" defaultChecked={formValues.videoURL.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="videoURL" defaultChecked={formValues?.videoURL?.is_verified} />
                   <span className={styles.detailHeading}>Intro Video</span>
                   <span>
-                    <a href={formValues.videoURL.data} target="_blank" rel="noreferrer noopener">
+                    <a href={formValues?.videoURL?.data} target="_blank" rel="noreferrer noopener">
                       <i className="fab fa-youtube"></i>
                     </a>
                   </span>
                 </div>
                 <div>
-                  <input type="checkbox" onClick={handleChange} name="mobileNumber" defaultChecked={formValues.mobileNumber.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="mobileNumber" defaultChecked={formValues?.mobileNumber?.is_verified} />
                   <span className={styles.detailHeading}>Phone</span>
-                  <span>{formValues.mobileNumber.data}</span>
+                  <span>{formValues?.mobileNumber?.data}</span>
                 </div>
                 <div>
-                  <input type="checkbox" onClick={handleChange} name="motherTongue" defaultChecked={formValues.motherTongue.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="motherTongue" defaultChecked={formValues?.motherTongue?.is_verified} />
                   <span className={styles.detailHeading}>Mother Tongue</span>
-                  <span>{formValues.motherTongue.data}</span>
+                  <span>{formValues?.motherTongue?.data}</span>
                 </div>
               </>
             ) : (
               // ----------------Course--------------
               <>
                 <div>
-                  <input type="checkbox" onClick={handleChange} name="title" defaultChecked={formValues.title.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="title" defaultChecked={formValues?.title?.is_verified} />
                   <span className={styles.detailHeading}>Title</span>
-                  <span>{formValues.title.data}</span>
+                  <span>{formValues?.title?.data}</span>
                 </div>
 
                 <div>
-                  <input type="checkbox" onClick={handleChange} name="price" defaultChecked={formValues.price.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="price" defaultChecked={formValues?.price?.is_verified} />
                   <span className={styles.detailHeading}>Price</span>
-                  <span>${formValues.price.data}</span>
+                  <span>${formValues?.price?.data}</span>
                 </div>
               </>
             )}
@@ -239,42 +239,42 @@ const TeachersData = (props) => {
               // --------------Teacher-------------------------
               <>
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="gender" defaultChecked={formValues.gender.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="gender" defaultChecked={formValues?.gender?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Gender:</span>
-                  <span>{formValues.gender.data}</span>
+                  <span>{formValues?.gender?.data}</span>
                 </div>
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="dob" defaultChecked={formValues.dob.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="dob" defaultChecked={formValues?.dob?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Date of Birth:</span>
-                  <span>{new Date(formValues.dob.data).toDateString().slice(3)}</span>
+                  <span>{formValues?.dob?.data ? new Date(formValues.dob.data).toDateString().slice(3) : ""}</span>
                 </div>
-                <div className={styles.otherDetails}>
+                <div>
                   <span className={styles.otherDetailsHeading + " " + styles.otherDetailsHeadingAge}>Age:</span>
-                  <span>{getAge(formValues.dob.data)}</span>
+                  <span>{formValues?.dob?.data ? getAge(formValues.dob.data) : ""}</span>
                 </div>
                 <div className={styles.otherDetails}>
-                  
-                  <input type="checkbox" onClick={handleChange} name="fromCountry" defaultChecked={formValues.fromCountry.is_verified} />
+
+                  <input type="checkbox" onClick={handleChange} name="fromCountry" defaultChecked={formValues?.fromCountry?.is_verified} />
                   <span className={styles.otherDetailsHeading}>From Country:</span>
-                  <span>{formValues.fromCountry.data}</span>
+                  <span>{formValues?.fromCountry?.data}</span>
                 </div>
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="languageTeach" defaultChecked={formValues.languageTeach[0].is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="languageTeach" defaultChecked={formValues?.languageTeach?.[0]?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Teaches:</span>
-                  {formValues.languageTeach.length > 1 ?
+                  {formValues?.languageTeach?.length > 1 ?
                     (<span>{formValues.languageTeach.map(u => u.data).join(', ')}</span>)
                     :
-                    (<span>{formValues.languageTeach[0].data}</span>)
+                    (<span>{formValues?.languageTeach?.[0]?.data}</span>)
                   }
                 </div>
 
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="languageSpeak" defaultChecked={formValues.languageSpeak[0].is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="languageSpeak" defaultChecked={formValues?.languageSpeak?.[0]?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Also Speaks:</span>
-                  {formValues.languageSpeak.length > 1 ?
+                  {formValues?.languageSpeak?.length > 1 ?
                     (<span>{formValues.languageSpeak.map(u => u.data).join(', ')}</span>)
                     :
-                    (<span>{formValues.languageSpeak[0].data}</span>)
+                    (<span>{formValues?.languageSpeak?.[0]?.data}</span>)
                   }
                 </div>
               </>
@@ -282,19 +282,19 @@ const TeachersData = (props) => {
               // ---------------Course--------------------
               <>
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="language" defaultChecked={formValues.language.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="language" defaultChecked={formValues?.language?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Language:</span>
-                  <span>{formValues.language.data}</span>
+                  <span>{formValues?.language?.data}</span>
                 </div>
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="course" defaultChecked={formValues.course.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="course" defaultChecked={formValues?.course?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Course:</span>
-                  <span>{formValues.course.data}</span>
+                  <span>{formValues?.course?.data}</span>
                 </div>
                 <div className={styles.otherDetails}>
-                  <input type="checkbox" onClick={handleChange} name="program" defaultChecked={formValues.program.is_verified} />
+                  <input type="checkbox" onClick={handleChange} name="program" defaultChecked={formValues?.program?.is_verified} />
                   <span className={styles.otherDetailsHeading}>Program:</span>
-                  <span>{formValues.program.data}</span>
+                  <span>{formValues?.program?.data}</span>
                 </div>
               </>
             )}
@@ -350,8 +350,8 @@ const TeachersData = (props) => {
               {props.verificationType === "Teacher" ? (
                 <>
                   <div className={styles.about} ref={aboutContainer}>
-                    <input type="checkbox" onClick={handleChange} name="selfIntro" defaultChecked={formValues.selfIntro.is_verified} />
-                    <p>{formValues.selfIntro.data}</p>
+                    <input type="checkbox" onClick={handleChange} name="selfIntro" defaultChecked={formValues?.selfIntro?.is_verified} />
+                    <p>{formValues?.selfIntro?.data}</p>
                   </div>
                   <div className={styles.educations} ref={certifiedDetail}>
                     <CertifiedDetail
@@ -365,8 +365,8 @@ const TeachersData = (props) => {
                 </>
               ) : (
                 <div className={styles.about} ref={aboutContainer}>
-                  <input type="checkbox" onClick={handleChange} name="description" defaultChecked={formValues.description.is_verified} />
-                  <p>{formValues.description.data}</p>
+                  <input type="checkbox" onClick={handleChange} name="description" defaultChecked={formValues?.description?.is_verified} />
+                  <p>{formValues?.description?.data}</p>
                 </div>
               )}
             </div>

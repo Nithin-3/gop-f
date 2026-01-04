@@ -8,6 +8,7 @@ import { Card, CardMobile } from '../commonUtils';
 function Completed(props) {
 
     let { width, arr } = props;
+    if (!Array.isArray(arr)) arr = [];
 
     const [issueModal, setIssueModal] = React.useState(false);
     const [homeworkModal, setHomeworkModal] = React.useState(false);
@@ -29,7 +30,7 @@ function Completed(props) {
         { text: 'Assign Homework', modal: setHomeworkModal }
     ]
 
-    arr = arr?.filter((item) => item.status === "Completed" )
+    arr = arr?.filter((item) => item.status === "Completed")
     console.log(arr)
 
     return (
