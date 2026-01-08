@@ -77,8 +77,8 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
     const result = await dispatch(createCourse(form));
     setApiCalled(false);
     document.getElementById("loader").style.display = "none";
-
-    if (result.msg === "Course Created Successfully") {
+    console.log(result.msg)
+    if (result?.msg === "Course Created Successfully") {
       toast.success("Course Created");
       setFormValues({
         title: "",
@@ -93,7 +93,7 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
       });
       setPage(1);
       setModal(false);
-    } else if (result.msg === "Admin Verification Pending") {
+    } else if (result?.msg === "Admin Verification Pending") {
       toast.error("Admin Verification Pending");
     } else {
       toast.error("Failed to create course");

@@ -12,50 +12,51 @@ const AdminCourses = () => {
 
   const [allCourses, setAllCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [courseApiCalled, setCourseApiCalled] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Show popup when a course is selected (only for mobile view)
+  // Open popup on mobile when course selected
   useEffect(() => {
     if (selectedCourse && width < 992) {
       setShowPopup(true);
+    } else {
+      setShowPopup(false);
     }
   }, [selectedCourse, width]);
 
-  // Fetch all courses
+  // Fetch courses (debounced search)
   useEffect(() => {
-    const fetchCourses = async () => {
-      setCourseApiCalled(true);
+    const timeout = setTimeout(async () => {
+      setLoading(true);
       try {
-        // Show Loader
-        const loader = document.getElementById("loader");
-        if (loader) loader.style.display = "flex";
-
         const result = await dispatch(getCourses(searchInput));
 
-        // Hide Loader
-        if (loader) loader.style.display = "none";
-
         if (result?.status === 200) {
-          setAllCourses(result?.data?.data || []);
-          if (!selectedCourse) {
-            setSelectedCourse(result?.data?.data?.[0] || null);
+          const courses = result?.data?.data || [];
+          setAllCourses(courses);
+
+          if (!selectedCourse && courses.length) {
+            setSelectedCourse(courses[0]);
           }
         } else {
           setAllCourses([]);
           setSelectedCourse(null);
         }
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    };
+    }, 400); // debounce search
 
-    fetchCourses();
-  }, [dispatch, searchInput]);
+    return () => clearTimeout(timeout);
+  }, [dispatch, searchInput, selectedCourse]);
 
   return (
     <div className={styles.coursesDashboard}>
+      {loading && <div className={styles.loader}>Loading...</div>}
+
       <Main
         verificationType="Course"
         courses={allCourses}
@@ -65,23 +66,19 @@ const AdminCourses = () => {
         setSearchInput={setSearchInput}
       />
 
-      {width >= 992 ? (
-        selectedCourse && (
-          <ShowData
-            selectedCourse={selectedCourse}
-            verificationType="Course"
-            setCourseApiCalled={setCourseApiCalled}
-          />
-        )
-      ) : (
-        showPopup && selectedCourse && (
-          <ShowData
-            selectedCourse={selectedCourse}
-            verificationType="Course"
-            setCourseApiCalled={setCourseApiCalled}
-            setShowPopUp={setShowPopup}
-          />
-        )
+      {width >= 992 && selectedCourse && (
+        <ShowData
+          selectedCourse={selectedCourse}
+          verificationType="Course"
+        />
+      )}
+
+      {width < 992 && showPopup && selectedCourse && (
+        <ShowData
+          selectedCourse={selectedCourse}
+          verificationType="Course"
+          setShowPopUp={setShowPopup}
+        />
       )}
     </div>
   );

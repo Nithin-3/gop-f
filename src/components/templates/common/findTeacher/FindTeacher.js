@@ -167,7 +167,7 @@ function FindTeacher() {
             alignItems: "center",
           }}
         >
-          {coursesArr.length > 0 ? (
+          {coursesArr?.length > 0 ? (
             coursesArr.map((item, index) =>
               width >= 992 ? (
                 <TeacherCardHome key={index} course={item} width={width} />
