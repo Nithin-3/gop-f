@@ -17,30 +17,34 @@ const Token_Api = axios.create({
 
 export const signup = (user) => async (dispatch) => {
   try {
-    console.log("-------- Line 21", user);
-    const data = await API.post("/signup", user);
-    console.log("-------- Line 21", data, user);
-    dispatch({ type: "AUTH", payload: { ...data._doc, token: data.token } });
-    console.log(data);
-    return data;
+    const { data } = await API.post("/signup", user);
+    const userDoc = data._doc || data.user || data;
+    const token = data.token || userDoc.token;
+    const resultPayload = { ...userDoc, token };
+
+    dispatch({ type: "AUTH", payload: resultPayload });
+    return { ...resultPayload, _doc: userDoc };
   } catch (e) {
     console.log(e);
-    toast(e.response.data.errors[0].msg);
-    return e.response.message;
+    return e.response?.data || e.message;
   }
 };
 
 export const login = (user) => async (dispatch) => {
   try {
     const { data } = await API.post("/login", user);
+    const userDoc = data._doc || data.user || data;
+    const token = data.token || userDoc.token;
+    const resultPayload = { ...userDoc, token };
+
     dispatch({
       type: "AUTH",
-      payload: { ...data._doc, token: data.token },
+      payload: resultPayload,
     });
-    return data;
+    return { ...resultPayload, _doc: userDoc };
   } catch (e) {
     console.log(e);
-    return e.response.message;
+    return e.response?.data || e.message;
   }
 };
 
@@ -49,7 +53,7 @@ export const getVerificationCode = (email) => async (dispatch) => {
     const { data } = await API.post("/reset-password-token", { email });
     return data;
   } catch (e) {
-    return e.response.message;
+    return e.response?.data || e.message;
   }
 };
 
@@ -59,7 +63,7 @@ export const resetPassword = (body) => async (dispatch) => {
     return data;
   } catch (e) {
     console.log(e);
-    return e.response.message;
+    return e.response?.data || e.message;
   }
 };
 
@@ -69,7 +73,7 @@ export const changePassword = (body) => async (dispatch) => {
     return data;
   } catch (e) {
     console.log(e);
-    return e.response.message;
+    return e.response?.data || e.message;
   }
 };
 

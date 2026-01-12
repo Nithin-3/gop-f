@@ -3,18 +3,21 @@ import React, { useState } from "react";
 import logo from "../../assets/image/logo.png";
 import hamburger from "../../assets/icons/hamburger.svg";
 //React Router
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 //css
 import "./Nav.css";
 import { toast } from "react-toastify";
 
 const Nav = ({ setPage, roleModal }) => {
+  const dispatch = useDispatch();
   const [click, setClick] = useState(false);
 
-  const profile = JSON.parse(window.localStorage.getItem("profile"));
+  const authData = useSelector((state) => state.auth.authData);
+  const profile = authData || JSON.parse(window.localStorage.getItem("profile"));
 
   const signOut = () => {
-    localStorage.clear();
+    dispatch({ type: "LOGOUT" });
     toast.success("Logged out");
   };
 

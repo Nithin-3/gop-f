@@ -30,34 +30,55 @@ const LoginInputContainer = ({ type, role }) => {
       document.getElementById("loader").style.display = "flex";
 
       const result = await dispatch(login(data));
-
-      if (result && result._doc) {
+      if (result && result.token) {
         toast.success("Logged In");
-        const user = result._doc;
+        const user = result;
 
-        if (user.role === ROLE_TEACHER) {
-          if (!user.isVerified) return toast.error("User not verified");
+        const userRole = user.role?.toLowerCase();
+
+        if (userRole === ROLE_TEACHER.toLowerCase()) {
+          if (!user.isVerified) {
+            document.getElementById("loader").style.display = "none";
+            toast.error("User not verified");
+            toast.success("Check your mail for verification link");
+            return;
+          }
           return user.isOnBoarding
             ? navigate("/teacher/dashboard")
             : navigate("/teacher/onboard", { state: { result } });
         }
-
-        if (user.role === ROLE_STUDENT) {
-          if (!user.isVerified) return toast.error("User not verified");
+        if (userRole === ROLE_STUDENT.toLowerCase()) {
+          if (!user.isVerified) {
+            document.getElementById("loader").style.display = "none";
+            toast.error("User not verified");
+            toast.success("Check your mail for verification link");
+            return;
+          }
           const course = JSON.parse(localStorage.getItem("chosenCourse"));
           return course
             ? navigate("/teacher-profile", { state: { course } })
             : navigate("/student/dashboard");
         }
 
-        if ([ROLE_ADMIN, ROLE_PAYMENT, ROLE_TUTOR].includes(user.role)) {
-          if (!user.isVerified) return toast.error("User not verified");
+        if ([ROLE_ADMIN.toLowerCase(), ROLE_PAYMENT.toLowerCase(), ROLE_TUTOR.toLowerCase()].includes(userRole)) {
+          if (!user.isVerified) {
+            document.getElementById("loader").style.display = "none";
+            toast.error("User not verified");
+            toast.success("Check your mail for verification link");
+            return;
+          }
           return navigate("/admin/dashboard");
         }
       }
 
       // Show error messages if login fails
-      if (result?.errors?.length) toast.error(result.errors[0].msg);
+      if (result?.errors?.length) {
+        toast.error(result.errors[0].msg);
+      } else if (result?.message) {
+        toast.error(result.message);
+      } else if (typeof result === "string" && result !== "Logged In") {
+        toast.error(result);
+      }
 
       document.getElementById("loader").style.display = "none";
     } catch (e) {

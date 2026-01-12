@@ -30,14 +30,16 @@ const SignupInputContainer = ({ type, role }) => {
       document.getElementById("loader").style.display = "flex";
       const response = await dispatch(signup(data));
 
-      if (response?.data?.status) {
+      if (response?.status) {
         toast.success("Check your mail for verification link");
-        const role = getRole();
-        navigate(`/${role}/verifyEmail`);
-      } else if (response?.data?.message === "User Already Exists") {
+        const userRole = role?.toLowerCase() || getRole()?.toLowerCase() || "student";
+        navigate(`/${userRole}/verifyEmail`);
+      } else if (response?.message === "User Already Exists") {
         toast.error("User Already Exists");
+      } else if (response?.errors?.[0]?.msg) {
+        toast.error(response.errors[0].msg);
       } else {
-        toast.error("Server Error, Please try again later");
+        toast.error(response?.message || "Server Error, Please try again later");
       }
     } catch (error) {
       toast.error(error.message || "Signup failed");
