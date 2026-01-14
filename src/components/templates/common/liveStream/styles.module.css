@@ -185,6 +185,20 @@
     display: none;
   }
   .joinCallWrapper {
-    width: 100%;
+    width: 90%;
   }
+}
+
+.joinBtn {
+  transition: all 0.3s ease;
+}
+
+.joinBtn:not(:disabled):hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(81, 173, 220, 0.4);
+}
+
+.joinBtn:not(:disabled):active {
+  transform: translateY(0);
 }

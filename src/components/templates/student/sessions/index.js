@@ -22,10 +22,20 @@ function StudentSessions() {
 
   React.useEffect(() => {
     const load = async () => {
-      try { setSessions(await dispatch(getAllSessions())); } catch (e) { console.log(e); }
+      try {
+        const result = await dispatch(getAllSessions());
+        if (result?.success) {
+          setSessions(result.data);
+        } else {
+          setSessions([]);
+        }
+      } catch (e) {
+        console.error("Failed to load sessions:", e);
+        setSessions([]);
+      }
     };
     load();
-  }, []);
+  }, [dispatch]);
 
   return (
     <main className={teacherStyles.mainSection}>
@@ -58,7 +68,7 @@ function StudentSessions() {
         Trial: <Trial width={width} arr={sessions} />,
         Completed: <Completed width={width} arr={sessions} />,
         Cancelled: <Cancelled width={width} arr={sessions} />,
-        "Issue Reported": <IssueReported width={width} />,
+        "Issue Reported": <IssueReported width={width} arr={sessions} />,
         "Need Scheduling": <NeedScheduling width={width} arr={sessions} />,
       }[activeTab]}
     </main>

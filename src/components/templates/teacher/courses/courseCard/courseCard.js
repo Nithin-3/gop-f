@@ -41,15 +41,15 @@ const CourseCard = ({
         {/* Course Image */}
         <img
           className={styles.flag}
-          src={courseData.courseImage.data}
+          src={courseData.courseImage?.data || "https://via.placeholder.com/150"}
           alt="course_img"
           style={{ borderRadius: "50%", border: "3px solid grey" }}
         />
 
         {/* Course Details */}
         <div className={styles.courseName}>
-          <h3>{courseData.title.data}</h3>
-          <p className={styles.courseDescDesktop}>{courseData.description.data}</p>
+          <h3>{courseData.title?.data || "Untitled Course"}</h3>
+          <p className={styles.courseDescDesktop}>{courseData.description?.data || "No description provided."}</p>
 
           {activeTab === "Courses" && (
             <div className={styles.courseStatusPhone}>
@@ -84,7 +84,7 @@ const CourseCard = ({
 
         <div className={styles.courseDescPhone}>
           <h3>Course Description:</h3>
-          <p>{courseData.description.data}</p>
+          <p>{courseData.description?.data || "No description provided."}</p>
         </div>
 
         {/* More Options Dropdown */}
@@ -102,8 +102,8 @@ const CourseCard = ({
                     action === "View"
                       ? "fas fa-eye"
                       : action === "Edit"
-                      ? "fas fa-pencil"
-                      : "fas fa-trash"
+                        ? "fas fa-pencil"
+                        : "fas fa-trash"
                   }
                 ></i>
               </li>
@@ -122,8 +122,8 @@ const CourseCard = ({
                 action === "View"
                   ? "fas fa-eye"
                   : action === "Edit"
-                  ? "fas fa-pencil"
-                  : "fas fa-trash"
+                    ? "fas fa-pencil"
+                    : "fas fa-trash"
               }
             ></i>
           </button>

@@ -6,8 +6,6 @@ import { LANGUAGES } from "../../../../../utils/constants";
 import { useDispatch } from "react-redux";
 import { updateTeacherProfile } from "../../../../../store/actions/teacher";
 import { toast } from "react-toastify";
-let FormData = require("form-data");
-
 const LanguageSkills = (props) => {
   const dispatch = useDispatch();
   const languageSpeakRef = React.useRef();
@@ -16,15 +14,13 @@ const LanguageSkills = (props) => {
   const [languageSpeak, setLanguageSpeak] = React.useState([]);
   const [languageTeach, setLanguageTeach] = React.useState([]);
 
-  function addLanguage(value, type) {
-    if (type === "Speak") {
-      if (languageSpeak.includes(languageSpeakRef.current.value) || languageSpeakRef.current.value === "") return;
-      setLanguageSpeak([...languageSpeak, languageSpeakRef.current.value]);
-    }
-    if (type === "Teach") {
-      if (languageTeach.includes(languageTeachRef.current.value) || languageTeachRef.current.value === "") return;
-      setLanguageTeach([...languageTeach, languageTeachRef.current.value]);
-    }
+  function addLanguage(type) {
+    const ref = type === "Speak" ? languageSpeakRef : languageTeachRef;
+    const currentList = type === "Speak" ? languageSpeak : languageTeach;
+    const setList = type === "Speak" ? setLanguageSpeak : setLanguageTeach;
+
+    if (currentList.includes(ref.current.value) || ref.current.value === "") return;
+    setList([...currentList, ref.current.value]);
   }
 
   const deleteLanguage = (type, indexToremove) => {
@@ -33,22 +29,24 @@ const LanguageSkills = (props) => {
   };
 
   React.useEffect(() => {
-    setFormValues({
-      teacherType: props.myDetails ? props.myDetails.teacherType.data : "",
-      motherTongue: props.myDetails ? props.myDetails.motherTongue.data : "",
-      fromCountry: props.myDetails ? props.myDetails.fromCountry.data : "",
-      fromState: props.myDetails ? props.myDetails.fromState.data : "",
-      currentCountry: props.myDetails ? props.myDetails.currentCountry.data : "",
-      currentState: props.myDetails ? props.myDetails.currentState.data : "",
-    });
+    if (props.myDetails) {
+      setFormValues({
+        teacherType: props.myDetails.teacherType?.data || "",
+        motherTongue: props.myDetails.motherTongue?.data || "",
+        fromCountry: props.myDetails.fromCountry?.data || "",
+        fromState: props.myDetails.fromState?.data || "",
+        currentCountry: props.myDetails.currentCountry?.data || "",
+        currentState: props.myDetails.currentState?.data || "",
+      });
 
-    let speakTemp = [];
-    props.myDetails && props.myDetails.languageSpeak.forEach(l => { if (!speakTemp.includes(l.data)) speakTemp.push(l.data); });
-    setLanguageSpeak(speakTemp);
+      let speakTemp = [];
+      props.myDetails.languageSpeak?.forEach(l => { if (!speakTemp.includes(l.data)) speakTemp.push(l.data); });
+      setLanguageSpeak(speakTemp);
 
-    let teachTemp = [];
-    props.myDetails && props.myDetails.languageTeach.forEach(l => { if (!teachTemp.includes(l.data)) teachTemp.push(l.data); });
-    setLanguageTeach(teachTemp);
+      let teachTemp = [];
+      props.myDetails.languageTeach?.forEach(l => { if (!teachTemp.includes(l.data)) teachTemp.push(l.data); });
+      setLanguageTeach(teachTemp);
+    }
   }, [props.myDetails]);
 
   const validateFields = (details) => Object.values(details).every(v => v !== "");
@@ -56,9 +54,11 @@ const LanguageSkills = (props) => {
   const handleSubmit = async () => {
     if (!validateFields(formValues)) return toast.warn("All Fields are mandatory.");
     if (!languageSpeak.length || !languageTeach.length) return toast.warn("Please add languages");
+
+    // Using native browser FormData
     let form = new FormData();
     form.append("type", "languageSkill");
-    form.append("teacherId", props.myDetails.id);
+    form.append("teacherId", props.myDetails?.id);
     form.append("teacherType", formValues.teacherType);
     form.append("motherTongue", formValues.motherTongue);
     form.append("fromCountry", formValues.fromCountry);
@@ -67,16 +67,25 @@ const LanguageSkills = (props) => {
     form.append("currentState", formValues.currentState);
     form.append("languageSpeak", JSON.stringify(languageSpeak));
     form.append("languageTeach", JSON.stringify(languageTeach));
+
     try {
-      document.getElementById("loader").style.display = "flex";
+      if (document.getElementById("loader")) document.getElementById("loader").style.display = "flex";
       const result = await dispatch(updateTeacherProfile(form));
-      document.getElementById("loader").style.display = "none";
-      result.status ? toast.success("Profile Updated Successfully") : toast.error("Faild to update, please try again");
+      if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
+
+      if (result?.status || result?.success) {
+        toast.success("Language Skills Updated Successfully");
+      } else {
+        toast.error(result?.message || "Failed to update, please try again");
+      }
     } catch (e) {
-      toast.error("Faild to update, please try again");
+      console.error("Language skills update failed:", e);
+      if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
+      toast.error("Failed to update, please try again");
     }
-    props.setApiCalled(false);
+    if (props.setApiCalled) props.setApiCalled(false);
   };
+
 
   return (
     <div className={styles.languageSkills}>
@@ -99,13 +108,14 @@ const LanguageSkills = (props) => {
         <div className={commonStyles.formGroup}>
           <label>Language Speak*:</label>
           <div className={styles.languageInput}>
-            <select ref={languageSpeakRef} onChange={e => addLanguage(e.target.value, "Speak")}>
-              {LANGUAGES.map(l => <option value={l.value}>{l.value}</option>)}
+            <select ref={languageSpeakRef} onChange={() => { addLanguage("Speak"); languageSpeakRef.current.value = ""; }}>
+              <option value="">Select Language</option>
+              {LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.value}</option>)}
             </select>
           </div>
           <div className={styles.selectedLanguagesContainer}>
             {languageSpeak.map((l, i) => (
-              <div className={styles.languageChip}>
+              <div key={i} className={styles.languageChip}>
                 <p>{l}</p>
                 <i className="fas fa-close" onClick={() => deleteLanguage("Speak", i)}></i>
               </div>
@@ -116,19 +126,21 @@ const LanguageSkills = (props) => {
         <div className={commonStyles.formGroup}>
           <label>Language Teach*:</label>
           <div className={styles.languageInput}>
-            <select ref={languageTeachRef} onChange={e => addLanguage(e.target.value, "Teach")}>
-              {LANGUAGES.map(l => <option value={l.value}>{l.value}</option>)}
+            <select ref={languageTeachRef} onChange={() => { addLanguage("Teach"); languageTeachRef.current.value = ""; }}>
+              <option value="">Select Language</option>
+              {LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.value}</option>)}
             </select>
           </div>
           <div className={styles.selectedLanguagesContainer}>
             {languageTeach.map((l, i) => (
-              <div className={styles.languageChip}>
+              <div key={i} className={styles.languageChip}>
                 <p>{l}</p>
                 <i className="fas fa-close" onClick={() => deleteLanguage("Teach", i)}></i>
               </div>
             ))}
           </div>
         </div>
+
 
         <h4 className={styles.sectionHeading}>Place:</h4>
 

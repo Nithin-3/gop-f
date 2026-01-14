@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { createCourse } from "../../../../../store/actions/course/index";
 import styles from "./styles.module.css";
 import { languages } from "../../../../../utils/constants";
-var FormData = require("form-data");
+// Removed require("form-data") to use native browser FormData
+
 
 const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
   const dispatch = useDispatch();
@@ -71,33 +72,77 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
     }
 
     const form = new FormData();
-    Object.entries(formValues).forEach(([key, value]) => form.append(key, value));
 
-    document.getElementById("loader").style.display = "flex";
-    const result = await dispatch(createCourse(form));
-    setApiCalled(false);
-    document.getElementById("loader").style.display = "none";
-    console.log(result.msg)
-    if (result?.msg === "Course Created Successfully") {
-      toast.success("Course Created");
-      setFormValues({
-        title: "",
-        courseImage: null,
-        language: "English",
-        course: "Academics",
-        program: "",
-        price: "",
-        price1: "",
-        price2: "",
-        description: "",
-      });
-      setPage(1);
-      setModal(false);
-    } else if (result?.msg === "Admin Verification Pending") {
-      toast.error("Admin Verification Pending");
+    // Explicitly append fields to ensure correctness
+    form.append("title", formValues.title);
+    form.append("language", formValues.language);
+    form.append("course", formValues.course);
+    form.append("program", formValues.program);
+    form.append("price", formValues.price);
+    form.append("price1", formValues.price1 || 0);
+    form.append("price2", formValues.price2 || 0);
+    form.append("description", formValues.description);
+    const profile = JSON.parse(localStorage.getItem("profile"));
+    const teacherId = profile?._id || profile?.id;
+
+    if (teacherId) {
+      form.append("teacherId", teacherId);
+    }
+
+    // Append courseImage with filename to ensure proper handling by multipart/form-data
+    if (formValues.courseImage && formValues.courseImage.name) {
+      form.append("courseImage", formValues.courseImage, formValues.courseImage.name);
     } else {
+      form.append("courseImage", formValues.courseImage);
+    }
+
+    // Comprehensive logging to verify what's being sent
+    console.log("Submitting Course FormData:");
+    for (let [key, value] of form.entries()) {
+      if (value instanceof File) {
+        console.log(`${key}: [File] ${value.name} (${value.size} bytes)`);
+      } else {
+        console.log(`${key}:`, value);
+      }
+    }
+
+
+    try {
+      document.getElementById("loader").style.display = "flex";
+      const result = await dispatch(createCourse(form));
+      document.getElementById("loader").style.display = "none";
+
+      const successMsg = result?.msg || result?.message || (typeof result === "string" ? result : "");
+
+      if (result?.status === 1 || successMsg === "Course Created Successfully") {
+        toast.success("Course Created Successfully");
+        setApiCalled(false);
+        setFormValues({
+          title: "",
+          courseImage: null,
+          language: "English",
+          course: "Academics",
+          program: "",
+          price: "",
+          price1: "",
+          price2: "",
+          description: "",
+        });
+        setPage(1);
+        setModal(false);
+      } else if (successMsg === "Admin Verification Pending") {
+        toast.info("Course Submitted: Admin Verification Pending");
+        setApiCalled(false);
+        setModal(false);
+      } else {
+        toast.error(result?.message || result?.msg || (typeof result === "string" ? result : "Failed to create course"));
+      }
+    } catch (e) {
+      console.error("Course creation failed:", e);
+      document.getElementById("loader").style.display = "none";
       toast.error("Failed to create course");
     }
+
   };
 
   if (!showModal) return null;

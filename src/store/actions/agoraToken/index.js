@@ -12,13 +12,13 @@ function createAxios() {
   });
 }
 
-export const generateAgoraToken = (channelName, role, uid) => async(dispatch) => {
-  try{
-    let API = createAxios()
-    const data = API.get(`/rtc/${channelName}/${role}/uid/${uid}`)
-    return data
+export const generateAgoraToken = (channelName, role, uid) => async (dispatch) => {
+  try {
+    let API = createAxios();
+    const { data } = await API.get(`/rtc/${channelName}/${role}/uid/${uid}`);
+    return data;
   } catch (err) {
-    console.log(err)
-    return err.response.message;
+    console.error("generateAgoraToken error:", err);
+    return { success: false, message: err.response?.data?.message || "Failed to generate token" };
   }
 };

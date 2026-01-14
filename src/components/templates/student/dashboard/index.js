@@ -58,7 +58,10 @@ const StudentDashboard = () => {
                 setUpcomingClass(res?.data);
                 setLanguageUC(course?.language?.data);
                 setPriceUC(course?.price?.data);
-            } catch { toast.error("Failed to fetch data"); }
+            } catch (e) {
+                console.error("Dashboard initialization failed:", e);
+                toast.error("Failed to fetch data");
+            }
         };
         // init();
     }, []);

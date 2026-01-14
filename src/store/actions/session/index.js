@@ -12,17 +12,17 @@ function createAxios() {
   });
 }
 
-export const getAllSessions = () => async(dispatch) => {
+export const getAllSessions = () => async (dispatch) => {
   try {
-    let API =  createAxios();
+    let API = createAxios();
     const { data } = await API.get("/getAll");
     return data
 
-  } catch(err) {
-    console.log(err)
-    return err.response
+  } catch (err) {
+    console.error("getAllSessions error:", err);
+    return { success: false, message: err.response?.data?.message || "Failed to fetch sessions" };
   }
-}
+};
 
 export const getSessionsByStatus = async (status) => {
   try {
@@ -31,8 +31,8 @@ export const getSessionsByStatus = async (status) => {
     const { data } = await API.get(`/${status}`);
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response;
+    console.error("getSessionsByStatus error:", e);
+    return { success: false, message: e.response?.data?.message || "Failed to fetch sessions by status" };
   }
 };
 
@@ -44,7 +44,7 @@ export const getTeacherFreeSessions = async () => {
     console.log(data);
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response;
+    console.error("getTeacherFreeSessions error:", e);
+    return { success: false, message: e.response?.data?.message || "Failed to fetch free sessions" };
   }
 };

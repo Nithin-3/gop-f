@@ -58,7 +58,15 @@ const TeacherCourses = () => {
         navigate("/teacher/onboard");
         return;
       }
-      const teacherData = JSON.parse(localStorage.getItem("teacherData"));
+      let teacherData = JSON.parse(localStorage.getItem("teacherData"));
+      if (!teacherData) {
+        try {
+          const { getTeacherData } = await import("../../../../store/actions/teacher");
+          teacherData = await dispatch(getTeacherData());
+        } catch (e) {
+          console.error("Failed to fetch teacher data:", e);
+        }
+      }
       if (teacherData?.approvalStatus !== "verified") {
         toast.warn("Admin Verification Pending");
         navigate("/teacher/dashboard");
@@ -66,8 +74,10 @@ const TeacherCourses = () => {
       }
       try {
         const result = await dispatch(getMyCourses(userObj?._id));
+        console.log(result);
         if (result?.data) setMyCourses(result.data);
-      } catch {
+      } catch (e) {
+        console.error("Failed to fetch courses:", e);
         toast.error("Failed to fetch your courses");
       }
     };
@@ -115,9 +125,8 @@ const TeacherCourses = () => {
             {tabs.map((item, idx) => (
               <div
                 key={idx}
-                className={`${styles.sessionTab} ${
-                  activeTab === item ? styles.sessionTabActive : ""
-                }`}
+                className={`${styles.sessionTab} ${activeTab === item ? styles.sessionTabActive : ""
+                  }`}
                 onClick={() => setActiveTab(item)}
               >
                 {item}
@@ -140,9 +149,8 @@ const TeacherCourses = () => {
                 {tabs.map((item, idx) => (
                   <div
                     key={idx}
-                    className={`${styles.sessionTab} ${
-                      activeTab === item ? styles.sessionTabActiveDropdown : ""
-                    }`}
+                    className={`${styles.sessionTab} ${activeTab === item ? styles.sessionTabActiveDropdown : ""
+                      }`}
                     onClick={() => {
                       setActiveTab(item);
                       setMobileDropdown(false);

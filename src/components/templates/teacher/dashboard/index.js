@@ -52,7 +52,8 @@ const TeacherDashboard = () => {
           setLanguageUC(course?.language?.data || "");
           setPriceUC(course?.price?.data || 0);
         }
-      } catch {
+      } catch (e) {
+        console.error("Dashboard initialization failed:", e);
         toast.error("Failed to load dashboard");
       }
     };
@@ -100,7 +101,15 @@ const MobileView = ({ widgets, sessionCounts, graph, setGraph, teacherData, upco
 );
 
 const TopWidgets = ({ widgets }) => (
-  <div className={styles.row}>{widgets.map((w,i)=><div key={i} className={styles.firstRowTab}><img src={w.icon} alt={w.title}/><div>{w.title}</div><div>{w.number}</div></div>)}</div>
+  <div className={styles.row}>
+    {widgets.map((w, i) => (
+      <div key={i} className={styles.firstRowTab}>
+        <img src={w.icon} alt={w.title} className={styles.widgetIcon} />
+        <div className={styles.widgetTitle}>{w.title}</div>
+        <div className={styles.widgetNumber}>{w.number}</div>
+      </div>
+    ))}
+  </div>
 );
 
 const LessonOverview = ({ sessionCounts }) => (
@@ -108,7 +117,7 @@ const LessonOverview = ({ sessionCounts }) => (
 );
 
 const GraphCard = ({ graph, setGraph }) => (
-  <div className={styles.graphCard}><div>{graph}</div><img src={graph_img} alt="graph"/></div>
+  <div className={styles.graphCard}><div>{graph}</div><img src={graph_img} alt="graph" /></div>
 );
 
 const RightTeacherCard = ({ teacherData, upcomingClass, language, price }) => (

@@ -103,7 +103,8 @@ const TeachersData = (props) => {
       } else {
         toast.error(`Failed to approve ${props.verificationType}`);
       }
-    } catch {
+    } catch (e) {
+      console.error("Approve teacher failed:", e);
       document.getElementById("loader").style.display = "none";
       toast.error(`Failed to approve ${props.verificationType}`);
     }
@@ -180,7 +181,30 @@ const TeachersData = (props) => {
                 <span className={styles.detailHeading}>Name</span>
                 <span>{formValues?.firstName?.data || "N/A"}</span>
               </div>
-              {/* Other teacher fields... */}
+              <div>
+                <input type="checkbox" onChange={handleChange} name="teacherType" defaultChecked={formValues?.teacherType?.is_verified} />
+                <span className={styles.detailHeading}>Teacher Type</span>
+                <span>{formValues?.teacherType?.data || "N/A"}</span>
+              </div>
+              <div>
+                <input type="checkbox" onChange={handleChange} name="videoURL" defaultChecked={formValues?.videoURL?.is_verified} />
+                <span className={styles.detailHeading}>Intro Video</span>
+                {formValues?.videoURL?.data ? (
+                  <a href={formValues.videoURL.data} target="_blank" rel="noreferrer">
+                    <i className="fab fa-youtube" style={{ color: 'red' }}></i>
+                  </a>
+                ) : "N/A"}
+              </div>
+              <div>
+                <input type="checkbox" onChange={handleChange} name="mobileNumber" defaultChecked={formValues?.mobileNumber?.is_verified} />
+                <span className={styles.detailHeading}>Phone</span>
+                <span>{formValues?.mobileNumber?.data || "N/A"}</span>
+              </div>
+              <div>
+                <input type="checkbox" onChange={handleChange} name="motherTongue" defaultChecked={formValues?.motherTongue?.is_verified} />
+                <span className={styles.detailHeading}>Mother Tongue</span>
+                <span>{formValues?.motherTongue?.data || "N/A"}</span>
+              </div>
             </>
           ) : (
             <>
@@ -195,110 +219,110 @@ const TeachersData = (props) => {
 
         {/* --- Other Details, Certifications, etc. remain same --- */}
 
-{/* --- Other Details --- */}
-<div className={styles.otherDetailsContainer}>
-  {props.verificationType === "Teacher" ? (
-    <>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="gender" defaultChecked={formValues?.gender?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Gender:</span>
-        <span>{formValues?.gender?.data || "N/A"}</span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="dob" defaultChecked={formValues?.dob?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Date of Birth:</span>
-        <span>{formValues?.dob?.data ? new Date(formValues.dob.data).toDateString().slice(3) : "N/A"}</span>
-      </div>
-      <div>
-        <span className={styles.otherDetailsHeading + " " + styles.otherDetailsHeadingAge}>Age:</span>
-        <span>{getAge(formValues?.dob?.data)}</span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="fromCountry" defaultChecked={formValues?.fromCountry?.is_verified} />
-        <span className={styles.otherDetailsHeading}>From Country:</span>
-        <span>{formValues?.fromCountry?.data || "N/A"}</span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="languageTeach" defaultChecked={formValues?.languageTeach?.[0]?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Teaches:</span>
-        <span>
-          {formValues?.languageTeach?.length
-            ? formValues.languageTeach.map(u => u.data).join(", ")
-            : "N/A"}
-        </span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="languageSpeak" defaultChecked={formValues?.languageSpeak?.[0]?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Also Speaks:</span>
-        <span>
-          {formValues?.languageSpeak?.length
-            ? formValues.languageSpeak.map(u => u.data).join(", ")
-            : "N/A"}
-        </span>
-      </div>
-    </>
-  ) : (
-    <>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="language" defaultChecked={formValues?.language?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Language:</span>
-        <span>{formValues?.language?.data || "N/A"}</span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="course" defaultChecked={formValues?.course?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Course:</span>
-        <span>{formValues?.course?.data || "N/A"}</span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="program" defaultChecked={formValues?.program?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Program:</span>
-        <span>{formValues?.program?.data || "N/A"}</span>
-      </div>
-      <div className={styles.otherDetails}>
-        <input type="checkbox" onClick={handleChange} name="price" defaultChecked={formValues?.price?.is_verified} />
-        <span className={styles.otherDetailsHeading}>Price:</span>
-        <span>${formValues?.price?.data || 0}</span>
-      </div>
-    </>
-  )}
-</div>
+        {/* --- Other Details --- */}
+        <div className={styles.otherDetailsContainer}>
+          {props.verificationType === "Teacher" ? (
+            <>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="gender" defaultChecked={formValues?.gender?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Gender:</span>
+                <span>{formValues?.gender?.data || "N/A"}</span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="dob" defaultChecked={formValues?.dob?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Date of Birth:</span>
+                <span>{formValues?.dob?.data ? new Date(formValues.dob.data).toDateString().slice(3) : "N/A"}</span>
+              </div>
+              <div>
+                <span className={styles.otherDetailsHeading + " " + styles.otherDetailsHeadingAge}>Age:</span>
+                <span>{getAge(formValues?.dob?.data)}</span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="fromCountry" defaultChecked={formValues?.fromCountry?.is_verified} />
+                <span className={styles.otherDetailsHeading}>From Country:</span>
+                <span>{formValues?.fromCountry?.data || "N/A"}</span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="languageTeach" defaultChecked={formValues?.languageTeach?.[0]?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Teaches:</span>
+                <span>
+                  {formValues?.languageTeach?.length
+                    ? formValues.languageTeach.map(u => u.data).join(", ")
+                    : "N/A"}
+                </span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="languageSpeak" defaultChecked={formValues?.languageSpeak?.[0]?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Also Speaks:</span>
+                <span>
+                  {formValues?.languageSpeak?.length
+                    ? formValues.languageSpeak.map(u => u.data).join(", ")
+                    : "N/A"}
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="language" defaultChecked={formValues?.language?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Language:</span>
+                <span>{formValues?.language?.data || "N/A"}</span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="course" defaultChecked={formValues?.course?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Course:</span>
+                <span>{formValues?.course?.data || "N/A"}</span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="program" defaultChecked={formValues?.program?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Program:</span>
+                <span>{formValues?.program?.data || "N/A"}</span>
+              </div>
+              <div className={styles.otherDetails}>
+                <input type="checkbox" onClick={handleChange} name="price" defaultChecked={formValues?.price?.is_verified} />
+                <span className={styles.otherDetailsHeading}>Price:</span>
+                <span>${formValues?.price?.data || 0}</span>
+              </div>
+            </>
+          )}
+        </div>
 
-{/* --- Certifications / Tabs --- */}
-<div className={styles.certificatedDetailsContainer}>
-  {props.verificationType === "Teacher" ? (
-    <>
-      <div className={styles.certificatedDetailsTabs}>
-        <button className={activeTab === "About" ? styles.active : ""} onClick={() => handleDetails("About")}>About</button>
-        <button className={activeTab === "educationDetails" ? styles.active : ""} onClick={() => handleDetails("educationDetails")}>Education</button>
-        <button className={activeTab === "workExperience" ? styles.active : ""} onClick={() => handleDetails("workExperience")}>Work</button>
-        <button className={activeTab === "certificateCourses" ? styles.active : ""} onClick={() => handleDetails("certificateCourses")}>Certificate</button>
-      </div>
-      <div className={styles.certificatedDetails}>
-        <div className={styles.about} ref={aboutContainer}>
-          <input type="checkbox" onClick={handleChange} name="selfIntro" defaultChecked={formValues?.selfIntro?.is_verified} />
-          <p>{formValues?.selfIntro?.data || "N/A"}</p>
+        {/* --- Certifications / Tabs --- */}
+        <div className={styles.certificatedDetailsContainer}>
+          {props.verificationType === "Teacher" ? (
+            <>
+              <div className={styles.certificatedDetailsTabs}>
+                <button className={activeTab === "About" ? styles.active : ""} onClick={() => handleDetails("About")}>About</button>
+                <button className={activeTab === "educationDetails" ? styles.active : ""} onClick={() => handleDetails("educationDetails")}>Education</button>
+                <button className={activeTab === "workExperience" ? styles.active : ""} onClick={() => handleDetails("workExperience")}>Work</button>
+                <button className={activeTab === "certificateCourses" ? styles.active : ""} onClick={() => handleDetails("certificateCourses")}>Certificate</button>
+              </div>
+              <div className={styles.certificatedDetails}>
+                <div className={styles.about} ref={aboutContainer}>
+                  <input type="checkbox" onClick={handleChange} name="selfIntro" defaultChecked={formValues?.selfIntro?.is_verified} />
+                  <p>{formValues?.selfIntro?.data || "N/A"}</p>
+                </div>
+                <div className={styles.educations} ref={certifiedDetail}>
+                  <CertifiedDetail
+                    data={certificateTabData}
+                    onChange={handleChange}
+                    formValues={formValues}
+                    setFormValues={setFormValues}
+                    activeTab={activeTab}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className={styles.about} ref={aboutContainer}>
+              <input type="checkbox" onClick={handleChange} name="description" defaultChecked={formValues?.description?.is_verified} />
+              <p>{formValues?.description?.data || "N/A"}</p>
+            </div>
+          )}
         </div>
-        <div className={styles.educations} ref={certifiedDetail}>
-          <CertifiedDetail
-            data={certificateTabData}
-            onChange={handleChange}
-            formValues={formValues}
-            setFormValues={setFormValues}
-            activeTab={activeTab}
-          />
-        </div>
-      </div>
-    </>
-  ) : (
-    <div className={styles.about} ref={aboutContainer}>
-      <input type="checkbox" onClick={handleChange} name="description" defaultChecked={formValues?.description?.is_verified} />
-      <p>{formValues?.description?.data || "N/A"}</p>
-    </div>
-  )}
-</div>
 
         <div className={styles.actions}>
-          <button onClick={() => setShowUnverifiedModal(true)}>Save</button>
+          <button onClick={() => setShowUnverifiedModal(true)}>Submit Verification</button>
         </div>
       </div>
 

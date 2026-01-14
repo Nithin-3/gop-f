@@ -39,7 +39,8 @@ const ProfilePic = ({ myDetails }) => {
     try {
       const res = await dispatch(updateStudentProfile(form));
       res?.status ? toast.success("Profile Pic Uploaded") : toast.error("Upload failed");
-    } catch {
+    } catch (e) {
+      console.error("Profile pic upload failed:", e);
       toast.error("Upload failed");
     }
   };

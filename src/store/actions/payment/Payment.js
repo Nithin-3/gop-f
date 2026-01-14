@@ -12,14 +12,15 @@ function createAxios() {
   });
 }
 
-export const addPayment = (payload)  => async (dispatch) => {
+export const addPayment = (payload) => async (dispatch) => {
   try {
     let API = createAxios();
     const { data } = await API.post("/add", payload);
     // console.log(result);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error("addPayment error:", e);
+    return { success: false, message: e.response?.data?.message || "Payment registration failed" };
   }
 };
 

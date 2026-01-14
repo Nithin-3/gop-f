@@ -12,15 +12,22 @@ function TeacherCard(props) {
   const [fav, setFav] = React.useState(false);
   const [showVideo, setShowVideo] = React.useState(true);
 
+  if (!course || !course.userId) return null;
+  const onType = course.userId.onType || {};
+
   const showTeacherProfile = () => {
     localStorage.setItem("chosenCourse", JSON.stringify(course));
     navigate("/teacher-profile");
   };
 
-  const showCalender = () => {
-    localStorage.setItem("chosenCourse", JSON.stringify(course));
-    // You can navigate to calendar if needed: navigate("/calendar")
+  const getYTVideoId = (url) => {
+    if (!url) return "";
+    if (url.includes("v=")) return url.split("v=")[1].split("&")[0];
+    if (url.includes("youtu.be/")) return url.split("youtu.be/")[1].split("?")[0];
+    return "";
   };
+
+  const videoId = getYTVideoId(onType.videoURL?.data);
 
   return (
     <>
@@ -45,9 +52,9 @@ function TeacherCard(props) {
                 alignItems: "center",
               }}
             >
-              <div onClick={() => showTeacherProfile()}>
+              <div onClick={() => showTeacherProfile()} style={{ cursor: "pointer" }}>
                 <img
-                  src={course && course.courseImage.data}
+                  src={course.courseImage?.data || onType.teacherProfilePic?.data}
                   alt="course_img"
                   style={{
                     border: "3px solid grey",
@@ -68,21 +75,21 @@ function TeacherCard(props) {
                   }}
                 />
               </div>
-              <div style={{ fontSize: "25px", fontWeight: "bold" }}>
-                {course.userId.onType.firstName.data +
+              <div style={{ fontSize: "20px", fontWeight: "bold", textAlign: 'center' }}>
+                {(onType.firstName?.data || onType.firstName || "") +
                   " " +
-                  course.userId.onType.lastName.data}
+                  (onType.lastName?.data || onType.lastName || "")}
               </div>
               <div style={{ color: "#fe1848" }}>
-                {course.userId.onType.teacherType.data}
+                {onType.teacherType?.data || onType.teacherType}
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
-                {[1, 2, 3, 4, 5].map((item, index) => (
+                {[1, 2, 3, 4, 5].map((_, index) => (
                   <span key={index}>
-                    <i className="fas fa-star"></i>
+                    <i className={index < (onType.avgRating || 0) ? "fas fa-star" : "far fa-star"}></i>
                   </span>
                 ))}
-                <div>&nbsp; (250)</div>
+                <div>&nbsp; ({onType.expertise?.ratings_teacher?.length || 0})</div>
               </div>
             </div>
 
@@ -96,7 +103,7 @@ function TeacherCard(props) {
               }}
             >
               <p>
-                Course Name
+                Course Name:
                 <span
                   style={{
                     cursor: "pointer",
@@ -109,8 +116,9 @@ function TeacherCard(props) {
                     marginLeft: "15px",
                     fontWeight: "bold",
                   }}
+                  onClick={showTeacherProfile}
                 >
-                  {course.title.data}
+                  {course.title?.data || course.title}
                 </span>
               </p>
               <div
@@ -126,13 +134,13 @@ function TeacherCard(props) {
                   Living in
                 </span>
                 <span style={{ fontWeight: "bold" }}>
-                  : {new Date(course.userId.onType.createdAt).toDateString().slice(4)}{" "}
+                  : {onType.createdAt ? new Date(onType.createdAt).toDateString().slice(4) : "N/A"}{" "}
                   <br />:{" "}
-                  {course.userId.onType.fromState.data},{" "}
-                  {course.userId.onType.fromCountry.data}{" "}
+                  {onType.fromState?.data || onType.fromState || "N/A"},{" "}
+                  {onType.fromCountry?.data || onType.fromCountry || "N/A"}{" "}
                   <br />:{" "}
-                  {course.userId.onType.currentState.data},{" "}
-                  {course.userId.onType.currentCountry.data}
+                  {onType.currentState?.data || onType.currentState || "N/A"},{" "}
+                  {onType.currentCountry?.data || onType.currentCountry || "N/A"}
                 </span>
               </div>
               <div
@@ -145,15 +153,17 @@ function TeacherCard(props) {
                 <span>
                   <div style={{ color: "#a4a4a5" }}>Teaches</div>
                   <div style={{ color: "#454544", fontSize: "18px" }}>
-                    {course.language.data}
+                    {course.language?.data || course.language || "N/A"}
                   </div>
                 </span>
                 <span>
                   <div style={{ color: "#a4a4a5" }}>Speaks</div>
-                  <div style={{ color: "#454544", fontSize: "18px" }}>French</div>
+                  <div style={{ color: "#454544", fontSize: "18px" }}>
+                    {onType.languageSpeak?.[0]?.data || onType.languageSpeak?.[0] || "N/A"}
+                  </div>
                 </span>
               </div>
-              <BookFreeTrialButton />
+              <BookFreeTrialButton course={course} />
             </div>
           </div>
 
@@ -187,14 +197,14 @@ function TeacherCard(props) {
                 height: "150px",
               }}
             >
-              <iframe
-                width="250"
-                height="120"
-                src={
-                  "https://www.youtube.com/embed/" +
-                  course.userId.onType.videoURL.data.split("?v=")[1]
-                }
-              ></iframe>
+              {videoId && (
+                <iframe
+                  width="250"
+                  height="120"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="Video"
+                ></iframe>
+              )}
             </div>
           </div>
         </div>
@@ -203,7 +213,7 @@ function TeacherCard(props) {
           style={{
             marginBottom: "20px",
             borderRadius: "10px",
-            width: "90%",
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             backgroundColor: "#fefeff",
@@ -222,62 +232,66 @@ function TeacherCard(props) {
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div
               style={{
-                marginRight: "2vw",
                 display: "flex",
+                flexDirection: 'column',
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <div onClick={() => showTeacherProfile()} style={{ cursor: "pointer" }}>
+              <div onClick={() => showTeacherProfile()} style={{ cursor: "pointer", position: 'relative' }}>
                 <img
-                  src={course.courseImage.data}
+                  src={course.courseImage?.data || onType.teacherProfilePic?.data}
                   alt="person_img"
                   style={{
                     borderRadius: "50%",
                     width: "100px",
                     height: "100px",
+                    objectFit: 'cover',
+                    border: '2px solid #eee'
                   }}
                 />
-                <img
-                  src={"/flags/" + course.language.data.toLowerCase() + ".png"}
-                  alt="language_flag"
-                  style={{
-                    marginLeft: "-30px",
-                    borderRadius: "50%",
-                    width: "25px",
-                    height: "25px",
-                  }}
-                />
+                {course.language?.data && (
+                  <img
+                    src={"/flags/" + course.language.data.toLowerCase() + ".png"}
+                    alt="language_flag"
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: "50%",
+                      width: "25px",
+                      height: "25px",
+                    }}
+                  />
+                )}
               </div>
-              <div style={{ marginLeft: "10px" }}>
-                <div style={{ fontSize: "25px", fontWeight: "bold" }}>
+              <div style={{ marginTop: "10px", textAlign: 'center' }}>
+                <div style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
                   <div
                     onClick={() => showTeacherProfile()}
                     style={{
                       cursor: "pointer",
-                      textDecoration: "none",
                       padding: "5px 15px",
-                      width: "fit-content",
-                      marginBottom: "10px",
                       borderRadius: "3px",
                       border: "1px solid lightblue",
+                      marginBottom: "5px"
                     }}
                   >
-                    {course.title.data}
+                    {course.title?.data || course.title}
                   </div>
                   <div onClick={() => showTeacherProfile()} style={{ cursor: "pointer" }}>
-                    {course.userId.onType.firstName.data + " " + course.userId.onType.lastName.data}{" "}
-                    &nbsp;<i className="far fa-check-circle"></i>
+                    {(onType.firstName?.data || onType.firstName || "") + " " + (onType.lastName?.data || onType.lastName || "")}{" "}
+                    &nbsp;<i className="far fa-check-circle" style={{ color: '#007bff' }}></i>
                   </div>
                 </div>
-                <div style={{ color: "#fe1848" }}>{course.userId.onType.teacherType.data}</div>
+                <div style={{ color: "#fe1848" }}>{onType.teacherType?.data || onType.teacherType}</div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  {[1, 2, 3, 4, 5].map((item, index) => (
+                  {[1, 2, 3, 4, 5].map((_, index) => (
                     <span key={index}>
-                      <i className="fas fa-star"></i>
+                      <i className={index < (onType.avgRating || 0) ? "fas fa-star" : "far fa-star"} style={{ color: '#ffc107' }}></i>
                     </span>
                   ))}
-                  <div>&nbsp; (250)</div>
+                  <div>&nbsp; ({onType.expertise?.ratings_teacher?.length || 0})</div>
                 </div>
               </div>
             </div>
@@ -302,13 +316,13 @@ function TeacherCard(props) {
               <span>
                 <div style={{ color: "#a4a4a5" }}>Teaches</div>
                 <div style={{ color: "#454544", fontSize: "18px" }}>
-                  {course.userId.onType.languageTeach[0].data}
+                  {onType.languageTeach?.[0]?.data || onType.languageTeach?.[0] || "N/A"}
                 </div>
               </span>
               <span>
                 <div style={{ color: "#a4a4a5" }}>Speaks</div>
                 <div style={{ color: "#454544", fontSize: "18px" }}>
-                  {course.userId.onType.languageSpeak[0].data}
+                  {onType.languageSpeak?.[0]?.data || onType.languageSpeak?.[0] || "N/A"}
                 </div>
               </span>
             </div>
@@ -318,25 +332,25 @@ function TeacherCard(props) {
             style={{
               margin: "15px 0",
               width: "100%",
-              height: "2px",
-              backgroundColor: "black",
+              height: "1px",
+              backgroundColor: "#eee",
             }}
           ></div>
 
           <div
             style={{
-              marginTop: "15px",
-              marginBottom: "15px",
+              marginTop: "5px",
               display: "flex",
               justifyContent: "center",
             }}
           >
-            <BookFreeTrialButton />
+            <BookFreeTrialButton course={course} />
           </div>
         </div>
       )}
     </>
   );
 }
+
 
 export default TeacherCard;

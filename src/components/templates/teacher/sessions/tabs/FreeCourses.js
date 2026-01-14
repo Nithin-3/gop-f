@@ -11,7 +11,7 @@ function FreeCourses(props) {
   if (!Array.isArray(arr)) arr = [];
   const [rescheduleModal, setRescheduleModal] = React.useState(false);
   const [addLessonModal, setAddlessonModal] = React.useState(false);
-  const [setFreeArr] = React.useState(false);
+  const [freeSessions, setFreeSessions] = React.useState([]);
 
   const dropDownArr = [
     { text: "Request to Reschedule", modal: setRescheduleModal },
@@ -22,7 +22,7 @@ function FreeCourses(props) {
     const result = await getTeacherFreeSessions();
     console.log(result);
     if (result.success) {
-      setFreeArr(result.data);
+      setFreeSessions(result.data);
     } else {
       console.log(result);
     }
@@ -31,9 +31,14 @@ function FreeCourses(props) {
   React.useEffect(() => {
     getFreeSessions();
   }, []);
-  const todayDate = new Date()
-  arr = arr?.filter((item) => item.isFree && new Date(item.from) - todayDate >= 0)
-  console.log(arr)
+
+  const todayDate = new Date();
+  const sessionsToDisplay = freeSessions.length > 0 ? freeSessions : (arr || []);
+  const filteredSessions = sessionsToDisplay.filter(
+    (item) => item.isFree && new Date(item.from) - todayDate >= 0
+  );
+  console.log(filteredSessions);
+
 
   return (
     <>
@@ -53,8 +58,9 @@ function FreeCourses(props) {
       )}
       {width >= 992 ? (
         <div style={{ marginTop: "50px" }}>
-          {arr && arr.length > 0 ? (
-            arr.map((item, index) => (
+          {filteredSessions && filteredSessions.length > 0 ? (
+            filteredSessions.map((item, index) => (
+
               <Card
                 width={width}
                 key={index}
@@ -68,8 +74,9 @@ function FreeCourses(props) {
         </div>
       ) : (
         <div style={{ marginTop: "30px" }}>
-          {arr && arr.length > 0 ? (
-            arr.map((item, index) => (
+          {filteredSessions && filteredSessions.length > 0 ? (
+            filteredSessions.map((item, index) => (
+
               <CardMobile
                 width={width}
                 key={index}

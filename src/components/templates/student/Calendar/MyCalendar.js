@@ -167,6 +167,7 @@ function MyCalendar({ teacherData: propTeacherData, course, coupon }) {
           toast.error(result.message);
         }
       } catch (e) {
+        console.error("Booking Slot failed:", e);
         toast.error("Failed to Book Slot");
       }
     }
@@ -220,7 +221,7 @@ function MyCalendar({ teacherData: propTeacherData, course, coupon }) {
   MyWeek.title = (date, { localizer }) => {
     const start = new Date(date);
     const end = dates.add(start, 2, "day");
-    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${monthNames[start.getMonth()]} ${start.getDate()} - ${monthNames[end.getMonth()]} ${end.getDate()}`;
   };
 

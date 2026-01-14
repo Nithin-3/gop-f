@@ -42,6 +42,7 @@ const SignupInputContainer = ({ type, role }) => {
         toast.error(response?.message || "Server Error, Please try again later");
       }
     } catch (error) {
+      console.error("Signup failed:", error);
       toast.error(error.message || "Signup failed");
     } finally {
       document.getElementById("loader").style.display = "none";

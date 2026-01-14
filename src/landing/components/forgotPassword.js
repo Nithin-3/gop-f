@@ -31,6 +31,7 @@ const ForgotPasswordComponent = () => {
       document.getElementById("loader").style.display = "none";
       toast(data.msg);
     } catch (error) {
+      console.error("sendVerificationCode error:", error);
       document.getElementById("loader").style.display = "none";
       toast(error.message || "Something went wrong");
     }
@@ -66,6 +67,7 @@ const ForgotPasswordComponent = () => {
         }, 1000);
       }
     } catch (error) {
+      console.error("resetPass error:", error);
       document.getElementById("loader").style.display = "none";
       toast(error.message || "Something went wrong");
     }

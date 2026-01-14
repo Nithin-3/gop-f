@@ -21,7 +21,7 @@ export const SubmitButton = ({ onClick }) => (
     </div>
 );
 
-export const Card = ({ width, cardInfo, dropDown }) => {
+export const Card = ({ width, cardInfo, dropDown = [] }) => {
     const [showOtherOptions, setShowOtherOptions] = React.useState(false);
     const otherOptions = React.useRef();
     const dispatch = useDispatch();
@@ -29,28 +29,94 @@ export const Card = ({ width, cardInfo, dropDown }) => {
     const [courseDetails, setCourseDetails] = React.useState();
     const [availDetails, setAvailDetails] = React.useState();
     const [teacherDetails, setTeacherDetails] = React.useState();
-    const [studentName, setStudentName] = React.useState();
+    const [studentName, setStudentName] = React.useState("");
     const [disableBtn, setDisableBtn] = React.useState(false);
     const [btnName] = React.useState("Start Class");
     const [cancelModal, setCancelModal] = React.useState(false);
 
-    const openLiveClass = () => disableBtn ? toast.error("This session time has elapsed.") : history({ pathname: "/liveclass", state: { role: "Teacher", studentName, availDetails, courseDetails, sessionDetails: cardInfo } });
+    const openLiveClass = () => {
+        if (disableBtn) {
+            return toast.error("This session time has elapsed.");
+        }
+        history("/liveclass", {
+            state: {
+                role: "Teacher",
+                studentName,
+                availDetails,
+                courseDetails,
+                sessionDetails: cardInfo,
+                teacherDetails
+            }
+        });
+    };
+
     const handleClick = e => { if (otherOptions.current && !otherOptions.current.contains(e.target)) setShowOtherOptions(false); };
-    window.addEventListener('mousedown', handleClick, false);
 
     React.useEffect(() => {
-        async function getStudentName() { try { const student = await dispatch(getStudentDetailById(cardInfo.studentId)); setStudentName(student[0].firstName + " " + student[0].lastName); } catch (error) { console.log(error); } }
-        async function getCourseDetails(cid) { try { const res = await dispatch(getCourseById(cid)); setCourseDetails(res); } catch (error) { console.log(error); } }
-        async function getTeacherName(tid) { try { const tname = await dispatch(getTeacherDetailByTId(tid)); setTeacherDetails(tname); } catch (error) { console.log(error); } }
-        async function getAvailTime(aid) { try { const availTime = await dispatch(getAvailByAId(aid)); let classDate = moment(cardInfo?.to); let todayDate = moment(Date.now()); if (Number(classDate) < Number(todayDate)) setDisableBtn(true); setAvailDetails(availTime); } catch (error) { console.log(error); } }
+        window.addEventListener('mousedown', handleClick, false);
+        return () => window.removeEventListener('mousedown', handleClick, false);
+    }, []);
+
+    React.useEffect(() => {
+        async function getStudentInfo() {
+            if (!cardInfo?.studentId) {
+                setStudentName("No Student Assigned");
+                return;
+            }
+            try {
+                const res = await dispatch(getStudentDetailById(cardInfo.studentId));
+                const student = res?.success ? res.data : res;
+                if (student && student.length > 0) {
+                    setStudentName(student[0].firstName + " " + student[0].lastName);
+                } else if (student && student.firstName) {
+                    setStudentName(student.firstName + " " + student.lastName);
+                } else {
+                    setStudentName("Student Details Not Found");
+                }
+            } catch (error) {
+                console.log("getStudentInfo error:", error);
+                setStudentName("Error Loading Student");
+            }
+        }
+        async function getCourseDetails(cid) {
+            try {
+                const res = await dispatch(getCourseById(cid));
+                const course = res?.success ? res.data : res;
+                setCourseDetails(course);
+            } catch (error) { console.log("getCourseDetails error:", error); }
+        }
+        async function getTeacherInfo(tid) {
+            try {
+                const res = await dispatch(getTeacherDetailByTId(tid));
+                const teacher = res?.success ? res.data : res;
+                setTeacherDetails(teacher);
+            } catch (error) { console.log("getTeacherInfo error:", error); }
+        }
+        async function getAvailTime(aid) {
+            try {
+                const res = await dispatch(getAvailByAId(aid));
+                const availTime = res?.success ? res.data : res;
+                let classDate = moment(availTime?.to);
+                let todayDate = moment();
+                if (classDate.isBefore(todayDate)) setDisableBtn(true);
+                setAvailDetails(availTime);
+            } catch (error) { console.log("getAvailTime error:", error); }
+        }
+
         if (cardInfo?.availabilityIds?.length > 0) getAvailTime(cardInfo.availabilityIds[0]);
-        getStudentName(); getTeacherName(cardInfo.teacherId); getCourseDetails(cardInfo.courseId);
+        getStudentInfo();
+        getTeacherInfo(cardInfo.teacherId);
+        getCourseDetails(cardInfo.courseId);
     }, [cardInfo, dispatch]);
 
     const cancelSession = async () => {
         let sessionObj = { teacherId: cardInfo.teacherId, studentId: cardInfo.studentId, sessionId: cardInfo._id, availId: availDetails ? availDetails.id : '' };
         const result = await dispatch(cancelVideoSession(sessionObj));
-        if (result) { setCancelModal(false); alert("Session Cancelled Successfully."); window.location.reload(); }
+        if (result) {
+            setCancelModal(false);
+            toast.success("Session Cancelled Successfully.");
+            window.location.reload();
+        }
     }
 
     return (
@@ -58,20 +124,66 @@ export const Card = ({ width, cardInfo, dropDown }) => {
             {cancelModal && <CancelModal setCancelModal={setCancelModal} width={width} cancelSession={cancelSession} availDetails={availDetails} cardInfo={cardInfo} />}
             <div className={styles.cardContainer}>
                 <div className={styles.courseimg}><img src={courseDetails ? courseDetails?.courseImage?.data : english} alt="language_flag" className={styles.cardImg} /></div>
-                {availDetails ? <div className={styles.div1}><div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>{courseDetails ? courseDetails?.title?.data : cardInfo.heading}</div><div style={{ fontSize: '20px', fontWeight: "bold" }}>{moment(availDetails.from).format("hh:mm a")}</div><div style={{ fontSize: '14px' }}>{moment(availDetails.from).format("dddd - MMMM DD, yyyy")}</div></div> : <div className={styles.div1}><div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>{courseDetails ? courseDetails?.title?.data : cardInfo.heading}</div><div style={{ marginTop: "1rem", fontSize: '14px' }}>Not Scheduled</div></div>}
-                <div className={styles.div2}><div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>{studentName}</div><div style={{ fontSize: '20px', fontWeight: "bold" }}>{courseDetails ? courseDetails.language.data : cardInfo.time}</div><div style={{ display: 'flex', alignItems: 'center', gap: "0.3rem" }}><i className="far fa-clock"></i><div>{cardInfo.isFree ? 30 : 60} minutes</div></div></div>
-                {cardInfo.status === "Cancelled" ? <div className={styles.btncontainer}><button className={styles.btn}>Cancelled</button></div> : <div className={styles.btncontainer}><button className={styles.btn} onClick={openLiveClass}>{btnName}</button><div className={styles.moreOptions} ref={otherOptions}><i className={styles.moreOptionsIcon + ' fas fa-ellipsis-h'} onClick={() => setShowOtherOptions(true)}></i><ul className={styles.otherOptions + ' ' + (showOtherOptions ? styles.showOptions : '')}>{dropDown.map((item, index) => <li key={index} onClick={() => item.modal(true)}><span>{item.text}</span></li>)}<li onClick={() => setCancelModal(true)} style={{ color: "#fffefe", backgroundColor: "#f83030" }}><span>Cancel</span> <i className='fas fa-trash'></i></li></ul></div></div>}
+                {availDetails ? (
+                    <div className={styles.div1}>
+                        <div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>
+                            {courseDetails ? courseDetails?.title?.data : cardInfo.heading}
+                        </div>
+                        <div style={{ fontSize: '20px', fontWeight: "bold" }}>{moment(availDetails.from).format("hh:mm a")}</div>
+                        <div style={{ fontSize: '14px' }}>{moment(availDetails.from).format("dddd - MMMM DD, yyyy")}</div>
+                    </div>
+                ) : (
+                    <div className={styles.div1}>
+                        <div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>
+                            {courseDetails ? courseDetails?.title?.data : cardInfo.heading}
+                        </div>
+                        <div style={{ marginTop: "1rem", fontSize: '14px' }}>Not Scheduled</div>
+                    </div>
+                )}
+                <div className={styles.div2}>
+                    <div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>{studentName}</div>
+                    <div style={{ fontSize: '20px', fontWeight: "bold" }}>
+                        {courseDetails ? courseDetails.language.data : cardInfo.time}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: "0.3rem" }}>
+                        <i className="far fa-clock"></i>
+                        <div>{cardInfo.isFree || cardInfo.type === "30" ? 30 : 60} minutes</div>
+                    </div>
+                </div>
+                {cardInfo.status === "Cancelled" ? (
+                    <div className={styles.btncontainer}>
+                        <button className={styles.btn} style={{ background: '#999', cursor: 'default' }}>Cancelled</button>
+                    </div>
+                ) : (
+                    <div className={styles.btncontainer}>
+                        <button className={styles.btn} onClick={openLiveClass}>{btnName}</button>
+                        <div className={styles.moreOptions} ref={otherOptions}>
+                            <i className={styles.moreOptionsIcon + ' fas fa-ellipsis-h'} onClick={() => setShowOtherOptions(true)}></i>
+                            <ul className={styles.otherOptions + ' ' + (showOtherOptions ? styles.showOptions : '')}>
+                                {dropDown?.map((item, index) => (
+                                    <li key={index} onClick={() => { item.modal(true); setShowOtherOptions(false); }}>
+                                        <span>{item.text}</span>
+                                    </li>
+                                ))}
+                                <li onClick={() => { setCancelModal(true); setShowOtherOptions(false); }} style={{ color: "#fffefe", backgroundColor: "#f83030" }}>
+                                    <span>Cancel</span>
+                                    <i className='fas fa-trash'></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     )
 }
 
-export const CardMobile = ({ width, cardInfo, dropDown }) => {
+export const CardMobile = ({ width, cardInfo, dropDown = [] }) => {
     const [courseDetails, setCourseDetails] = React.useState();
     const [availDetails, setAvailDetails] = React.useState();
     const [teacherDetails, setTeacherDetails] = React.useState();
     const [cancelModal, setCancelModal] = React.useState(false);
-    const [studentName, setStudentName] = React.useState();
+    const [studentName, setStudentName] = React.useState("");
     const [disableBtn, setDisableBtn] = React.useState(false);
     const [btnName, setBtnName] = React.useState("Start Class");
     const [showOtherOptions, setShowOtherOptions] = React.useState(false);
@@ -81,26 +193,123 @@ export const CardMobile = ({ width, cardInfo, dropDown }) => {
 
     React.useEffect(() => {
         if (cardInfo.status === "Need Scheduling") setBtnName("Schedule");
-        async function getCourseDetails(cid) { try { const res = await dispatch(getCourseById(cid)); setCourseDetails(res); } catch (error) { console.log(error); } }
-        async function getTeacherName(tid) { try { const tname = await dispatch(getTeacherDetailByTId(tid)); setTeacherDetails(tname); } catch (error) { console.log(error); } }
-        async function getStudentName() { try { const student = await dispatch(getStudentDetailById(cardInfo.studentId)); setStudentName(student[0].firstName + " " + student[0].lastName); } catch (error) { console.log(error); } }
-        async function getAvailTime(aid) { try { const availTime = await dispatch(getAvailByAId(aid)); let classDate = moment(cardInfo?.to); let todayDate = moment(Date.now()); if (Number(classDate) < Number(todayDate)) setDisableBtn(true); setAvailDetails(availTime); } catch (error) { console.log(error); } }
+        async function getCourseDetails(cid) {
+            try {
+                const res = await dispatch(getCourseById(cid));
+                const course = res?.success ? res.data : res;
+                setCourseDetails(course);
+            } catch (error) { console.log(error); }
+        }
+        async function getTeacherInfo(tid) {
+            try {
+                const res = await dispatch(getTeacherDetailByTId(tid));
+                const teacher = res?.success ? res.data : res;
+                setTeacherDetails(teacher);
+            } catch (error) { console.log(error); }
+        }
+        async function getStudentInfo() {
+            if (!cardInfo?.studentId) {
+                setStudentName("No Student Assigned");
+                return;
+            }
+            try {
+                const res = await dispatch(getStudentDetailById(cardInfo.studentId));
+                const student = res?.success ? res.data : res;
+                if (student && student.length > 0) {
+                    setStudentName(student[0].firstName + " " + student[0].lastName);
+                } else if (student && student.firstName) {
+                    setStudentName(student.firstName + " " + student.lastName);
+                } else {
+                    setStudentName("Student Details Not Found");
+                }
+            } catch (error) {
+                console.log("getStudentInfo error:", error);
+                setStudentName("Error Loading Student");
+            }
+        }
+        async function getAvailTime(aid) {
+            try {
+                const res = await dispatch(getAvailByAId(aid));
+                const availTime = res?.success ? res.data : res;
+                let classDate = moment(availTime?.to);
+                let todayDate = moment();
+                if (classDate.isBefore(todayDate)) setDisableBtn(true);
+                setAvailDetails(availTime);
+            } catch (error) { console.log(error); }
+        }
         if (cardInfo?.availabilityIds?.length > 0) getAvailTime(cardInfo.availabilityIds[0]);
-        getCourseDetails(cardInfo.courseId); getTeacherName(cardInfo.teacherId); getStudentName();
+        getCourseDetails(cardInfo.courseId);
+        getTeacherInfo(cardInfo.teacherId);
+        getStudentInfo();
     }, [cardInfo, dispatch]);
 
-    const cancelSession = async () => { let sessionObj = { teacherId: cardInfo.teacherId, studentId: cardInfo.studentId, sessionId: cardInfo._id, availId: availDetails ? availDetails.id : '' }; const result = await dispatch(cancelVideoSession(sessionObj)); if (result) { setCancelModal(false); alert("Session Cancelled Successfully."); window.location.reload(); } }
+    const cancelSession = async () => {
+        let sessionObj = { teacherId: cardInfo.teacherId, studentId: cardInfo.studentId, sessionId: cardInfo._id, availId: availDetails ? availDetails.id : '' };
+        const result = await dispatch(cancelVideoSession(sessionObj));
+        if (result) {
+            setCancelModal(false);
+            toast.success("Session Cancelled Successfully.");
+            window.location.reload();
+        }
+    }
     const openLiveClass = () => disableBtn ? toast.error("This session time has elapsed.") : history({ pathname: "/liveclass", state: { role: "Teacher", studentName, availDetails, courseDetails, sessionDetails: cardInfo } });
+
+    const handleClick = e => { if (otherOptions.current && !otherOptions.current.contains(e.target)) setShowOtherOptions(false); };
+
+    React.useEffect(() => {
+        window.addEventListener('mousedown', handleClick, false);
+        return () => window.removeEventListener('mousedown', handleClick, false);
+    }, []);
 
     return (
         <>
             {cancelModal && <CancelModal setCancelModal={setCancelModal} width={width} cancelSession={cancelSession} availDetails={availDetails} cardInfo={cardInfo} />}
             <div className={styles.cardMobileContainer} style={{ marginBottom: "1.5rem" }}>
-                {availDetails ? <div className={styles.div1}><div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>{courseDetails ? courseDetails?.title?.data : cardInfo.heading}</div><div style={{ fontSize: '20px', fontWeight: "bold" }}>{moment(availDetails.from).format("hh:mm a")}</div><div style={{ fontSize: '14px' }}>{moment(availDetails.from).format("dddd - MMMM DD, yyyy")}</div></div> : <div className={styles.div1}><div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>{courseDetails ? courseDetails?.title?.data : cardInfo.heading}</div><div style={{ marginTop: width >= 992 ? "1rem" : "", fontSize: '14px' }}>Not Scheduled</div></div>}
+                {availDetails ? (
+                    <div className={styles.div1}>
+                        <div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>
+                            {courseDetails ? courseDetails?.title?.data : cardInfo.heading}
+                        </div>
+                        <div style={{ fontSize: '20px', fontWeight: "bold" }}>{moment(availDetails.from).format("hh:mm a")}</div>
+                        <div style={{ fontSize: '14px' }}>{moment(availDetails.from).format("dddd - MMMM DD, yyyy")}</div>
+                    </div>
+                ) : (
+                    <div className={styles.div1}>
+                        <div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc" }}>
+                            {courseDetails ? courseDetails?.title?.data : cardInfo.heading}
+                        </div>
+                        <div style={{ marginTop: width >= 992 ? "1rem" : "", fontSize: '14px' }}>Not Scheduled</div>
+                    </div>
+                )}
                 <div style={{ fontSize: '16px', fontWeight: "bold", color: "#51addc", marginTop: width >= 992 ? "" : "1rem" }}>{studentName}</div>
                 <div style={{ fontSize: '20px', fontWeight: "bold" }}>{courseDetails ? courseDetails.language.data : cardInfo.time}</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: "0.3rem" }}><i className="far fa-clock"></i><div>{cardInfo.isFree ? 30 : 60} minutes</div></div>
-                {cardInfo.status === "Cancelled" ? <div className={styles.btncontainer}><button className={styles.btn}>Cancelled</button></div> : <div className={styles.btncontainer}><button className={styles.btn} onClick={openLiveClass}>{btnName}</button><div className={styles.moreOptions} ref={otherOptions}><i className={styles.moreOptionsIcon + ' fas fa-ellipsis-h'} onClick={() => setShowOtherOptions(true)}></i><ul className={styles.otherOptions + ' ' + (showOtherOptions ? styles.showOptions : '')}>{dropDown.map((item, index) => <li key={index} onClick={() => item.modal(true)}><span>{item.text}</span></li>)}<li onClick={() => setCancelModal(true)} style={{ color: "#fffefe", backgroundColor: "#f83030" }}><span>Cancel</span> <i className='fas fa-trash'></i></li></ul></div></div>}
+                <div style={{ display: 'flex', alignItems: 'center', gap: "0.3rem" }}>
+                    <i className="far fa-clock"></i>
+                    <div>{cardInfo.isFree || cardInfo.type === "30" ? 30 : 60} minutes</div>
+                </div>
+                {cardInfo.status === "Cancelled" ? (
+                    <div className={styles.btncontainer}>
+                        <button className={styles.btn} style={{ background: '#999', cursor: 'default', width: '100%' }}>Cancelled</button>
+                    </div>
+                ) : (
+                    <div className={styles.btncontainer}>
+                        <button className={styles.btn} onClick={openLiveClass}>{btnName}</button>
+                        <div className={styles.moreOptions} ref={otherOptions}>
+                            <i className={styles.moreOptionsIcon + ' fas fa-ellipsis-h'} onClick={() => setShowOtherOptions(true)}></i>
+                            <ul className={styles.otherOptions + ' ' + (showOtherOptions ? styles.showOptions : '')}>
+                                {dropDown?.map((item, index) => (
+                                    <li key={index} onClick={() => { item.modal(true); setShowOtherOptions(false); }}>
+                                        <span>{item.text}</span>
+                                    </li>
+                                ))}
+                                <li onClick={() => { setCancelModal(true); setShowOtherOptions(false); }} style={{ color: "#fffefe", backgroundColor: "#f83030" }}>
+                                    <span>Cancel</span>
+                                    <i className='fas fa-trash'></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

@@ -53,14 +53,7 @@ function MyCalendar() {
 
   const addTeacherAvail = async (slots) => {
     const result = await dispatch(addTeacherAvailability(slots));
-    if (result?.success) {
-      toast.success("Slot added successfully");
-      setAddEventModal(false);
-      getTeacherAvail();
-    } else {
-      toast.error("Something went wrong");
-      setAddEventModal(false);
-    }
+    return result;
   };
 
   useEffect(() => { getTeacherLoggedData(); getTeacherAvail(); }, [getTeacherLoggedData, getTeacherAvail]);
@@ -132,7 +125,7 @@ function MyCalendar() {
 
   return (
     <>
-      {addEventModal && <AddEventModal setAddEventModal={setAddEventModal} slots={selectedTimeSlots} addSlots={addTeacherAvail} />}
+      {addEventModal && <AddEventModal setAddEventModal={setAddEventModal} slots={selectedTimeSlots} addSlots={addTeacherAvail} getAvailability={getTeacherAvail} />}
       {editEventModal && <EditEventModal setEditEventModal={setEditEventModal} selectedSlot={selectedSlot} availability={availability} setAvailability={setAvailability} />}
       <div className="teacherCalendar">
         <Calendar

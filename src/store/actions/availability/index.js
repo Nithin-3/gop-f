@@ -22,8 +22,8 @@ export const addTeacherAvailability = (payload) => async (dispatch) => {
     // dispatch({ type: "Create_Course", payload: { ...data } });
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response.message;
+    console.error(e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to add availability" };
   }
 };
 
@@ -35,18 +35,19 @@ export const getAvailByTeacher = async (id) => {
     console.log(data, "DaTA");
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response.message;
+    console.error(e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to get availability" };
   }
 };
 
-export const getAvailByAId = (aid) => async(dispatch) => {
-  try{
+export const getAvailByAId = (aid) => async (dispatch) => {
+  try {
     let API = createAxios();
-    const {data} = await API.get(`/avail/${aid}`)
+    const { data } = await API.get(`/avail/${aid}`)
     return data
-  } catch(error) {
-    return error.response.message;
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error.response?.data?.message || error.message || "Failed to get availability" };
   }
 }
 
@@ -59,8 +60,8 @@ export const getTeacherAvailability = (payload) => async (dispatch) => {
     console.log(data, "DaTA");
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response.message;
+    console.error(e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to get availability" };
   }
 };
 
@@ -71,7 +72,7 @@ export const deleteAvailability = async (id) => {
     const { data } = await API.delete(`/deleteAvailability/${id}`);
     return data;
   } catch (e) {
-    console.log(e);
-    return e;
+    console.error(e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to delete availability" };
   }
 };

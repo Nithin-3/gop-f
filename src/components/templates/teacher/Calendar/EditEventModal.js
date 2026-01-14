@@ -20,6 +20,8 @@ const EditEventModal = ({
       toast.success("Slot Deleted Successfully!");
       setAvailability((prev) => prev.filter((el) => el.id !== selectedSlot.id));
       setEditEventModal(false);
+    } else {
+      toast.error(data.message || "Failed to delete slot.");
     }
   };
 

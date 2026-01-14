@@ -8,6 +8,22 @@ function TeacherCardHome({ course, width }) {
   const [fav, setFav] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
 
+  if (width < 992) return null; // Only render for large screens
+  if (!course || !course.userId) return null;
+
+  const onType = course.userId.onType || {};
+
+  const getYTVideoId = (url) => {
+    if (!url) return "";
+    if (url.includes("v=")) return url.split("v=")[1].split("&")[0];
+    if (url.includes("youtu.be/")) return url.split("youtu.be/")[1].split("?")[0];
+    return "";
+  };
+
+  const videoId = getYTVideoId(onType.videoURL?.data);
+  const languageFlag = course.language?.data ? `/flags/${course.language.data.toLowerCase()}.png` : "";
+
+
   const showCalendar = () => {
     localStorage.setItem("chosenCourse", JSON.stringify(course));
   };
@@ -16,11 +32,6 @@ function TeacherCardHome({ course, width }) {
     localStorage.setItem("chosenCourse", JSON.stringify(course));
     navigate("/teacher-profile");
   };
-
-  if (width < 992) return null; // Only render for large screens
-
-  const videoId = course.userId.onType.videoURL.data.split("?v=")[1];
-  const languageFlag = `/flags/${course.language.data.toLowerCase()}.png`;
 
   return (
     <div style={{ display: "flex", marginBottom: "20px" }}>
@@ -50,7 +61,7 @@ function TeacherCardHome({ course, width }) {
             style={{ cursor: "pointer", width: "100px", height: "100px", position: "relative" }}
           >
             <img
-              src={course.userId.onType.teacherProfilePic.data}
+              src={onType.teacherProfilePic?.data}
               alt="teacher"
               style={{
                 border: "3px solid grey",
@@ -60,20 +71,22 @@ function TeacherCardHome({ course, width }) {
                 height: "100%",
               }}
             />
-            <img
-              src={languageFlag}
-              alt="language flag"
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: "-10px",
-                width: "30px",
-                height: "30px",
-              }}
-            />
+            {languageFlag && (
+              <img
+                src={languageFlag}
+                alt="language flag"
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: "-10px",
+                  width: "30px",
+                  height: "30px",
+                }}
+              />
+            )}
           </div>
           <div style={{ marginTop: "10px", color: "#fe1848", textAlign: "center" }}>
-            ${course.price.data} <br /> USD/hr
+            ${course.price?.data || course.price} <br /> USD/hr
           </div>
         </div>
 
@@ -98,10 +111,10 @@ function TeacherCardHome({ course, width }) {
                 marginBottom: "10px",
               }}
             >
-              {course.title.data}
+              {course.title?.data || course.title}
             </div>
             <div onClick={showTeacherProfile} style={{ cursor: "pointer" }}>
-              {course.userId.onType.firstName.data} {course.userId.onType.lastName.data}{" "}
+              {onType.firstName?.data || onType.firstName} {onType.lastName?.data || onType.lastName}{" "}
               <i className="far fa-check-circle"></i>
             </div>
           </div>
@@ -110,14 +123,14 @@ function TeacherCardHome({ course, width }) {
           <div style={{ display: "flex", alignItems: "center" }}>
             {[1, 2, 3, 4, 5].map((_, index) => (
               <span key={index}>
-                {index < course.userId.onType.avgRating ? (
+                {index < (onType.avgRating || 0) ? (
                   <i className="fas fa-star" />
                 ) : (
                   <i className="far fa-star" />
                 )}
               </span>
             ))}
-            &nbsp;({course.userId.onType.expertise.ratings_teacher.length})
+            &nbsp;({onType.expertise?.ratings_teacher?.length || 0})
           </div>
 
           {/* Teacher Type */}
@@ -127,7 +140,7 @@ function TeacherCardHome({ course, width }) {
               borderBottom: "1px solid #fe1848",
             }}
           >
-            {course.userId.onType.teacherType.data}
+            {onType.teacherType?.data || onType.teacherType}
           </div>
 
           {/* Languages */}
@@ -135,18 +148,18 @@ function TeacherCardHome({ course, width }) {
             <div>
               <div style={{ color: "#a4a4a5" }}>Teaches</div>
               <div style={{ color: "#454544", fontSize: "18px" }}>
-                {course.userId.onType.languageTeach[0].data}
-                {course.userId.onType.languageTeach.length > 1 && (
-                  <span style={{ fontSize: "14px" }}> +{course.userId.onType.languageTeach.length} more</span>
+                {onType.languageTeach?.[0]?.data || onType.languageTeach?.[0] || "N/A"}
+                {onType.languageTeach?.length > 1 && (
+                  <span style={{ fontSize: "14px" }}> +{onType.languageTeach.length - 1} more</span>
                 )}
               </div>
             </div>
             <div>
               <div style={{ color: "#a4a4a5" }}>Also Speaks</div>
               <div style={{ color: "#454544", fontSize: "18px" }}>
-                {course.userId.onType.languageSpeak[0].data}
-                {course.userId.onType.languageSpeak.length > 1 && (
-                  <span style={{ fontSize: "14px" }}> +{course.userId.onType.languageSpeak.length} more</span>
+                {onType.languageSpeak?.[0]?.data || onType.languageSpeak?.[0] || "N/A"}
+                {onType.languageSpeak?.length > 1 && (
+                  <span style={{ fontSize: "14px" }}> +{onType.languageSpeak.length - 1} more</span>
                 )}
               </div>
             </div>
@@ -166,7 +179,10 @@ function TeacherCardHome({ course, width }) {
         >
           <i
             className={fav ? "fas fa-heart" : "far fa-heart"}
-            onClick={() => setFav(!fav)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setFav(!fav);
+            }}
             style={{ cursor: "pointer" }}
           ></i>
           <BookFreeTrialButton course={course} />
@@ -212,6 +228,7 @@ function TeacherCardHome({ course, width }) {
       </div>
     </div>
   );
+
 }
 
 export default TeacherCardHome;

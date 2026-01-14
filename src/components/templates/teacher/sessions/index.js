@@ -20,14 +20,36 @@ function TeacherSessions() {
   const dispatch = useDispatch();
   const [mobileDropdown, setMobileDropdown] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Upcoming");
-  const tabs = ["Upcoming","Free Trail","Cancelled","Completed","Incompleted","Report Issue","Need Scheduling"];
+  const tabs = ["Upcoming", "Free Trail", "Cancelled", "Completed", "Incompleted", "Report Issue", "Need Scheduling"];
 
   React.useEffect(() => {
     let userObj = JSON.parse(window.localStorage.getItem("profile"));
-    if (!userObj.isOnBoarding) { toast.warn("Onboarding Pending"); return history("/teacher/onboard"); }
+    if (!userObj?.isOnBoarding) {
+      toast.warn("Onboarding Pending");
+      return history("/teacher/onboard");
+    }
     let teacherData = JSON.parse(window.localStorage.getItem("teacherData"));
-    if (teacherData.approvalStatus !== "verified") { toast.warn("Admin Verification Pending"); return history("/teacher/dashboard"); }
-    async function getSessions() { try { const res = await dispatch(getTeacherSessions(teacherData.id)); setSessions(res); } catch (error) { console.log(error); } }
+    if (teacherData?.approvalStatus !== "verified") {
+      toast.warn("Admin Verification Pending");
+      return history("/teacher/dashboard");
+    }
+
+    async function getSessions() {
+      try {
+        const result = await dispatch(getTeacherSessions());
+        console.log("Teacher Sessions API result:", result);
+        if (result?.success) {
+          setSessions(result.data);
+        } else if (Array.isArray(result)) {
+          setSessions(result);
+        } else {
+          setSessions([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch teacher sessions:", error);
+        setSessions([]);
+      }
+    }
     getSessions();
   }, [dispatch, history]);
 
@@ -35,27 +57,27 @@ function TeacherSessions() {
     <main className={styles.mainSection}>
       {width >= 992 ? (
         <div className={styles.sessionTabs}>
-          {tabs.map((item,index)=>(
-            <div key={index} className={styles.sessionTab + " " + `${activeTab===item?styles.sessionTabActive:""}`} onClick={()=>setActiveTab(item)}>{item}</div>
+          {tabs.map((item, index) => (
+            <div key={index} className={styles.sessionTab + " " + `${activeTab === item ? styles.sessionTabActive : ""}`} onClick={() => setActiveTab(item)}>{item}</div>
           ))}
         </div>
       ) : (
         <>
           <div className={styles.sessionTabs}>
             <div className={styles.sessionTabHeading}>{activeTab}</div>
-            <div className={styles.arrowIcon} onClick={()=>setMobileDropdown(!mobileDropdown)}>{mobileDropdown?<i className='fas fa-caret-up'></i>:<i className='fas fa-caret-down'></i>}</div>
+            <div className={styles.arrowIcon} onClick={() => setMobileDropdown(!mobileDropdown)}>{mobileDropdown ? <i className='fas fa-caret-up'></i> : <i className='fas fa-caret-down'></i>}</div>
           </div>
-          {mobileDropdown && <div style={{position:"relative"}}><div className={styles.mobileDropdown}>{tabs.map((item,index)=><div key={index} className={styles.sessionTab + " " + `${activeTab===item?styles.sessionTabActiveDropdown:""}`} onClick={()=>{setActiveTab(item); setMobileDropdown(false);}}>{item}</div>)}</div></div>}
+          {mobileDropdown && <div style={{ position: "relative" }}><div className={styles.mobileDropdown}>{tabs.map((item, index) => <div key={index} className={styles.sessionTab + " " + `${activeTab === item ? styles.sessionTabActiveDropdown : ""}`} onClick={() => { setActiveTab(item); setMobileDropdown(false); }}>{item}</div>)}</div></div>}
         </>
       )}
       {{
-        Upcoming:<Upcoming width={width} arr={sessions} />,
-        "Free Trail":<FreeCourses width={width} arr={sessions} />,
-        Cancelled:<Cancelled width={width} arr={sessions} />,
-        Completed:<Completed width={width} arr={sessions} />,
-        Incompleted:<Incompleted width={width} arr={sessions} />,
-        "Report Issue":<ReportIssue width={width} />,
-        "Need Scheduling":<NeedScheduling width={width} arr={sessions} />
+        Upcoming: <Upcoming width={width} arr={sessions} />,
+        "Free Trail": <FreeCourses width={width} arr={sessions} />,
+        Cancelled: <Cancelled width={width} arr={sessions} />,
+        Completed: <Completed width={width} arr={sessions} />,
+        Incompleted: <Incompleted width={width} arr={sessions} />,
+        "Report Issue": <ReportIssue width={width} />,
+        "Need Scheduling": <NeedScheduling width={width} arr={sessions} />
       }[activeTab]}
     </main>
   );

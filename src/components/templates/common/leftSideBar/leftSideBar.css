@@ -27,6 +27,7 @@
 .sideNav .nav__logo {
   margin-bottom: 2rem;
 }
+
 .sideNav {
   font-weight: 600;
   font-size: 1.1rem;
@@ -60,11 +61,13 @@
   position: relative;
   cursor: pointer;
 }
+
 .nav__link.signOut {
   background: inherit;
   border: inherit;
   font-size: 1em;
 }
+
 .sideNav .nav__link::before,
 .sideNav .nav__link::after {
   position: absolute;
@@ -90,6 +93,9 @@
 .sideNav .nav__icon {
   font-size: 1.2rem;
   margin-right: 0.8rem;
+  width: 1.5rem;
+  text-align: center;
+  display: inline-block;
 }
 
 .sideNav .nav__name {
@@ -124,20 +130,24 @@
   background-color: #fff;
   height: 10vh;
 }
+
 .mobileNav .navbar-brand {
   font-size: 1.3em;
   text-decoration: none;
 }
+
 .mobileNav .hamburgerIcon {
   width: 35px;
   margin-right: 15px;
 }
+
 .avtar {
   border-radius: 55%;
   width: 50px;
   height: 50px;
   margin-left: auto;
 }
+
 @media screen and (min-width: 992px) {
   .sideNav {
     left: 0;

@@ -22,7 +22,8 @@ const WithDrawModal = ({ width, setEditModal, teacherData, teacherWallet, getWal
       const { data } = await axios.get(`https://ifsc.razorpay.com/${value}`);
       setIsIFSCCorrect(true);
       return { branch: data?.BRANCH, bank: data?.BANK };
-    } catch {
+    } catch (e) {
+      console.error("IFSC lookup failed:", e);
       setIsIFSCCorrect(false);
       toast.error("Add Proper IFSC code");
     }
@@ -46,7 +47,7 @@ const WithDrawModal = ({ width, setEditModal, teacherData, teacherWallet, getWal
     e.preventDefault();
     if (activeTab === "UPI" && !upi) return toast.warn("Please fill the required field");
     if (activeTab === "Bank Transfer") {
-      const requiredFields = ["accountHolderName","accountNumber","confirmAccountNumber","bankLocation","bankAccountType","bankName","branchName"];
+      const requiredFields = ["accountHolderName", "accountNumber", "confirmAccountNumber", "bankLocation", "bankAccountType", "bankName", "branchName"];
       for (let field of requiredFields) if (!bankDetails[field]) return toast.warn("Please fill the required fields");
       if (bankDetails.confirmAccountNumber !== bankDetails.accountNumber) return toast.warn("Account Number and Confirm Account Number don't match");
     }

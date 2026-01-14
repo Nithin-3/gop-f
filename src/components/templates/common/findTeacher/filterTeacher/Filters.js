@@ -1,4 +1,6 @@
 import React from "react";
+import { toast } from "react-toastify";
+
 
 import Select from "./select/Select";
 import PriceFilter from "./priceFilter/PriceFilter";
@@ -38,12 +40,12 @@ function Filters(props) {
     console.log("ttt", allFilters);
     // const filterStore = null;
 
-    const [courseType, setCourseType] = React.useState(allFilters?.courseT);
-    const [availability, setAvailability] = React.useState(allFilters?.availability);
-    const [minPrice, setMinPrice] = React.useState(allFilters?.minPrice);
-    const [maxPrice, setMaxPrice] = React.useState(allFilters?.maxPrice);
-    const [motherTongue, setMotherTongue] = React.useState(allFilters?.motherT);
-    const [from, setFrom] = React.useState(allFilters?.from);
+    const [courseType, setCourseType] = React.useState(allFilters?.courseT || "Course");
+    const [availability, setAvailability] = React.useState(allFilters?.availability || "Availability");
+    const [minPrice, setMinPrice] = React.useState(allFilters?.minPrice || 0);
+    const [maxPrice, setMaxPrice] = React.useState(allFilters?.maxPrice || 200);
+    const [motherTongue, setMotherTongue] = React.useState(allFilters?.motherT || "Mother Tongue");
+    const [from, setFrom] = React.useState(allFilters?.from || "Country");
     // const [courseType, setCourseType] = React.useState("Course");
     // const [availability, setAvailability] = React.useState('Availability');
     // const [minPrice, setMinPrice] = React.useState(0);
@@ -51,8 +53,8 @@ function Filters(props) {
     // const [motherTongue, setMotherTongue] = React.useState('Mother Tongue');
     // const [from, setFrom] = React.useState("Country");
 
-    const [motherTongueOptions, setMotherTongueOptions] = React.useState();
-    const [countryOptions, setCountryOptions] = React.useState();
+    const [motherTongueOptions, setMotherTongueOptions] = React.useState([]);
+    const [countryOptions, setCountryOptions] = React.useState([]);
 
     React.useEffect(() => {
         setLang("Language");
@@ -76,45 +78,57 @@ function Filters(props) {
             page: 1,
             limit: 100,
         };
-        // const language = lang === 'Language' ? 'All' : lang;
-        // const courseT = courseType === 'Course' ? 'All' : courseType;
-        // const startPrice = minPrice;
-        // const endPrice = maxPrice;
-        // const country = from === 'Country' ? '' : from;
-        // const motherT = motherTongue === 'Mother Tongue' ? '' : motherTongue;
-        // const page = 1;
-        // const limit = 10;
 
-        localStorage.setItem("allFilters", JSON.stringify(currFilters));
+        const filtersToSave = {
+            lang,
+            courseT: courseType,
+            availability,
+            minPrice,
+            maxPrice,
+            motherT: motherTongue,
+            from,
+        };
 
-        // console.log("sss", currFilters);
-        // const apiStr = `?language=${language}&courseType=${courseT.replace(" ", "%20")}&startPrice=${startPrice}&endPrice=${endPrice}&motherTongue=${motherT}&country=${country}&page=${page}&limit=${limit}`;
-        const apiStr = `?language=${currFilters.language
-            }&courseType=${currFilters.courseT.replace(" ", "%20")}&startPrice=${currFilters.startPrice
-            }&endPrice=${currFilters.endPrice}&motherTongue=${currFilters.motherT
-            }&country=${currFilters.country}&page=${currFilters.page}&limit=${currFilters.limit
-            }`;
-        console.log("qqq", apiStr);
+        localStorage.setItem("allFilters", JSON.stringify(filtersToSave));
 
-        // const apiStr = null;
+        const apiStr = `?language=${encodeURIComponent(currFilters.language)}&courseType=${encodeURIComponent(currFilters.courseT)}&startPrice=${currFilters.startPrice}&endPrice=${currFilters.endPrice}&motherTongue=${encodeURIComponent(currFilters.motherT)}&country=${encodeURIComponent(currFilters.country)}&page=${currFilters.page}&limit=${currFilters.limit}`;
+
+        console.log("Fetching courses with filters:", currFilters);
+        console.log("API Query String:", apiStr);
+
         async function getCourses() {
             try {
-                // Show Loader
-                document.getElementById("loader").style.display = "flex";
+                if (document.getElementById("loader")) document.getElementById("loader").style.display = "flex";
                 const result = await dispatch(filterCourse(apiStr));
-                // Hide Loader
-                document.getElementById("loader").style.display = "none";
+                if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
 
-                setCoursesArr(result?.data.courses);
-                setMotherTongueOptions(result?.data.motherTongues);
-                setCountryOptions(result?.data.countries);
+                console.log("Filter API Result:", result);
+
+                if (result) {
+                    // Handle different possible response structures
+                    const courses = result.courses || result.data?.courses || [];
+                    const motherTongues = result.motherTongues || result.data?.motherTongues || [];
+                    const countries = result.countries || result.data?.countries || [];
+
+                    setCoursesArr(courses);
+                    setMotherTongueOptions(motherTongues);
+                    setCountryOptions(countries);
+
+                    if (courses.length === 0) {
+                        console.log("No courses found for these filters.");
+                    }
+                } else {
+                    console.error("Empty response from filter course API");
+                    setCoursesArr([]);
+                }
             } catch (e) {
-                console.log(e);
+                console.error("Filter course failed:", e);
+                if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
+                toast.error("Failed to fetch courses");
+                setCoursesArr([]);
             }
         }
         getCourses();
-
-        // console.log("filters: ", lang, courseType, availability, minPrice, maxPrice, motherTongue, from)
     }, [
         dispatch,
         lang,
@@ -124,7 +138,9 @@ function Filters(props) {
         maxPrice,
         motherTongue,
         from,
+        setCoursesArr
     ]);
+
 
     return (
         <>

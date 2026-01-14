@@ -14,12 +14,16 @@ const AddEventModal = ({ setAddEventModal, slots = [], addSlots, getAvailability
 
     setLoading(true);
     try {
-      await addSlots(slots);
-      await getAvailability();
-      toast.success("Slots added successfully!");
-      setAddEventModal(false);
+      const result = await addSlots(slots);
+      if (result?.success) {
+        await getAvailability();
+        toast.success("Slots added successfully!");
+        setAddEventModal(false);
+      } else {
+        toast.error(result?.message || "Failed to add slots.");
+      }
     } catch (err) {
-      toast.error("Failed to add slots. Try again.");
+      toast.error("An error occurred while adding slots.");
       console.error(err);
     } finally {
       setLoading(false);

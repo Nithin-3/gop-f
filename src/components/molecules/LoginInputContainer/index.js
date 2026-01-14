@@ -82,6 +82,7 @@ const LoginInputContainer = ({ type, role }) => {
 
       document.getElementById("loader").style.display = "none";
     } catch (e) {
+      console.error("Login failed:", e);
       document.getElementById("loader").style.display = "none";
       toast.error(e.message || e);
     }

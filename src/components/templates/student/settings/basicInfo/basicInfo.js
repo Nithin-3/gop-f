@@ -38,9 +38,11 @@ const BasicInfo = ({ myDetails }) => {
       document.getElementById("loader")?.style && (document.getElementById("loader").style.display = "flex");
       const res = await dispatch(updateStudentProfile(form));
       document.getElementById("loader")?.style && (document.getElementById("loader").style.display = "none");
-      console.log(res);
       res?.status ? toast.success("Profile Updated Successfully") : toast.error("Update failed");
-    } catch { toast.error("Update failed"); }
+    } catch (e) {
+      console.error("Profile Update failed:", e);
+      toast.error("Update failed");
+    }
   };
 
   return (

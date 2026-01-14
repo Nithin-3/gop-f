@@ -21,41 +21,41 @@ export const filterCourse = (payload) => async (dispatch) => {
     // dispatch({ type: "Create_Course", payload: { ...data } });
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response.message;
+    console.error("filterCourse error:", e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to fetch courses" };
   }
 };
 
-export const getUpcomingClassForStudent = (sid) => async(dispatch) => {
-  try{
+export const getUpcomingClassForStudent = (sid) => async (dispatch) => {
+  try {
     console.log(sid)
     let API = createAxios()
-    const {data} = await API.get(`student/upcomingClass/${sid}`)
+    const { data } = await API.get(`student/upcomingClass/${sid}`)
     return data
-  } catch(error){
-    console.log(error)
-    return error.response.message;
+  } catch (error) {
+    console.error("getUpcomingClassForStudent error:", error);
+    return { success: false, message: error.response?.data?.message || error.message || "Failed to load upcoming classes" };
   }
 }
 
-export const getStudentDashNums = (sid) => async(dispatch) => {
-  try{
+export const getStudentDashNums = (sid) => async (dispatch) => {
+  try {
     console.log(sid)
     let API = createAxios()
-    const {data} = await API.get(`student/getDashNums/${sid}`)
+    const { data } = await API.get(`student/getDashNums/${sid}`)
     return data
-  } catch(error){
+  } catch (error) {
     console.log(error)
     return error.response.message;
   }
 }
 
 export const newStudent = (userId) => async (dispatch) => {
-  try{
+  try {
     let API = createAxios();
-    const {data } = await API.post(`/student/new/${userId}`) 
+    const { data } = await API.post(`/student/new/${userId}`)
     return data
-  } catch(error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -74,10 +74,10 @@ export const getStudentData = (uid) => async (dispatch) => {
 };
 
 
-export const getStudentDetailById = (uid) => async(dispatch) => {
+export const getStudentDetailById = (uid) => async (dispatch) => {
   try {
     let API = createAxios()
-    const {data} = await API.get(`/student/${uid}`)
+    const { data } = await API.get(`/student/${uid}`)
     return data
   } catch (error) {
     console.log(error)
@@ -104,8 +104,8 @@ export const bookSlot = (payload) => async (dispatch) => {
     const { data } = await API.post("/session/bookSession", payload);
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response;
+    console.error("bookSlot error:", e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to book session" };
   }
 };
 
@@ -117,8 +117,8 @@ export const reSchedule = (payload) => async (dispatch) => {
     const { data } = await API.post("/session/reschedule", payload);
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response;
+    console.error("reSchedule error:", e);
+    return { success: false, message: e.response?.data?.message || e.message || "Failed to reschedule session" };
   }
 };
 
@@ -126,12 +126,11 @@ export const makePayment = (payload) => async (dispatch) => {
   try {
     let API = createAxios();
 
-    // console.log(payload, 'payload')
-    const { data } = await API.post("/student/payment/razorpay");
+    const { data } = await API.post("/student/payment/razorpay", payload);
     return data;
   } catch (e) {
-    console.log(e);
-    return e.response.message;
+    console.error("makePayment error:", e);
+    return { success: false, message: e.response?.data?.message || "Payment initialization failed" };
   }
 };
 

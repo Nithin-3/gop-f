@@ -27,18 +27,20 @@ function FindTeacher() {
   const [flagSrc, setFlagSrc] = useState(Flag);
   const resetRef = useRef();
 
-  // Save default filters to localStorage
+  // Save default filters to localStorage if not already present
   React.useEffect(() => {
-    const allFilters = {
-      lang: "Language",
-      courseT: "Course",
-      availability: "Availability",
-      minPrice: 0,
-      maxPrice: 200,
-      motherT: "Mother Tongue",
-      from: "Country",
-    };
-    localStorage.setItem("allFilters", JSON.stringify(allFilters));
+    if (!localStorage.getItem("allFilters")) {
+      const allFilters = {
+        lang: "Language",
+        courseT: "Course",
+        availability: "Availability",
+        minPrice: 0,
+        maxPrice: 200,
+        motherT: "Mother Tongue",
+        from: "Country",
+      };
+      localStorage.setItem("allFilters", JSON.stringify(allFilters));
+    }
   }, []);
 
   return (

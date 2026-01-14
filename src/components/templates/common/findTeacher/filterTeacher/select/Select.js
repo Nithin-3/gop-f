@@ -46,7 +46,7 @@ function Select(props) {
 
             {show ?
                 <div ref={ref} style={{ borderRadius: '10px', maxHeight: '70vh', overflowY: name === "lang" ? 'scroll' : "none", marginTop: '10px', backgroundColor: '#fefeff', position: width >= 992 ? 'absolute' : 'relative' }}>
-                    {options.map((item, index) => (
+                    {options && options.map((item, index) => (
                         <SelectOption key={index}
                             onClick={() => {
                                 name === 'lang' && setFlagSrc(item.flag);
@@ -59,6 +59,7 @@ function Select(props) {
                         </SelectOption>
                     ))}
                 </div>
+
                 :
                 <></>
             }

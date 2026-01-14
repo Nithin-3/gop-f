@@ -16,7 +16,8 @@ const TeacherEarnings = () => {
       const data = await getTeacherWithdrawals();
       if (data?.success) setWithdrawals(data.data);
       else toast.error("Failed to fetch withdrawals");
-    } catch {
+    } catch (e) {
+      console.error("Fetch withdrawals failed:", e);
       toast.error("Failed to fetch withdrawals");
     }
   }, []);
@@ -26,7 +27,8 @@ const TeacherEarnings = () => {
       const data = await getTeacherPendingEarnings();
       if (data?.success) setTeacherPending(data.data);
       else toast.error("Failed to fetch pending earnings");
-    } catch {
+    } catch (e) {
+      console.error("Fetch pending earnings failed:", e);
       toast.error("Failed to fetch pending earnings");
     }
   }, []);
