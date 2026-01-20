@@ -13,12 +13,12 @@ function createAxios() {
 }
 
 export const filterCourse = (payload) => async (dispatch) => {
+  console.log("Redux action filterCourse called with payload:", payload);
   try {
     let API = createAxios();
-
+    console.log("Calling axios.get('/course' + payload)...");
     const { data } = await API.get("/course" + payload);
-    // const {data} = await API.get("/course?language=All&courseType=Spoken Languages&startPrice=14&endPrice=200&country=Afghanistan&page=1&limit=10")
-    // dispatch({ type: "Create_Course", payload: { ...data } });
+    console.log("Axios response data:", data);
     return data;
   } catch (e) {
     console.error("filterCourse error:", e);

@@ -1,4 +1,4 @@
-// export const baseURL = "http://localhost:8000"; // Localhost
+// export const baseURL = "http://192.168.57.224:8000"; // Localhost
 
 export const baseURL = "https://gop-b.onrender.com"; // Production
 // export const baseURL =

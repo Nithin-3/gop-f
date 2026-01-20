@@ -252,7 +252,7 @@ export const CardMobile = ({ width, cardInfo, dropDown = [] }) => {
             window.location.reload();
         }
     }
-    const openLiveClass = () => disableBtn ? toast.error("This session time has elapsed.") : history({ pathname: "/liveclass", state: { role: "Teacher", studentName, availDetails, courseDetails, sessionDetails: cardInfo } });
+    const openLiveClass = () => disableBtn ? toast.error("This session time has elapsed.") : history("/liveclass", { state: { role: "Teacher", studentName, availDetails, courseDetails, sessionDetails: cardInfo } });
 
     const handleClick = e => { if (otherOptions.current && !otherOptions.current.contains(e.target)) setShowOtherOptions(false); };
 

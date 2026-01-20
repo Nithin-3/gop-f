@@ -40,8 +40,6 @@ const Main = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/" element={<Landing />} />
         <Route path="/liveclass" element={<LiveVidStream />} />
-        {/* Add a catch-all route if needed */}
-        {/* <Route path="*" element={<Landing />} /> */}
       </Routes>
     </ScrollToTop>
   );

@@ -61,13 +61,14 @@ function Filters(props) {
         setCourseType("Course");
         setAvailability("Availability");
         setMinPrice(0);
-        setMaxPrice(200);
+        setMaxPrice(2000);
         setMotherTongue("Mother Tongue");
         setFrom("Country");
         setFlagSrc(Flag);
     }, [reset]);
 
     React.useEffect(() => {
+        console.log("Filters.js useEffect triggered", { lang, courseType, availability, minPrice, maxPrice, motherTongue, from });
         const currFilters = {
             language: lang === "Language" ? "All" : lang,
             courseT: courseType === "Course" ? "All" : courseType,
@@ -98,18 +99,18 @@ function Filters(props) {
 
         async function getCourses() {
             try {
+                console.log("getCourses function calling dispatch...");
                 if (document.getElementById("loader")) document.getElementById("loader").style.display = "flex";
                 const result = await dispatch(filterCourse(apiStr));
+                console.log("filterCourse dispatch result:", result);
                 if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
 
-                console.log("Filter API Result:", result);
-
                 if (result) {
-                    // Handle different possible response structures
                     const courses = result.courses || result.data?.courses || [];
                     const motherTongues = result.motherTongues || result.data?.motherTongues || [];
                     const countries = result.countries || result.data?.countries || [];
 
+                    console.log(`Setting courses with length: ${courses.length}`);
                     setCoursesArr(courses);
                     setMotherTongueOptions(motherTongues);
                     setCountryOptions(countries);
@@ -122,7 +123,7 @@ function Filters(props) {
                     setCoursesArr([]);
                 }
             } catch (e) {
-                console.error("Filter course failed:", e);
+                console.error("Filter course async function failed:", e);
                 if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
                 toast.error("Failed to fetch courses");
                 setCoursesArr([]);

@@ -67,22 +67,22 @@ function Payment() {
 
   let lessonPrices = [];
   if (trail) {
-    lessonPrices = [{ number: "30 Minute Trial Lesson", itemPrice: 0, actual: "$ 0/hrs" }];
+    lessonPrices = [{ number: "30 Minute Trial Lesson", itemPrice: 0, actual: "₹ 0/hrs" }];
   } else if (rescheduleObj) {
-    lessonPrices = [{ number: "1 Lesson", itemPrice: 0, actual: "$ 0/hrs" }];
+    lessonPrices = [{ number: "1 Lesson", itemPrice: 0, actual: "₹ 0/hrs" }];
   } else if (course.price1?.data && course.price2?.data) {
     lessonPrices = [
-      { ...course, number: "1 Lesson", itemPrice: course.price.data, actual: `$${course.price.data}/hr` },
-      { ...course, number: "5 Lessons", itemPrice: course.price1.data, actual: `$${course.price1.data}/hr` },
-      { ...course, number: "10 Lessons", itemPrice: course.price2.data, actual: `$${course.price2.data}/hr` },
+      { ...course, number: "1 Lesson", itemPrice: course.price.data, actual: `₹${course.price.data}/hr` },
+      { ...course, number: "5 Lessons", itemPrice: course.price1.data, actual: `₹${course.price1.data}/hr` },
+      { ...course, number: "10 Lessons", itemPrice: course.price2.data, actual: `₹${course.price2.data}/hr` },
     ];
   } else if (course.price1?.data) {
     lessonPrices = [
-      { ...course, number: "1 Lesson", itemPrice: course.price.data, actual: `$${course.price.data}/hr` },
-      { ...course, number: "5 Lessons", itemPrice: course.price1.data, actual: `$${course.price1.data}/hr` },
+      { ...course, number: "1 Lesson", itemPrice: course.price.data, actual: `₹${course.price.data}/hr` },
+      { ...course, number: "5 Lessons", itemPrice: course.price1.data, actual: `₹${course.price1.data}/hr` },
     ];
   } else {
-    lessonPrices = [{ ...course, number: "Course Price", itemPrice: course.price.data, actual: `$${course.price.data}/hr` }];
+    lessonPrices = [{ ...course, number: "Course Price", itemPrice: course.price.data, actual: `₹${course.price.data}/hr` }];
   }
 
   const obj = `${convertHours(slotStart.getHours(), slotStart.getMinutes())} to ${convertHours(addMinutes(slotStart, 30).getHours(), addMinutes(slotStart, 30).getMinutes())}`;
@@ -137,7 +137,7 @@ function Payment() {
 
     const options = {
       key: "rzp_test_NFQu7j9qsd4IfM",
-      currency: "USD",
+      currency: "INR",
       amount: (totalAmount * 100).toFixed(0), // Amount in paise/cents
       name: selectedPlan.number || "Lesson Booking",
       description: "Secure payment for your session",
@@ -163,13 +163,16 @@ function Payment() {
         }
 
         try {
+          if (document.getElementById("loader")) document.getElementById("loader").style.display = "flex";
           const paidData = await dispatch(addPayment(paymentData));
           if (paidData?.success) {
             handleCheckout(paidData?.data?._id);
           } else {
+            if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
             toast.error("Payment registration failed. Please contact support.");
           }
         } catch (error) {
+          if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
           console.error("Add payment error:", error);
           toast.error("A system error occurred after payment.");
         }
@@ -188,6 +191,7 @@ function Payment() {
   }
 
   const handleCheckout = async (bookedPaymentId) => {
+    if (document.getElementById("loader")) document.getElementById("loader").style.display = "flex";
     let body = {
       courseId: course._id,
       studentId: studentData?.data?.userId,
@@ -195,6 +199,7 @@ function Payment() {
       type: lesson.split(" ")[0],
       from: chosenEvent.start,
       to: chosenEvent.end,
+      isFree: trail,
     };
 
     if (bookedPaymentId) body.paymentId = bookedPaymentId;
@@ -209,6 +214,7 @@ function Payment() {
       body.session = rescheduleObj;
       try {
         const result = await dispatch(reSchedule(body));
+        if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
         if (result.success) {
           toast.success("Session booked successfully");
           localStorage.removeItem('rescheduleObj');
@@ -216,6 +222,7 @@ function Payment() {
           navigate("/student/dashboard");
         } else toast.error(result.message);
       } catch (e) {
+        if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
         console.error("Reschedule failed:", e);
         toast.error("Failed to book slot");
       }
@@ -229,11 +236,13 @@ function Payment() {
 
       try {
         const result = await dispatch(bookSlot(body));
+        if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
         if (result.success) {
           toast.success("Session booked successfully");
           navigate("/find-teacher");
         } else toast.error(result.message);
       } catch (e) {
+        if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
         console.error("Booking failed:", e);
         toast.error("Failed to book slot");
       }
@@ -317,7 +326,7 @@ function Payment() {
                           <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>{plan.actual}</p>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <p style={{ margin: 0, fontWeight: '800', fontSize: '1.2rem', color: '#fe1848' }}>${plan.itemPrice}</p>
+                          <p style={{ margin: 0, fontWeight: '800', fontSize: '1.2rem', color: '#fe1848' }}>₹{plan.itemPrice}</p>
                         </div>
                       </div>
                     ))}
@@ -344,23 +353,23 @@ function Payment() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderBottom: '1px solid #eee', paddingBottom: '20px', marginBottom: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#666' }}>
                   <span>Price ({selectedPlan.number || (trail ? "Trial" : "Reschedule")})</span>
-                  <span style={{ fontWeight: '600', color: '#333' }}>${basePrice}</span>
+                  <span style={{ fontWeight: '600', color: '#333' }}>₹{basePrice}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#666' }}>
                   <span>Platform Fee (8%)</span>
-                  <span style={{ fontWeight: '600', color: '#333' }}>${platformFees}</span>
+                  <span style={{ fontWeight: '600', color: '#333' }}>₹{platformFees}</span>
                 </div>
                 {couponDiscountPercentage > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', color: '#2e7d32', fontWeight: '600' }}>
                     <span>Discount ({couponDiscountPercentage}%)</span>
-                    <span>-${couponDiscountPrice}</span>
+                    <span>-₹{couponDiscountPrice}</span>
                   </div>
                 )}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
                 <span style={{ fontSize: '1.2rem', fontWeight: '800' }}>Total Amount</span>
-                <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#fe1848' }}>${totalAmount}</span>
+                <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#fe1848' }}>₹{totalAmount}</span>
               </div>
 
               <button

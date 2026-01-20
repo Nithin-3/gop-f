@@ -31,6 +31,17 @@ export const getTeachers = (payload) => async (dispatch) => {
   }
 };
 
+export const getAdminNumbers = () => async (dispatch) => {
+  try {
+    let API = createAxios();
+    const { data } = await API.get("/getNumbers");
+    return data;
+  } catch (error) {
+    console.error("getAdminNumbers error:", error);
+    throw error?.response?.data || { message: "Failed to load dashboard statistics" };
+  }
+};
+
 export const approveTeacher = (payload) => async (dispatch) => {
   try {
     let API = createAxios()

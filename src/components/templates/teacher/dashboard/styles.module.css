@@ -1,4 +1,4 @@
-.mainsection {
+.mainSection {
   padding: 1rem;
   position: relative;
   background-color: rgb(240, 240, 240);
@@ -13,16 +13,40 @@
 }
 
 .firstRowTab {
-  background-color: rgba(158, 205, 230, 0.15);
-  padding: 20px 30px;
-  border-radius: 30px;
-  outline: 2px solid #000;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   width: 24%;
-  height: 120px;
+  height: 140px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  color: #000;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.widgetIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 12px;
+  object-fit: contain;
+}
+
+.widgetTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.widgetNumber {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #333;
 }
 
 .firstRowTab:hover {
@@ -149,5 +173,313 @@
     padding: 5px;
     border-radius: 20px;
     width: 30%;
+  }
+}
+
+/* --- New Dashboard Improvements --- */
+
+.loader {
+  font-size: 1.2rem;
+  color: #51addc;
+  font-weight: 600;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Session Management & Table */
+.sessionManagement {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.sessionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sessionHeader h3 {
+  margin: 0;
+  color: #32325d;
+  font-size: 1.25rem;
+}
+
+.filterDropdown {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e0e6ed;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sessionTable {
+  width: 100%;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #64748b;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr;
+  padding: 15px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.tableRow:hover {
+  background: #fcfdfe;
+}
+
+.tableRow span:first-child {
+  color: #475569;
+  font-weight: 500;
+}
+
+.tableRow span:nth-child(2) {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.statusUpcoming {
+  color: #2dce89;
+  font-weight: 700;
+  background: #e6f9f0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.statusNeedScheduling {
+  color: #fb6340;
+  font-weight: 700;
+  background: #fff1ed;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.statusCancelled {
+  color: #f5365c;
+  font-weight: 700;
+  background: #fee7eb;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.statusSummaryCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.statusItem:last-child {
+  border: none;
+}
+
+.statusBadgeUpcoming {
+  background: #2dce89;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.statusBadgePending {
+  background: #fb6340;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.statusBadgeCancelled {
+  background: #f5365c;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Enhanced Right Card */
+.rightCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid #e0e6ed;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.upcomingBadge {
+  display: inline-block;
+  background: #51addc;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.dateTime {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.priceTag {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2dce89;
+  margin: 1rem 0;
+}
+
+.joinBtn {
+  background: #51addc;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  width: 100%;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(81, 173, 220, 0.3);
+}
+
+.joinBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(81, 173, 220, 0.4);
+}
+
+.noClass {
+  text-align: center;
+  padding: 1rem;
+  color: #94a3b8;
+}
+
+.noClass i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #e2e8f0;
+}
+
+/* Mobile Enhancements */
+.mobileUpcoming {
+  background: linear-gradient(135deg, #51addc 0%, #308ec3 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+}
+
+.mobileUpcomingInfo h4 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.mobileUpcomingInfo p {
+  margin: 5px 0;
+  opacity: 0.9;
+}
+
+.mobileUpcomingInfo span {
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.mobileJoinBtn {
+  background: white;
+  color: #51addc;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 992px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }

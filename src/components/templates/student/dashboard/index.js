@@ -48,23 +48,48 @@ const StudentDashboard = () => {
         const init = async () => {
             if (!userProfile?._id) return;
             try {
-                await dispatch(createConversation({ senderId: userProfile._id, receiverId: "6220e5b15e6e8a82aff9a0b9" }));
-                const result = await dispatch(getStudentData(userProfile._id));
-                setStudentData(result);
-                const res = await dispatch(getUpcomingClassForStudent(result?.data?.userId));
-                const course = await dispatch(getCourseById(res?.data?.courseId));
-                const nums = await dispatch(getStudentDashNums(result?.data?.userId));
+                try {
+                    await dispatch(createConversation({ senderId: userProfile._id, receiverId: "6220e5b15e6e8a82aff9a0b9" }));
+                } catch (chatErr) {
+                    console.error("Chat initialization failed:", chatErr);
+                }
+
+                const studentId = userProfile.onType;
+                if (!studentId) return;
+
+                const res = await dispatch(getUpcomingClassForStudent(studentId));
+                if (res?.data) {
+                    setUpcomingClass(res.data);
+                    const course = await dispatch(getCourseById(res.data.courseId));
+                    setLanguageUC(course?.language?.data || "");
+                    setPriceUC(course?.price?.data || 0);
+                }
+
+                const nums = await dispatch(getStudentDashNums(studentId));
                 setNumbers(nums);
-                setUpcomingClass(res?.data);
-                setLanguageUC(course?.language?.data);
-                setPriceUC(course?.price?.data);
+
+                const dataRes = await dispatch(getStudentData(userProfile._id));
+                if (Array.isArray(dataRes) && dataRes.length > 0) {
+                    setStudentData({ data: dataRes[0] });
+                }
             } catch (e) {
                 console.error("Dashboard initialization failed:", e);
-                toast.error("Failed to fetch data");
             }
         };
-        // init();
+        init();
     }, []);
+
+    const handleJoinClass = () => {
+        if (!upcomingClass) return;
+        navigate("/liveclass", {
+            state: {
+                role: "Student",
+                availDetails: upcomingClass,
+                courseDetails: { title: languageUC },
+                sessionDetails: upcomingClass,
+            }
+        });
+    };
 
     return (
         <>
@@ -78,12 +103,27 @@ const StudentDashboard = () => {
                         <div className={styles.row}><SessionOverviewCard numbers={numbers} /><TeacherCard /><WalletCard /></div>
                         <div className={styles.row}><GraphCard graphOptions={graphOptions} graph={graph} setGraph={setGraph} width={width} /></div>
                     </main>
-                    <RightTeacherCard studentData={studentData} fromt={msgFromT} froma={msgFromA} setfromt={setMsgFromT} setfroma={setMsgFromA} upcomingClass={upcomingClass} language={languageUC} price={priceUC} />
+                    <RightTeacherCard
+                        studentData={studentData}
+                        fromt={msgFromT}
+                        froma={msgFromA}
+                        setfromt={setMsgFromT}
+                        setfroma={setMsgFromA}
+                        upcomingClass={upcomingClass}
+                        language={languageUC}
+                        price={priceUC}
+                        onJoin={handleJoinClass}
+                    />
                 </>
             ) : (
                 <main className={teacherStyles.mainSection}>
                     <div style={{ fontSize: 24, fontWeight: 500, textAlign: "center" }}>{`Welcome ${profile?.fullName || ""}`}</div>
-                    <MobileUpcomingCard upcomingClass={upcomingClass} language={languageUC} price={priceUC} />
+                    <MobileUpcomingCard
+                        upcomingClass={upcomingClass}
+                        language={languageUC}
+                        price={priceUC}
+                        onJoin={handleJoinClass}
+                    />
                     <div style={{ display: "flex", justifyContent: "space-between" }}><SessionOverviewCard numbers={numbers} /><WalletCard /></div>
                     <div className={styles.row}><GraphCard graphOptions={graphOptions} graph={graph} setGraph={setGraph} width={width} /></div>
                 </main>
@@ -114,7 +154,7 @@ const GraphCard = ({ graphOptions, graph, setGraph, width }) => (
     </div>
 );
 
-const RightTeacherCard = ({ studentData, fromt, froma, setfromt, setfroma, upcomingClass, language, price }) => (
+const RightTeacherCard = ({ studentData, fromt, froma, setfromt, setfroma, upcomingClass, language, price, onJoin }) => (
     <div style={{ width: "20%", position: "fixed", right: 25 }}>
         <div style={{ backgroundColor: "rgba(158,205,230,0.15)", borderRadius: 20, minHeight: "97vh", padding: 10 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -133,6 +173,23 @@ const RightTeacherCard = ({ studentData, fromt, froma, setfromt, setfroma, upcom
                         <div>{moment(upcomingClass.from).format("hh:mm A")}</div>
                         <div>{moment(upcomingClass.to).diff(moment(upcomingClass.from), "minutes")} Minutes</div>
                         <div>{price}</div>
+                        <button
+                            onClick={onJoin}
+                            style={{
+                                backgroundColor: "white",
+                                color: "#FD879F",
+                                border: "none",
+                                borderRadius: "8px",
+                                padding: "10px 20px",
+                                cursor: "pointer",
+                                fontWeight: "bold",
+                                marginTop: "10px",
+                                width: "100%",
+                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+                            }}
+                        >
+                            Join Class
+                        </button>
                     </>
                 ) : <div>No meetings to show</div>}
             </div>
@@ -140,7 +197,7 @@ const RightTeacherCard = ({ studentData, fromt, froma, setfromt, setfroma, upcom
     </div>
 );
 
-const MobileUpcomingCard = ({ upcomingClass, language, price }) => (
+const MobileUpcomingCard = ({ upcomingClass, language, price, onJoin }) => (
     <div style={{ backgroundColor: "#FD879F", color: "#fff", borderRadius: 10, padding: 10 }}>
         {upcomingClass ? (
             <>
@@ -149,6 +206,22 @@ const MobileUpcomingCard = ({ upcomingClass, language, price }) => (
                 <div>{moment(upcomingClass.from).format("hh:mm A")}</div>
                 <div>{moment(upcomingClass.to).diff(moment(upcomingClass.from), "minutes")} Minutes</div>
                 <div>${price}</div>
+                <button
+                    onClick={onJoin}
+                    style={{
+                        backgroundColor: "white",
+                        color: "#FD879F",
+                        border: "none",
+                        borderRadius: "8px",
+                        padding: "8px 15px",
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                        marginTop: "10px",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                    }}
+                >
+                    Join Now
+                </button>
             </>
         ) : <div>No meetings to show</div>}
     </div>

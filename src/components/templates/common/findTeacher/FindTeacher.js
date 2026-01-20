@@ -35,7 +35,6 @@ function FindTeacher() {
         courseT: "Course",
         availability: "Availability",
         minPrice: 0,
-        maxPrice: 200,
         motherT: "Mother Tongue",
         from: "Country",
       };
@@ -128,32 +127,30 @@ function FindTeacher() {
                 </div>
               </div>
 
-              {showFilter && (
-                <div
-                  style={{
-                    padding: "20px 0",
-                    width: "90vw",
-                    borderRadius: "10px",
-                    marginTop: "15px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "20px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    border: "1px solid #007bff",
-                  }}
-                >
-                  <Filters
-                    focus={focus}
-                    setFocus={setFocus}
-                    width={width}
-                    courseArr={coursesArr}
-                    setCoursesArr={setCoursesArr}
-                    lang={lang}
-                    setLang={setLang}
-                  />
-                </div>
-              )}
+              <div
+                style={{
+                  display: showFilter ? "flex" : "none",
+                  padding: "20px 0",
+                  width: "90vw",
+                  borderRadius: "10px",
+                  marginTop: "15px",
+                  flexDirection: "column",
+                  gap: "20px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  border: "1px solid #007bff",
+                }}
+              >
+                <Filters
+                  focus={focus}
+                  setFocus={setFocus}
+                  width={width}
+                  courseArr={coursesArr}
+                  setCoursesArr={setCoursesArr}
+                  lang={lang}
+                  setLang={setLang}
+                />
+              </div>
             </div>
           )}
         </div>

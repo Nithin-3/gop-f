@@ -9,14 +9,17 @@ import down_arrow from "../../../../assets/icons/down_arrow_icon.svg";
 import graph_img from "../../../../assets/icons/temp_graph.png";
 import notification from "../../../../assets/icons/bell_mobile ui_notification_icon.svg";
 
+import { useDispatch } from "react-redux";
+import { getAdminNumbers } from "../../../../store/actions/admin";
+
 const TopWidgets = ({ widgets }) => {
-    const [activeTab, setActiveTab] = React.useState("Class Taken");
     return (
         <div className={styles.row}>
             {widgets.map((item, index) => (
-                <div key={index} className={item.title === activeTab ? styles.firstRowTabActive : styles.firstRowTab} onClick={() => setActiveTab(item.title)} role="button" tabIndex={0}>
-                    <div className={styles.widgetTitle}>{item.title}<div style={{ float: "right" }}><i className="fas fa-ellipsis-h" /></div></div>
-                    <div className={styles.widgetValue}><img src={item.icon} alt="icon" style={{ width: "30px" }} /><div style={{ float: "right" }}>{item.number}</div></div>
+                <div key={index} className={styles.firstRowTab}>
+                    <img src={item.icon} alt="icon" className={styles.widgetIcon} />
+                    <div className={styles.widgetTitle}>{item.title}</div>
+                    <div className={styles.widgetNumber}>{item.number}</div>
                 </div>
             ))}
         </div>
@@ -26,7 +29,7 @@ const TopWidgets = ({ widgets }) => {
 const FeeCollection = () => (
     <div className={styles.fee}>
         <div className={styles.secondRowHeadings}>Fee Collection</div>
-        <div className={styles.secondRowBody}>Some Data</div>
+        <div className={styles.secondRowBody}>Monthly Overview</div>
     </div>
 );
 
@@ -47,21 +50,46 @@ const GraphCard = ({ graphOptions, graph, setGraph, width }) => (
 const RightAdminCard = () => (
     <div className={styles.rightCard}>
         <div className={styles.rightCardContent}>
-            <i className="far fa-comment fa-2x" />
+            <div style={{ marginTop: "20px" }}><i className="far fa-comment fa-2x" /></div>
             <img src={notification} alt="notification" className={styles.notification} />
+            <div style={{ flex: 1 }}></div>
         </div>
     </div>
 );
 
 function AdminDashboard({ socket }) {
     const { width } = useWindowDimensions();
+    const dispatch = useDispatch();
+    const [numbers, setNumbers] = React.useState({
+        totalStudents: 0,
+        currentStudents: 0,
+        totalTeachers: 0,
+        currentTeachers: 0,
+        totalCourses: 0,
+        visitors: 0
+    });
+
+    React.useEffect(() => {
+        const fetchNumbers = async () => {
+            try {
+                const res = await dispatch(getAdminNumbers());
+                if (res?.success) {
+                    setNumbers(res.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch admin stats:", err);
+            }
+        };
+        fetchNumbers();
+    }, [dispatch]);
+
     const widgets = [
-        { title: "Total Students", icon: graduation_cap, number: "4586" },
-        { title: "Current Students", icon: class_taken, number: "456" },
-        { title: "Total Teachers", icon: verified, number: "589" },
-        { title: "Current Teachers", icon: non_verified, number: "0" },
-        { title: "Total Courses", icon: non_verified, number: "48" },
-        { title: "Visitors", icon: non_verified, number: "0" },
+        { title: "Total Students", icon: graduation_cap, number: numbers.totalStudents },
+        { title: "Current Students", icon: class_taken, number: numbers.currentStudents },
+        { title: "Total Teachers", icon: verified, number: numbers.totalTeachers },
+        { title: "Current Teachers", icon: verified, number: numbers.currentTeachers },
+        { title: "Total Courses", icon: graduation_cap, number: numbers.totalCourses },
+        { title: "Visitors", icon: notification, number: numbers.visitors },
     ];
     const graphOptions = [{ name: "Courses Impression" }, { name: "Per Session Earning" }, { name: "Top Student" }];
     const [graph, setGraph] = React.useState("Courses Impression");
