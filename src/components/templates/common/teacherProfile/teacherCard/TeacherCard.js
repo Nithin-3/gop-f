@@ -1,7 +1,5 @@
 import React from "react";
-import Person from "../../../../../assets/icons/boy_icon.svg";
 import English from "../../../../../assets/flags/english.png";
-import Video from "../../../../../assets/video.mp4";
 import { BookFreeTrialButton } from "../../commonUtils";
 import { useNavigate } from "react-router-dom";
 

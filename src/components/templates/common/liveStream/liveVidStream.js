@@ -5,6 +5,16 @@ import moment from 'moment';
 import { SocketContext } from '../../../../context/socketContext';
 import { toast } from 'react-toastify';
 
+const iceServers = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+    { urls: "stun:stun2.l.google.com:19302" },
+    { urls: "stun:stun3.l.google.com:19302" },
+    { urls: "stun:stun4.l.google.com:19302" },
+  ],
+};
+
 const LiveVidStream = () => {
   const socket = useContext(SocketContext);
   const location = useLocation();
@@ -34,17 +44,7 @@ const LiveVidStream = () => {
   const remoteStreamRef = React.useRef(new MediaStream());
   const candidateQueue = React.useRef([]);
 
-  const iceServers = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "stun:stun2.l.google.com:19302" },
-      { urls: "stun:stun3.l.google.com:19302" },
-      { urls: "stun:stun4.l.google.com:19302" },
-    ],
-  };
-
-  const getMedia = async () => {
+  const getMedia = React.useCallback(async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const isSecure = window.location.protocol === 'https:';
@@ -79,9 +79,9 @@ const LiveVidStream = () => {
       }
       throw err;
     }
-  };
+  }, []);
 
-  const createPeer = () => {
+  const createPeer = React.useCallback(() => {
     const peer = new RTCPeerConnection(iceServers);
     peerRef.current = peer;
 
@@ -102,7 +102,7 @@ const LiveVidStream = () => {
     };
 
     return peer;
-  };
+  }, [socket, currRole, sessionDetails]);
 
   const startCall = async () => {
     setIsConnecting(true);
@@ -282,7 +282,7 @@ const LiveVidStream = () => {
       socket.off("answer-made");
       socket.off("ice-candidate");
     };
-  }, [socket, currRole, sessionDetails]);
+  }, [socket, currRole, sessionDetails, createPeer, getMedia]);
 
   if (!location.state) return null;
 

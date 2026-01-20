@@ -12,7 +12,6 @@ import { useWindowDimensions } from "../../../../utils/util";
 import { getStudentData, getUpcomingClassForStudent, getStudentDashNums } from "../../../../store/actions/student";
 import { getCourseById } from "../../../../store/actions/course";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
@@ -77,7 +76,7 @@ const StudentDashboard = () => {
             }
         };
         init();
-    }, []);
+    }, [dispatch, socket]);
 
     const handleJoinClass = () => {
         if (!upcomingClass) return;

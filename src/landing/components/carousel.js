@@ -4,10 +4,8 @@ import Carousel from "react-elastic-carousel";
 //images
 import p1 from "../../assets/image/p1.jpg";
 import p2 from "../../assets/image/p2.jpg";
-import p3 from "../../assets/image/p3.jpeg";
 import p4 from "../../assets/image/p4.jpeg";
 import p5 from "../../assets/image/p5.jpeg";
-import p6 from "../../assets/image/p6.jpeg";
 
 //icons
 import { ReactComponent as ArrowBackIcon } from "../../assets/icons/arrow_left_black_24dp.svg";
