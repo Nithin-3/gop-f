@@ -27,9 +27,12 @@ const LiveVidStream = () => {
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const localVideoRef = React.useRef();
-  const remoteVideoRef = React.useRef();
-  const peerRef = React.useRef();
+  const localVideoRef = React.useRef(null);
+  const remoteVideoRef = React.useRef(null);
+  const peerRef = React.useRef(null);
+  const localStreamRef = React.useRef(null);
+  const remoteStreamRef = React.useRef(new MediaStream());
+  const candidateQueue = React.useRef([]);
 
   const iceServers = {
     iceServers: [
@@ -38,236 +41,33 @@ const LiveVidStream = () => {
       { urls: "stun:stun2.l.google.com:19302" },
       { urls: "stun:stun3.l.google.com:19302" },
       { urls: "stun:stun4.l.google.com:19302" },
-      // Note: For production and mobile data usage, you MUST add TURN servers here.
-      // High-reliability production examples (replace with your real credentials):
-      /*
-      {
-        urls: "turn:your-turn-server.com:3478",
-        username: "your-username",
-        credential: "your-password"
-      }
-      */
     ],
   };
 
-  useEffect(() => {
-    if (!location.state) {
-      toast.error("Session information missing. Returning to dashboard.");
-      const profile = JSON.parse(localStorage.getItem("profile"));
-      const role = profile?.roleModel === "Teacher" ? "teacher" : "student";
-      navigate(`/${role}/dashboard`);
-      return;
-    }
-
-    const state = location.state;
-    setCurrRole(state.role);
-    setAvailDetails(state.availDetails);
-    setCourseDetails(state.courseDetails);
-    setSessionDetails(state.sessionDetails);
-    setStudentName(state.studentName);
-
-    if (state.teacherName) {
-      setTeacherName(state.teacherName);
-    } else if (state.teacherDetails) {
-      const firstName = state.teacherDetails.firstName?.data || state.teacherDetails.firstName || "";
-      const lastName = state.teacherDetails.lastName?.data || state.teacherDetails.lastName || "";
-      setTeacherName(`${firstName} ${lastName}`.trim());
-    }
-  }, [location, navigate]);
-
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(moment()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (sessionDetails) {
-      const id = currRole === "Student" ? sessionDetails.studentId : sessionDetails.teacherId;
-      socket?.emit("addUser", id);
-    }
-  }, [sessionDetails, currRole, socket]);
-
-  const localStreamRef = React.useRef(null);
-  const remoteStreamRef = React.useRef(new MediaStream());
-  const candidateQueue = React.useRef([]);
-
-  // 1. COMPREHENSIVE CLEANUP (Fixes Active Camera/Mic on Exit)
-  useEffect(() => {
-    const cleanup = () => {
-      console.log("Performing WebRTC cleanup...");
-
-      // Stop local tracks
-      if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach(track => {
-          track.stop();
-          console.log(`Stopped local track: ${track.kind}`);
-        });
-        localStreamRef.current = null;
-      }
-
-      // Stop remote tracks
-      if (remoteStreamRef.current) {
-        remoteStreamRef.current.getTracks().forEach(track => {
-          track.stop();
-          console.log(`Stopped remote track: ${track.kind}`);
-        });
-      }
-
-      // Close Peer Connection
-      if (peerRef.current) {
-        peerRef.current.close();
-        peerRef.current = null;
-      }
-
-      // Notify backend if teacher stops being live
-      const profile = JSON.parse(localStorage.getItem("profile"));
-      if (profile?.roleModel === "Teacher" && sessionDetails) {
-        socket?.emit("sendTeacherIsLive", {
-          senderId: sessionDetails.teacherId,
-          receiverId: sessionDetails.studentId,
-          isTeacherLive: false
-        });
-      }
-    };
-
-    // Handle Tab Close / Refresh
-    window.addEventListener('beforeunload', cleanup);
-
-    return () => {
-      // Handle Navigation Away (React Unmount)
-      window.removeEventListener('beforeunload', cleanup);
-      cleanup();
-    };
-  }, [socket, sessionDetails]);
-
-  // Sync ref with localStream state
-  useEffect(() => {
-    localStreamRef.current = localStream;
-  }, [localStream]);
-
-  // 2. SIGNALING IMPROVEMENTS (Fixes Remote Stream Rendering)
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on("getIsTeacherLive", (data) => {
-      setIsTeacherLive(data.isTeacherLive);
-    });
-
-    socket.on("call-made", async ({ offer }) => {
-      if (currRole !== "Teacher") return;
-      setIsConnecting(true);
-
-      const peer = createPeer();
-      await peer.setRemoteDescription(new RTCSessionDescription(offer));
-
-      // Process queued candidates that arrived before the peer was ready
-      while (candidateQueue.current.length) {
-        const cand = candidateQueue.current.shift();
-        await peer.addIceCandidate(new RTCIceCandidate(cand));
-      }
-
-      const stream = await getMedia();
-      stream.getTracks().forEach(track => peer.addTrack(track, stream));
-
-      const answer = await peer.createAnswer();
-      await peer.setLocalDescription(answer);
-
-      socket.emit("make-answer", {
-        to: sessionDetails.studentId,
-        answer
-      });
-      setIsConnecting(false);
-      setInCall(true);
-    });
-
-    socket.on("answer-made", async ({ answer }) => {
-      if (currRole !== "Student" || !peerRef.current) return;
-      try {
-        await peerRef.current.setRemoteDescription(new RTCSessionDescription(answer));
-
-        // Process queued candidates
-        while (candidateQueue.current.length) {
-          const cand = candidateQueue.current.shift();
-          await peerRef.current.addIceCandidate(new RTCIceCandidate(cand));
-        }
-
-        setIsConnecting(false);
-        setInCall(true);
-      } catch (err) {
-        console.error("Error setting remote description:", err);
-      }
-    });
-
-    socket.on("ice-candidate", async ({ candidate }) => {
-      const peer = peerRef.current;
-      if (peer && peer.remoteDescription) {
-        try {
-          await peer.addIceCandidate(new RTCIceCandidate(candidate));
-        } catch (e) { console.error("Error adding ice candidate", e); }
-      } else {
-        // Queue candidates if remoteDescription is not yet set
-        candidateQueue.current.push(candidate);
-      }
-    });
-
-    return () => {
-      socket.off("getIsTeacherLive");
-      socket.off("call-made");
-      socket.off("answer-made");
-      socket.off("ice-candidate");
-    };
-  }, [socket, currRole, sessionDetails]);
-
-  useEffect(() => {
-    if (localStream && localVideoRef.current) {
-      localVideoRef.current.srcObject = localStream;
-    }
-  }, [localStream, inCall]);
-
-  useEffect(() => {
-    if (inCall && remoteVideoRef.current && remoteStream) {
-      console.log("Attaching remote stream to video element:", remoteStream.id);
-      remoteVideoRef.current.srcObject = remoteStream;
-
-      // Explicitly call play to handle some mobile/browser policies
-      remoteVideoRef.current.play().catch(e => console.log("Auto-play prevented:", e));
-    }
-  }, [inCall, remoteStream]);
-
   const getMedia = async () => {
-    // 1. Check if mediaDevices is supported (only works on HTTPS or localhost)
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const isSecure = window.location.protocol === 'https:';
-
       let errorMsg = "Your browser does not support video calls.";
       if (!isSecure) {
         errorMsg = "Video calls require a secure (HTTPS) connection. Please check your URL.";
       } else if (isMobile) {
         errorMsg = "Please use a modern browser like Chrome or Safari on your mobile device.";
       }
-
       toast.error(errorMsg);
       throw new Error(errorMsg);
     }
 
     try {
-      // 2. Request media with standard constraints
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-          facingMode: "user" // Prefer front camera on mobile
-        },
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
         audio: true
       });
       setLocalStream(stream);
-      localStreamRef.current = stream; // Update ref immediately for cleanup safety
+      localStreamRef.current = stream;
       return stream;
     } catch (err) {
-      // 3. Handle specific error types for better UX
       console.error("getUserMedia Error:", err);
-
       if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
         toast.error("Camera/Mic permission denied. Please enable them in your browser settings.");
       } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
@@ -296,10 +96,7 @@ const LiveVidStream = () => {
 
     peer.ontrack = (e) => {
       console.log("Remote track received:", e.track.kind, e.streams);
-
       const stream = e.streams[0] || new MediaStream([e.track]);
-
-      // Update persistent ref and state
       remoteStreamRef.current = stream;
       setRemoteStream(stream);
     };
@@ -309,56 +106,40 @@ const LiveVidStream = () => {
 
   const startCall = async () => {
     setIsConnecting(true);
-    const stream = await getMedia();
-    const peer = createPeer();
+    try {
+      const stream = await getMedia();
+      const peer = createPeer();
+      stream.getTracks().forEach(track => peer.addTrack(track, stream));
 
-    stream.getTracks().forEach(track => peer.addTrack(track, stream));
-
-    if (currRole === "Student") {
-      const offer = await peer.createOffer();
-      await peer.setLocalDescription(offer);
-      socket.emit("call-user", {
-        to: sessionDetails.teacherId,
-        offer
-      });
-    } else {
-      // Teacher just notifies they are live and waits
-      socket.emit("sendTeacherIsLive", {
-        senderId: sessionDetails.teacherId,
-        receiverId: sessionDetails.studentId,
-        isTeacherLive: true
-      });
-      setInCall(true); // Teacher UI shows up immediately
+      if (currRole === "Student") {
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        socket.emit("call-user", { to: sessionDetails.teacherId, offer });
+      } else {
+        socket.emit("sendTeacherIsLive", {
+          senderId: sessionDetails.teacherId,
+          receiverId: sessionDetails.studentId,
+          isTeacherLive: true
+        });
+        setInCall(true);
+        setIsConnecting(false);
+      }
+    } catch (err) {
       setIsConnecting(false);
     }
   };
 
   const endCall = () => {
-    console.log("Ending call and stopping tracks...");
-
-    // 1. Stop all local tracks immediately
     if (localStream) {
-      localStream.getTracks().forEach(track => {
-        track.stop();
-        console.log(`Stopped local track: ${track.kind}`);
-      });
+      localStream.getTracks().forEach(track => track.stop());
     }
-
-    // 2. Stop all remote tracks
     if (remoteStreamRef.current) {
-      remoteStreamRef.current.getTracks().forEach(track => {
-        track.stop();
-        console.log(`Stopped remote track: ${track.kind}`);
-      });
+      remoteStreamRef.current.getTracks().forEach(track => track.stop());
     }
-
-    // 3. Close peer connection
     if (peerRef.current) {
       peerRef.current.close();
       peerRef.current = null;
     }
-
-    // 4. Notify backend if teacher
     if (currRole === "Teacher" && sessionDetails) {
       socket?.emit("sendTeacherIsLive", {
         senderId: sessionDetails.teacherId,
@@ -366,7 +147,6 @@ const LiveVidStream = () => {
         isTeacherLive: false
       });
     }
-
     navigate(-1);
   };
 
@@ -384,6 +164,126 @@ const LiveVidStream = () => {
     }
   };
 
+  useEffect(() => {
+    if (!location.state) {
+      toast.error("Session information missing. Returning to dashboard.");
+      const profile = JSON.parse(localStorage.getItem("profile"));
+      const role = profile?.roleModel === "Teacher" ? "teacher" : "student";
+      navigate(`/${role}/dashboard`);
+      return;
+    }
+    const state = location.state;
+    setCurrRole(state.role);
+    setAvailDetails(state.availDetails);
+    setCourseDetails(state.courseDetails);
+    setSessionDetails(state.sessionDetails);
+    setStudentName(state.studentName);
+
+    if (state.teacherName) {
+      setTeacherName(state.teacherName);
+    } else if (state.teacherDetails) {
+      const firstName = state.teacherDetails.firstName?.data || state.teacherDetails.firstName || "";
+      const lastName = state.teacherDetails.lastName?.data || state.teacherDetails.lastName || "";
+      setTeacherName(`${firstName} ${lastName}`.trim());
+    }
+  }, [location, navigate]);
+
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentTime(moment()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (sessionDetails) {
+      const id = currRole === "Student" ? sessionDetails.studentId : sessionDetails.teacherId;
+      socket?.emit("addUser", id);
+    }
+  }, [sessionDetails, currRole, socket]);
+
+  useEffect(() => {
+    const cleanup = () => {
+      console.log("Performing WebRTC cleanup...");
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop());
+        localStreamRef.current = null;
+      }
+      if (remoteStreamRef.current) {
+        remoteStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (peerRef.current) {
+        peerRef.current.close();
+        peerRef.current = null;
+      }
+    };
+    window.addEventListener('beforeunload', cleanup);
+    return () => {
+      window.removeEventListener('beforeunload', cleanup);
+      cleanup();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (localStream && localVideoRef.current) {
+      localVideoRef.current.srcObject = localStream;
+    }
+  }, [localStream]);
+
+  useEffect(() => {
+    if (inCall && remoteVideoRef.current && remoteStream) {
+      remoteVideoRef.current.srcObject = remoteStream;
+      remoteVideoRef.current.play().catch(() => { });
+    }
+  }, [inCall, remoteStream]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("getIsTeacherLive", (data) => setIsTeacherLive(data.isTeacherLive));
+    socket.on("call-made", async ({ offer }) => {
+      if (currRole !== "Teacher") return;
+      setIsConnecting(true);
+      const peer = createPeer();
+      await peer.setRemoteDescription(new RTCSessionDescription(offer));
+      while (candidateQueue.current.length) {
+        const cand = candidateQueue.current.shift();
+        await peer.addIceCandidate(new RTCIceCandidate(cand));
+      }
+      const stream = await getMedia();
+      stream.getTracks().forEach(track => peer.addTrack(track, stream));
+      const answer = await peer.createAnswer();
+      await peer.setLocalDescription(answer);
+      socket.emit("make-answer", { to: sessionDetails.studentId, answer });
+      setIsConnecting(false);
+      setInCall(true);
+    });
+    socket.on("answer-made", async ({ answer }) => {
+      if (currRole !== "Student" || !peerRef.current) return;
+      try {
+        await peerRef.current.setRemoteDescription(new RTCSessionDescription(answer));
+        while (candidateQueue.current.length) {
+          const cand = candidateQueue.current.shift();
+          await peerRef.current.addIceCandidate(new RTCIceCandidate(cand));
+        }
+        setIsConnecting(false);
+        setInCall(true);
+      } catch (err) { console.error("Error setting remote description:", err); }
+    });
+    socket.on("ice-candidate", async ({ candidate }) => {
+      const peer = peerRef.current;
+      if (peer && peer.remoteDescription) {
+        try { await peer.addIceCandidate(new RTCIceCandidate(candidate)); }
+        catch (e) { console.error("Error adding ice candidate", e); }
+      } else {
+        candidateQueue.current.push(candidate);
+      }
+    });
+    return () => {
+      socket.off("getIsTeacherLive");
+      socket.off("call-made");
+      socket.off("answer-made");
+      socket.off("ice-candidate");
+    };
+  }, [socket, currRole, sessionDetails]);
+
   if (!location.state) return null;
 
   const classTime = moment(availDetails?.from);
@@ -392,13 +292,13 @@ const LiveVidStream = () => {
 
   if (inCall) {
     return (
-      <div className={styles.videoContainer} style={{ background: "#202124", height: "100vh", position: "fixed", top: 0, left: 0, width: "100%", zIndex: 1000, display: "flex", flexDirection: "column" }}>
+      <div className={styles.VideoContainer} style={{ background: "#202124", height: "100vh", position: "fixed", top: 0, left: 0, width: "100%", zIndex: 1000, display: "flex", flexDirection: "column" }}>
         <div style={{ flex: 1, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
           {remoteStream ? (
             <video ref={remoteVideoRef} autoPlay playsInline style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           ) : (
             <div style={{ color: "white", textAlign: "center" }}>
-              <div className={styles.loader}></div>
+              <div className="loader"></div>
               <p>{currRole === "Teacher" ? "Waiting for student to join..." : "Connecting to teacher..."}</p>
             </div>
           )}
@@ -438,7 +338,7 @@ const LiveVidStream = () => {
             <div className={styles.msgForStu} style={{ borderRadius: "12px", borderLeft: "6px solid #51addc", backgroundColor: "white", padding: "15px", marginBottom: "20px" }}>
               {isTeacherLive ? (
                 <div style={{ color: "#2dce89", fontWeight: "bold", display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span className={styles.liveDot}></span>
+                  <span className="liveDot"></span>
                   The teacher is live! You can join the call now.
                 </div>
               ) : (
