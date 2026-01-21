@@ -7,9 +7,8 @@ import { updateSessionRefund } from "../../../../../store/actions/student";
 const CancelModal = ({ setCancelModal, width, cancelSession, availDetails, cardInfo }) => {
   const [page, setPage] = React.useState("1");
   const dispatch = useDispatch();
-  let classDate = moment(availDetails?.from);
-  let todayDate = moment(Date.now());
-  let hours = moment.duration(classDate.diff(todayDate)).asHours();
+
+
   const platformFees = cardInfo.paymentId.platformFees;
   let refundPercent = 100;
   const refundAmount = (cardInfo.paymentId.itemPrice / Number(cardInfo.type)) * (refundPercent / 100) + platformFees / Number(cardInfo.type);

@@ -4,7 +4,6 @@ import { useWindowDimensions } from "../../../../utils/util";
 import graduation_cap from "../../../../assets/icons/graduation-cap-solid.svg";
 import class_taken from "../../../../assets/icons/class_learning_from_home_education_icon.svg";
 import verified from "../../../../assets/icons/check_checklist_list_mark_ok_icon.svg";
-import non_verified from "../../../../assets/icons/close_circled_icon.svg";
 import down_arrow from "../../../../assets/icons/down_arrow_icon.svg";
 import graph_img from "../../../../assets/icons/temp_graph.png";
 import notification from "../../../../assets/icons/bell_mobile ui_notification_icon.svg";

@@ -12,14 +12,14 @@ import moment from "moment";
 import AddEventModal from "./AddEventModal";
 import EditEventModal from "./EditEventModal";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import { getTeacherData } from "../../../../store/actions/teacher";
+
 import { addTeacherAvailability, getTeacherAvailability } from "../../../../store/actions/availability";
 import { useWindowDimensions } from "../../../../utils/util";
 import TimeGrid from "react-big-calendar/lib/TimeGrid";
 import "./calendar.css";
 
-const DragAndDropCalendar = withDragAndDrop(Calendar);
+
 const locales = { "en-US": require("date-fns/locale/en-US") };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 

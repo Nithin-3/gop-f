@@ -4,8 +4,8 @@ import Person from '../../../../../assets/icons/boy_icon.svg';
 
 function Ratings(props) {
 
-    const { width , teacherData} = props;
-// console.log(teacherData.data.data, "ciaalaalalla");
+    const { width, teacherData } = props;
+
     return (
         <div style={{ display: width >= 992 ? '' : 'flex', flexDirection: width >= 992 ? '' : 'column', alignItems: 'center', justifyContent: 'center', marginTop: '10px', borderRadius: '10px', width: width >= 992 ? '100%' : '90%', backgroundColor: '#fefeff', padding: '20px' }}>
             <div style={{ alignSelf: 'flex-start', marginBottom: '10px', fontWeight: 'bold' }}>Ratings</div>
@@ -31,8 +31,8 @@ function Ratings(props) {
 
             <div></div>
 
-            {teacherData.data !=null && teacherData.data.data != null  && teacherData.data.data.length  >0 ? 
-            
+            {teacherData.data != null && teacherData.data.data != null && teacherData.data.data.length > 0 ?
+
                 teacherData.data.data.map((item, index) => (
                     <div style={{ borderRadius: '10px', border: '3px solid #f9f9f8', padding: '10px', margin: '2%', display: 'inline-block', width: width >= 992 ? '40%' : '70vw' }}>
                         <div style={{}}>
@@ -43,7 +43,7 @@ function Ratings(props) {
                                     <span>
                                         {item.user_details.fullName}
                                         <br />
-                                        {item.course_details !=null && item.course_details.course !=null ? item.course_details.course.data : ''}
+                                        {item.course_details != null && item.course_details.course != null ? item.course_details.course.data : ''}
                                     </span>
                                 </div>
                                 <div>
@@ -52,7 +52,7 @@ function Ratings(props) {
                             </div>
                         </div>
                     </div>
-                )) :  null 
+                )) : null
             }
         </div >
     )

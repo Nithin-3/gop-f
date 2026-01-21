@@ -23,7 +23,6 @@ const EditEventModal = (props) => {
   React.useEffect(() => {
     let temp = [];
     props.availability.forEach((availability) => {
-      console.log(availability);
       if (new Date(availability.start).getDate() === new Date(props.selectedSlot.start).getDate()) {
         let newSlot = {
           start: convertFrom24To12Format(String(availability.start).slice(16, 21)),
@@ -34,7 +33,6 @@ const EditEventModal = (props) => {
         temp.push(newSlot);
       }
     });
-    console.log(temp);
     setSlots(temp);
   }, [props.selectedSlot, props.availability]);
 
@@ -43,7 +41,6 @@ const EditEventModal = (props) => {
   }
 
   function handleChange(name, value, index) {
-    console.log(name, value, index);
     let newSlot = [...slots];
     newSlot[index][name] = value;
     setSlots(newSlot);
@@ -51,7 +48,6 @@ const EditEventModal = (props) => {
 
   const deleteSlot = (i) => {
     let temp = [...slots];
-    console.log(temp);
     if (temp.length > 0) temp.splice(i, 1);
     setSlots(temp);
   };
@@ -63,7 +59,6 @@ const EditEventModal = (props) => {
       let startTime = new Date(2022, 1, 1, parseInt(slot.start.slice(0, 2)), parseInt(slot.start.slice(3, 5)));
       let endTime = new Date(2022, 1, 1, parseInt(slot.end.slice(0, 2)), parseInt(slot.end.slice(3, 5)));
 
-      console.log((endTime - startTime) / 1000 / 60);
       if (slot.start === "" || slot.end === "") {
         toast.warn("Please select start and end time");
         status = false;
@@ -93,22 +88,22 @@ const EditEventModal = (props) => {
 
   const overlapping = (a, b) => {
     const getMinutes = s => {
-       const p = s.split(':').map(Number);
-       return p[0] * 60 + p[1];
+      const p = s.split(':').map(Number);
+      return p[0] * 60 + p[1];
     };
     return getMinutes(a.end) > getMinutes(b.start) && getMinutes(b.end) > getMinutes(a.start);
- };
- const isOverlapping = (arr) => {
+  };
+  const isOverlapping = (arr) => {
     let i, j;
     for (i = 0; i < arr.length - 1; i++) {
-        for (j = i + 1; j < arr.length; j++) {
-          if (overlapping(arr[i], arr[j])) {
-             return true;
-          }
-       };
+      for (j = i + 1; j < arr.length; j++) {
+        if (overlapping(arr[i], arr[j])) {
+          return true;
+        }
+      };
     };
     return false;
- };
+  };
 
   const saveSlots = async () => {
     if (!verifyFields()) {
@@ -120,12 +115,11 @@ const EditEventModal = (props) => {
       return { start: convertTime12to24(slot.start), end: convertTime12to24(slot.end) };
     });
 
-    if(isOverlapping(slots24HourFormat)){
+    if (isOverlapping(slots24HourFormat)) {
       return toast.warn('Slots are overlapping')
     }
 
     // props.setAvailability([...props.availability, ...temp]);
-    console.log(temp);
     // return;
     let body = {
       availability: {
@@ -136,7 +130,7 @@ const EditEventModal = (props) => {
 
     try {
       const result = await dispatch(editAvailability(body));
-      console.log(result);
+
       if (result.status) {
         toast.success(result.message);
         props.setEditEventModal(false);
@@ -144,7 +138,7 @@ const EditEventModal = (props) => {
         toast.error(result.message);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       toast.error("Failed to Change availability");
     }
   };
@@ -176,7 +170,7 @@ const EditEventModal = (props) => {
           <button className={modalStyles.saveSlotBtn} onClick={saveSlots}>
             Save Changes
           </button>
-          
+
         </div>
       </div>
     </>

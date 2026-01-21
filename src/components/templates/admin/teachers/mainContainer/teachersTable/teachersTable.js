@@ -4,7 +4,6 @@ import styles from "./styles.module.css";
 import TeacherRow from "./teacherRow";
 
 const TeachersTable = (props) => {
-  console.log(props)
   const { width } = useWindowDimensions()
   return (
     <>

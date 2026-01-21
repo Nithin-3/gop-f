@@ -1,15 +1,15 @@
 import React from 'react';
 import teacherStyles from '../styles.module.css';
-import styles from './styles.module.css';
-import MultiSelect from  'react-multiple-select-dropdown-lite'
-import  'react-multiple-select-dropdown-lite/dist/index.css'
+
+import MultiSelect from 'react-multiple-select-dropdown-lite'
+import 'react-multiple-select-dropdown-lite/dist/index.css'
 
 function StudentCertificates() {
-    const  options  = [
-        { label:  'English', value:  'english'  },
-        { label:  'Hindi', value:  'hindi'  },
-        { label:  'Frensh', value:  'french'  },
-      ]
+    const options = [
+        { label: 'English', value: 'english' },
+        { label: 'Hindi', value: 'hindi' },
+        { label: 'Frensh', value: 'french' },
+    ]
 
     return (
         <main className={teacherStyles.mainSection}>

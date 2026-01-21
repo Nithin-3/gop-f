@@ -97,14 +97,7 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
     }
 
     // Comprehensive logging to verify what's being sent
-    console.log("Submitting Course FormData:");
-    for (let [key, value] of form.entries()) {
-      if (value instanceof File) {
-        console.log(`${key}: [File] ${value.name} (${value.size} bytes)`);
-      } else {
-        console.log(`${key}:`, value);
-      }
-    }
+    // Comprehensive logging to verify what's being sent
 
 
     try {

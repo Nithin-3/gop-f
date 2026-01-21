@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import logo from "../../assets/image/logo.png";
 import hamburger from "../../assets/icons/hamburger.svg";
 //React Router
-import { useNavigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 import { useSelector, useDispatch } from "react-redux";
 //css
 import "./Nav.css";

@@ -40,11 +40,10 @@ export const createCourse = (payload) => async () => {
 
     const { data } = await API.post("/createCourse", payload);
 
-    console.log("SUCCESS:", data);
     return data;
 
   } catch (e) {
-    console.log("ERROR:", e.response?.data || e.message);
+    console.error("ERROR:", e.response?.data || e.message);
     return e.response?.data || e.message;
   }
 };

@@ -39,20 +39,7 @@ const InfoForm = (props) => {
     setBody(temp);
   };
 
-  const handleAddDetails = () => {
-    setEditTable(true);
-    setIsAddDetails(true);
 
-    setFormValues({
-      title: "",
-      institute: "",
-      locations: "",
-      description: "",
-      from: "",
-      to: "",
-      certificate_data: undefined,
-    });
-  };
 
   /* ✅ React 18-safe replacement for setState callback */
   useEffect(() => {

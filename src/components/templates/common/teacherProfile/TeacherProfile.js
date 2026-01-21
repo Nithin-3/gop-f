@@ -26,7 +26,6 @@ function TeacherProfile() {
   const [coupons, setCoupons] = React.useState([]);
   const [ratings, setRatings] = React.useState([]);
   const [selectedCoupon, setSelectedCoupon] = React.useState();
-  console.log("course", course);
   const { width } = useWindowDimensions();
 
   React.useEffect(() => {
@@ -37,19 +36,18 @@ function TeacherProfile() {
           setCoupons(result);
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
 
     async function getRatings() {
       try {
-        console.log(course.userId.onType, "course.userId.onType");
         const result = await dispatch(getTeacherRatings(course.userId.onType._id));
         if (result) {
           setRatings(result);
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
 
@@ -59,7 +57,6 @@ function TeacherProfile() {
   }, [dispatch]);
 
   const handleSelectCoupon = (coupon) => {
-    console.log("coupon", coupon);
     setSelectedCoupon(coupon);
   };
 

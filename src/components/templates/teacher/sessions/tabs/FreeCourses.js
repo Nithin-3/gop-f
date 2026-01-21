@@ -20,11 +20,10 @@ function FreeCourses(props) {
 
   const getFreeSessions = async () => {
     const result = await getTeacherFreeSessions();
-    console.log(result);
     if (result.success) {
       setFreeSessions(result.data);
     } else {
-      console.log(result);
+      console.error(result);
     }
   };
 
@@ -37,7 +36,7 @@ function FreeCourses(props) {
   const filteredSessions = sessionsToDisplay.filter(
     (item) => item.isFree && new Date(item.from) - todayDate >= 0
   );
-  console.log(filteredSessions);
+
 
 
   return (

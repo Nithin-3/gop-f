@@ -3,7 +3,7 @@ import modalStyles from "./styles.module.css";
 import DeleteSlot from "./DeleteSlot";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { editAvailability } from "../../../../store/actions/teacher";
+
 import { deleteAvailability } from "../../../../store/actions/availability";
 
 const EditEventModal = ({
@@ -12,7 +12,7 @@ const EditEventModal = ({
   availability,
   setAvailability,
 }) => {
-  const dispatch = useDispatch();
+
 
   const handleClick = async () => {
     const data = await deleteAvailability(selectedSlot.id);

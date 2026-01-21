@@ -33,11 +33,10 @@ function Filters(props) {
         lang,
         setLang,
         reset,
-        resetRef,
     } = props;
 
     let allFilters = JSON.parse(localStorage.getItem("allFilters"));
-    console.log("ttt", allFilters);
+
     // const filterStore = null;
 
     const [courseType, setCourseType] = React.useState(allFilters?.courseT || "Course");
@@ -68,7 +67,6 @@ function Filters(props) {
     }, [reset]);
 
     React.useEffect(() => {
-        console.log("Filters.js useEffect triggered", { lang, courseType, availability, minPrice, maxPrice, motherTongue, from });
         const currFilters = {
             language: lang === "Language" ? "All" : lang,
             courseT: courseType === "Course" ? "All" : courseType,
@@ -94,15 +92,14 @@ function Filters(props) {
 
         const apiStr = `?language=${encodeURIComponent(currFilters.language)}&courseType=${encodeURIComponent(currFilters.courseT)}&startPrice=${currFilters.startPrice}&endPrice=${currFilters.endPrice}&motherTongue=${encodeURIComponent(currFilters.motherT)}&country=${encodeURIComponent(currFilters.country)}&page=${currFilters.page}&limit=${currFilters.limit}`;
 
-        console.log("Fetching courses with filters:", currFilters);
-        console.log("API Query String:", apiStr);
+
+
 
         async function getCourses() {
             try {
-                console.log("getCourses function calling dispatch...");
                 if (document.getElementById("loader")) document.getElementById("loader").style.display = "flex";
+
                 const result = await dispatch(filterCourse(apiStr));
-                console.log("filterCourse dispatch result:", result);
                 if (document.getElementById("loader")) document.getElementById("loader").style.display = "none";
 
                 if (result) {
@@ -110,13 +107,13 @@ function Filters(props) {
                     const motherTongues = result.motherTongues || result.data?.motherTongues || [];
                     const countries = result.countries || result.data?.countries || [];
 
-                    console.log(`Setting courses with length: ${courses.length}`);
+
+
                     setCoursesArr(courses);
                     setMotherTongueOptions(motherTongues);
                     setCountryOptions(countries);
 
                     if (courses.length === 0) {
-                        console.log("No courses found for these filters.");
                     }
                 } else {
                     console.error("Empty response from filter course API");

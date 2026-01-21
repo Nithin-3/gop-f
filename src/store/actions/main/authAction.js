@@ -24,7 +24,7 @@ export const signup = (user) => async (dispatch) => {
     dispatch({ type: "AUTH", payload: resultPayload });
     return { ...resultPayload, _doc: userDoc };
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response?.data || e.message;
   }
 };
@@ -42,7 +42,7 @@ export const login = (user) => async (dispatch) => {
     });
     return { ...resultPayload, _doc: userDoc };
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response?.data || e.message;
   }
 };
@@ -61,7 +61,7 @@ export const resetPassword = (body) => async (dispatch) => {
     const { data } = await API.post("/reset-password", body);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response?.data || e.message;
   }
 };
@@ -71,7 +71,7 @@ export const changePassword = (body) => async (dispatch) => {
     const { data } = await Token_Api.post("/changePassword", body);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response?.data || e.message;
   }
 };
@@ -81,7 +81,7 @@ export const getInTouch = (body) => async (dispatch) => {
     const { data } = await API.post("/getInTouch", body);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response.message;
   }
 };
@@ -93,7 +93,7 @@ export const getInTouch = (body) => async (dispatch) => {
 //       type: "AUTH",
 //       payload: { ...data._doc, token: data.token.access },
 //     });
-//     console.log(data);
+// console.log(data);
 //     return "Success";
 //   } catch (e) {
 //     console.log(e);
@@ -108,7 +108,7 @@ export const getInTouch = (body) => async (dispatch) => {
 //       type: "AUTH",
 //       payload: { ...data._doc, token: data.token.access },
 //     });
-//     console.log(data);
+// console.log(data);
 //     return "Success";
 //   } catch (e) {
 //     console.log(e);

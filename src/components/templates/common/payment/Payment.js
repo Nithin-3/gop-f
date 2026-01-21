@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import "./payment.css";
-import student from "../../../../assets/icons/student_man_icon.svg";
 import razorpayLogo from "../../../../assets/icons/razorpayLogo.svg";
 import { useDispatch } from "react-redux";
 import { useWindowDimensions } from "../../../../utils/util";
@@ -43,17 +42,13 @@ function Payment() {
   const studentData = JSON.parse(localStorage.getItem("studentData")) || {};
   const rescheduleObj = JSON.parse(localStorage.getItem("rescheduleObj")) || null;
 
-  const monthArr = [
-    "January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December",
-  ];
 
-  const [slotStart, setSlotStart] = useState(new Date(chosenEvent.start));
-  const [slotEnd, setSlotEnd] = useState(new Date(chosenEvent.end));
+  const [slotStart] = useState(new Date(chosenEvent.start));
+  const [slotEnd] = useState(new Date(chosenEvent.end));
   const diffMin = Math.ceil(Math.abs(slotEnd - slotStart) / (1000 * 60));
 
-  const [slotToBookStart, setSlotToBookStart] = useState(diffMin === 30 ? slotStart : null);
-  const [slotToBookEnd, setSlotToBookEnd] = useState(diffMin === 30 ? slotEnd : null);
+  const [slotToBookStart] = useState(diffMin === 30 ? slotStart : null);
+  const [slotToBookEnd] = useState(diffMin === 30 ? slotEnd : null);
 
   const [selectedPlan, setSelectedPlan] = useState({});
   const platformFeesPercentage = 8;
@@ -93,7 +88,7 @@ function Payment() {
     else if (rescheduleObj) setLesson("1 Lesson");
   }, [trail, rescheduleObj]);
 
-  const [data, setData] = useState();
+
 
   useEffect(() => {
     async function pay() {
@@ -112,7 +107,7 @@ function Payment() {
           // Sort availabilities by date to ensure findIndex(next) works correctly
           const sortedAvails = [...result.data].sort((a, b) => new Date(a.from) - new Date(b.from));
           setAvailabilities(sortedAvails);
-          setData(result.data);
+
         }
       } catch (e) {
         console.error("Payment initialization failed:", e);

@@ -9,7 +9,7 @@ const BankReferenceModal = ({
   setBankReferenceModal,
   setPayouts,
 }) => {
-  console.log(data);
+
   const [bankId, setBankId] = useState(data?.bankReferenceId || "");
 
   const handleClick = async () => {

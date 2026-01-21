@@ -1,25 +1,22 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import CouponCard from "../../../teacher/coupons/CouponCard/CouponCard";
-import CouponButton from "./CouponButton";
 import moment from "moment";
 import { getTeacherDetailByTId } from "../../../../../store/actions/teacher";
 
 function Coupons(props) {
-  const { width, coupons, handleSelectCoupon, selectedCoupon } = props;
-  
+  const { width, coupons } = props;
+
   const dispatch = useDispatch()
   const [teacherName, setTeacherName] = React.useState()
   // const [coupon, setCoupon] = React.useState()
   React.useEffect(async () => {
-    console.log("working")
-    console.log(coupons[0]?.generatedBy, "coupons")
     try {
       const teacher = await dispatch(getTeacherDetailByTId(coupons[0].generatedBy));
-      console.log(teacher)
+
       setTeacherName(teacher.firstName.data)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, [coupons]);
   return (
@@ -53,12 +50,8 @@ function Coupons(props) {
                 width="330px"
                 margin="0"
               />
-              // <CouponButton
-              //   coupon={coupon}
-              //   handleSelectCoupon={handleSelectCoupon}
-              //   selectedCoupon={selectedCoupon}
-              // />
             );
+
           })
         )}
       </div>

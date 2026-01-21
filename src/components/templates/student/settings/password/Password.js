@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import styles from './styles.module.css';
 import commonStyles from '../styles.module.css';
 import { useDispatch } from 'react-redux';
-import {updateStudentProfile} from "../../../../../store/actions/student/index"
+import { updateStudentProfile } from "../../../../../store/actions/student/index"
 function Password(props) {
 
-    const [profileId, setProfileId] = React.useState()
     const dispatch = useDispatch()
     const [formValues, setFormValues] = React.useState({
         type: "",
@@ -15,21 +14,19 @@ function Password(props) {
         confirmNewPassword: "",
     });
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("form values", e.target[0].value);
         try {
-            const res = await dispatch(updateStudentProfile(formValues))
-            console.log(res)
+            await dispatch(updateStudentProfile(formValues))
+
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
     useEffect(() => {
         let userProfile = JSON.parse(window.localStorage.getItem("profile"));
-        console.log(userProfile._id)
-        setFormValues({type: "password", userid: userProfile._id})
+        setFormValues({ type: "password", userid: userProfile._id })
     }, [])
 
     return (
@@ -72,12 +69,12 @@ function Password(props) {
                     </div>
 
                     <div className={commonStyles.submitButtonContainer}>
-                    <button type="submit"
-                        className={commonStyles.submitButton}
-                    >
-                        Submit
-                    </button>
-                </div>
+                        <button type="submit"
+                            className={commonStyles.submitButton}
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -16,7 +16,7 @@ export const addPayment = (payload) => async (dispatch) => {
   try {
     let API = createAxios();
     const { data } = await API.post("/add", payload);
-    // console.log(result);
+
     return data;
   } catch (e) {
     console.error("addPayment error:", e);

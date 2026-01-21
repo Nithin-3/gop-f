@@ -34,7 +34,6 @@ const ChangePassword = () => {
             const result = await dispatch(changePassword(body));
             // Hide Loader
             document.getElementById("loader").style.display = "none";
-            // console.log(result, "Result");
             if (result.status) {
                 toast.success("Password Updated Successfully");
                 setFormValues({
@@ -46,7 +45,7 @@ const ChangePassword = () => {
                 toast.error(result && result.message);
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             toast.error("Faild to update, please try again");
         }
     };

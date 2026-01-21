@@ -1,7 +1,6 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import Flag from '../../../../../../assets/icons/flag_icon.svg'
 
 const SelectOption = styled.div`
     padding: 10px;

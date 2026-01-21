@@ -1,7 +1,7 @@
 import React from 'react';
 import { useWindowDimensions } from '../../utils/util';
 
-import {getInTouch} from '../../store/actions/main/authAction';
+import { getInTouch } from '../../store/actions/main/authAction';
 
 function ContactScreen() {
     const { width } = useWindowDimensions();
@@ -14,7 +14,7 @@ function ContactScreen() {
         e.preventDefault();
         var d = new Date();
 
-        console.log("qqq", e.target[0].value, e.target[1].value, e.target[2].value, d);
+
 
         var body = {
             name: e.target[0].value,
@@ -57,7 +57,7 @@ function ContactScreen() {
                                 </textarea>
                             </div>
 
-                            <button type="submit" style={{ all: 'unset',cursor: 'pointer', backgroundColor: '#FF1849', width: '100%', borderRadius: '10px', padding: '10px 0', color: '#fff', textAlign: 'center' }}>
+                            <button type="submit" style={{ all: 'unset', cursor: 'pointer', backgroundColor: '#FF1849', width: '100%', borderRadius: '10px', padding: '10px 0', color: '#fff', textAlign: 'center' }}>
                                 Send
                             </button>
                         </form>
@@ -66,7 +66,7 @@ function ContactScreen() {
 
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px', width: width >= 992 ? '45%' : '100%' }}>
                         <div style={{ padding: '30px', borderRadius: '10px', boxShadow: '0 3px 10px rgb(0 0 0 / 0.2)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom :'20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
                                 <div style={{ color: '#FF1849', fontSize: '25px' }}>
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>

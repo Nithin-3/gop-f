@@ -13,14 +13,14 @@ function TeacherCoupons() {
   const { width } = useWindowDimensions();
   const tableHeader = ['All Coupons', 'Redeemed', 'Expired'];
 
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
   const [coupons, setCoupons] = useState([]);
   const [searchQuery, setSearchQuery] = useState('All Coupons');
   const [createModal, setCreateModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const [mobileDropdown, setMobileDropdown] = useState(false);
-  const [activeTab, setActiveTab] = useState('Coupons');
+  const [activeTab] = useState('Coupons');
   const [teacherName, setTeacherName] = useState('');
 
   useEffect(() => {

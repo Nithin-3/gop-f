@@ -12,25 +12,25 @@ function createAxios() {
   });
 }
 
-export const getConversations = (userId) => async(dispatch) => {
-  try { 
+export const getConversations = (userId) => async (dispatch) => {
+  try {
     let API = createAxios();
-    // console.log("payload", userId)
-    const {data} = await API.get(`/${userId}`)
+
+    const { data } = await API.get(`/${userId}`)
     return data
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return error.response.message;
   }
 };
 
-export const createConversation = (payload) => async(dispatch) => {
-  try{
+export const createConversation = (payload) => async (dispatch) => {
+  try {
     let API = createAxios();
-    const {data} = await API.post('/', payload)
+    const { data } = await API.post('/', payload)
     return data
-  } catch(error){
-    console.log(error)
+  } catch (error) {
+    console.error(error)
     return error.response.message;
   }
 }

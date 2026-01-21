@@ -13,15 +13,7 @@ const TopNav = ({ pageNumber, setPageNumber }) => {
     { item: "Resume", path: "resume", div: [10, 11, 12] },
   ];
   const [expand, setExpand] = useState(false);
-  const handlePageChange = (page) => {
-    if (page) {
-      const section = nav_list.filter((obj) => obj.item === page);
-      console.log(section);
-      if (!isEmpty(section[0])) {
-        setPageNumber(section[0].div[0]);
-      }
-    }
-  };
+
   return (
     <div className="topnav-container">
       <div className="topnav">
@@ -55,8 +47,8 @@ const TopNav = ({ pageNumber, setPageNumber }) => {
             <div key={index} className="">
               <div
                 className={`${navi.div.includes(pageNumber)
-                    ? "topnav-selected"
-                    : "topnav-item"
+                  ? "topnav-selected"
+                  : "topnav-item"
                   } subSectionNav`} /*onClick={() => handlePageChange(navi.item)}*/
               >
                 {" "}

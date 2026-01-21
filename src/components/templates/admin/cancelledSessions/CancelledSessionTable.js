@@ -2,11 +2,9 @@
 import moment from "moment";
 import React, { useState } from "react";
 import styles from "./styles.module.css"; // Fixed import
-import Expand from "../../../../assets/icon/expand-01.svg";
 import PaymentsModal from "../payment/Modals/PaymentsModal";
 
 const BookedCoursesTable = ({ columns, data }) => {
-  const [selectedTransaction, setSelectedTransaction] = useState({});
   const [paymentsModal, setPaymentsModal] = useState(false);
 
   return (
@@ -14,7 +12,7 @@ const BookedCoursesTable = ({ columns, data }) => {
       {paymentsModal && (
         <PaymentsModal
           setPaymentsModal={setPaymentsModal}
-          data={selectedTransaction}
+          data={{}}
         />
       )}
 
@@ -29,14 +27,9 @@ const BookedCoursesTable = ({ columns, data }) => {
           <tbody>
             {data &&
               data.map((e) => {
-                const teacherName = `${
-                  e?.teacherId?.firstName?.data ? e.teacherId.firstName.data : ""
-                } ${
-                  e?.teacherId?.lastName?.data ? e.teacherId.lastName.data : ""
-                }`;
-
-                let amount = e?.total;
-                if (e.couponUsed) amount = e?.totalAfterDiscount;
+                const teacherName = `${e?.teacherId?.firstName?.data ? e.teacherId.firstName.data : ""
+                  } ${e?.teacherId?.lastName?.data ? e.teacherId.lastName.data : ""
+                  }`;
 
                 return (
                   <tr className={styles.table_row} key={e._id}>

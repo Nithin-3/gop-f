@@ -20,14 +20,13 @@ const UnverifiedFieldsModal = (props) => {
             key === "program")
         ) {
           array.push(key);
-          // console.log(key, "K");
+
         }
       });
     }
 
     // Teacher
     if (props.verificationType === "Teacher") {
-      console.log(data);
       Object.entries(data).forEach(([key, value]) => {
         if (
           !value.is_verified &&
@@ -46,16 +45,15 @@ const UnverifiedFieldsModal = (props) => {
           array.push("fromCountry");
         } else if ((key === "languageSpeak" || key === "languageTeach") && !value[0].is_verified) {
           array.push(key);
-        }else if((key === 'certificateCourses' || key === 'educationDetails' || key === 'workExperience')){
-          value.forEach((detail)=>{
-            if(!detail.is_verified){
+        } else if ((key === 'certificateCourses' || key === 'educationDetails' || key === 'workExperience')) {
+          value.forEach((detail) => {
+            if (!detail.is_verified) {
               array.push(`${key} - ${detail.title}`)
             }
           })
         }
       });
     }
-    // console.log(array);
     props.setUnverifiedFields(array);
   }, []);
   return (

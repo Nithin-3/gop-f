@@ -55,10 +55,10 @@ export const sendEmailToTeacher = async (payload) => {
     let API = createAxios();
 
     await API.post("/sendEmail", payload);
-    // console.log(data.success, "DaTA");
+
 
     // return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };

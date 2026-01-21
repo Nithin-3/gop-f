@@ -20,7 +20,7 @@ const RoleContainer = ({ popupSetter }) => {
     localStorage.setItem("userRole", JSON.stringify({ role: role }));
     // setIsChecked(true);
     setRole(role);
-    console.log(role);
+
   };
 
   return (
@@ -43,10 +43,10 @@ const RoleContainer = ({ popupSetter }) => {
         </span>
       </div>
       <div className={classes.popupBtn}>
-        
-        <button type="button" className={classes.continueBtn} onClick={()=> clickHandler()}>
-         Continue
-          <img src={arrowForward} alt="errImg"/>
+
+        <button type="button" className={classes.continueBtn} onClick={() => clickHandler()}>
+          Continue
+          <img src={arrowForward} alt="errImg" />
         </button>
 
       </div>

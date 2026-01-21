@@ -22,7 +22,8 @@ const sampleHomework = [
 ];
 
 const HomeworkModal = ({ setHomeworkModal, width }) => {
-  const [homeworks, setHomeworks] = useState(sampleHomework);
+  const [homeworks] = useState(sampleHomework);
+
 
   return (
     <div className={modalStyles.modalBackdrop}>

@@ -13,7 +13,7 @@ const All = ({ width, arr = [] }) => {
     issue: false,
     homework: false,
   });
-
+ const all = arr.sort((a, b) => new Date(b.from) - new Date(a.from)) 
   // Dropdown actions
   const dropDownArr = [
     { text: "Request to Reschedule", modal: (val) => setModals({ ...modals, reschedule: val }) },
@@ -31,8 +31,8 @@ const All = ({ width, arr = [] }) => {
 
       {/* Sessions */}
       <div style={{ marginTop: width >= 992 ? '50px' : '30px' }}>
-        {arr.length > 0 ? (
-          arr.map((item, index) =>
+        {all.length > 0 ? (
+          all.map((item, index) =>
             width >= 992 ? (
               <Card key={index} width={width} cardInfo={item} dropDown={dropDownArr} />
             ) : (

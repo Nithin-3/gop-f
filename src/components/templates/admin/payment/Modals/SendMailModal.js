@@ -4,7 +4,7 @@ import styles from "../styles.module.css";
 import { toast } from "react-toastify";
 
 const SendMailModal = ({ data, setSendMailModal }) => {
-  console.log(data);
+
 
   const [formData, setFormData] = useState({
     subject: "",

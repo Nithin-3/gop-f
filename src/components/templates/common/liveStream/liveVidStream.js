@@ -29,20 +29,18 @@ const LiveVidStream = () => {
   const [isTeacherLive, setIsTeacherLive] = useState(false);
   const [currentTime, setCurrentTime] = useState(moment());
 
-  // WebRTC States
+  // Multi-user state
+  const [remoteStreams, setRemoteStreams] = useState({}); // { userId: stream }
   const [inCall, setInCall] = useState(false);
   const [localStream, setLocalStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const localVideoRef = React.useRef(null);
-  const remoteVideoRef = React.useRef(null);
-  const peerRef = React.useRef(null);
+  const peers = React.useRef({}); // { userId: RTCPeerConnection }
   const localStreamRef = React.useRef(null);
-  const remoteStreamRef = React.useRef(new MediaStream());
-  const candidateQueue = React.useRef([]);
+  const candidateQueues = React.useRef({}); // { userId: [candidates] }
 
   const getMedia = React.useCallback(async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -56,6 +54,11 @@ const LiveVidStream = () => {
       }
       toast.error(errorMsg);
       throw new Error(errorMsg);
+    }
+
+    // Reuse existing active stream if available
+    if (localStreamRef.current && localStreamRef.current.active) {
+      return localStreamRef.current;
     }
 
     try {
@@ -81,24 +84,43 @@ const LiveVidStream = () => {
     }
   }, []);
 
-  const createPeer = React.useCallback(() => {
+  const createPeer = React.useCallback((targetId, stream) => {
+    if (peers.current[targetId]) return peers.current[targetId];
+
     const peer = new RTCPeerConnection(iceServers);
-    peerRef.current = peer;
+    peers.current[targetId] = peer;
+
+    stream.getTracks().forEach(track => peer.addTrack(track, stream));
 
     peer.onicecandidate = (e) => {
       if (e.candidate) {
         socket.emit("ice-candidate", {
-          to: currRole === "Teacher" ? sessionDetails.studentId : sessionDetails.teacherId,
+          to: targetId,
+          from: currRole === "Teacher" ? sessionDetails.teacherId : sessionDetails.studentId,
           candidate: e.candidate
         });
       }
     };
 
     peer.ontrack = (e) => {
-      console.log("Remote track received:", e.track.kind, e.streams);
-      const stream = e.streams[0] || new MediaStream([e.track]);
-      remoteStreamRef.current = stream;
-      setRemoteStream(stream);
+      setRemoteStreams(prev => ({
+        ...prev,
+        [targetId]: e.streams[0]
+      }));
+    };
+
+    peer.onconnectionstatechange = () => {
+      if (peer.connectionState === 'disconnected' || peer.connectionState === 'failed') {
+        setRemoteStreams(prev => {
+          const updated = { ...prev };
+          delete updated[targetId];
+          return updated;
+        });
+        if (peers.current[targetId]) {
+          peers.current[targetId].close();
+          delete peers.current[targetId];
+        }
+      }
     };
 
     return peer;
@@ -107,46 +129,58 @@ const LiveVidStream = () => {
   const startCall = async () => {
     setIsConnecting(true);
     try {
-      const stream = await getMedia();
-      const peer = createPeer();
-      stream.getTracks().forEach(track => peer.addTrack(track, stream));
+      await getMedia();
 
-      if (currRole === "Student") {
-        const offer = await peer.createOffer();
-        await peer.setLocalDescription(offer);
-        socket.emit("call-user", { to: sessionDetails.teacherId, offer });
-      } else {
-        socket.emit("sendTeacherIsLive", {
-          senderId: sessionDetails.teacherId,
-          receiverId: sessionDetails.studentId,
-          isTeacherLive: true
+      const roomId = sessionDetails.id;
+      const userId = currRole === "Teacher" ? sessionDetails.teacherId : sessionDetails.studentId;
+
+      socket.emit("join-class", { roomId, userId, role: currRole });
+      if (currRole === "Teacher") {
+        socket.emit("teacher-status-update", {
+          teacherId: userId,
+          isLive: true
         });
-        setInCall(true);
-        setIsConnecting(false);
       }
+
+      setInCall(true);
+      setIsConnecting(false);
     } catch (err) {
       setIsConnecting(false);
     }
   };
 
+  const muteAllStudents = () => {
+    if (currRole !== "Teacher") return;
+    socket.emit("mute-all-students", { roomId: sessionDetails.id });
+    toast.info("All students muted");
+  };
+
   const endCall = () => {
-    if (localStream) {
-      localStream.getTracks().forEach(track => track.stop());
+    const roomId = sessionDetails?.id;
+    const userId = currRole === "Teacher" ? sessionDetails?.teacherId : sessionDetails?.studentId;
+
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => track.stop());
+      localStreamRef.current = null;
     }
-    if (remoteStreamRef.current) {
-      remoteStreamRef.current.getTracks().forEach(track => track.stop());
-    }
-    if (peerRef.current) {
-      peerRef.current.close();
-      peerRef.current = null;
-    }
-    if (currRole === "Teacher" && sessionDetails) {
-      socket?.emit("sendTeacherIsLive", {
-        senderId: sessionDetails.teacherId,
-        receiverId: sessionDetails.studentId,
-        isTeacherLive: false
+    setLocalStream(null);
+
+    Object.values(remoteStreams).forEach(stream => {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+    });
+
+    Object.values(peers.current).forEach(peer => peer.close());
+    peers.current = {};
+    setRemoteStreams({});
+
+    if (currRole === "Teacher") {
+      socket?.emit("teacher-status-update", {
+        teacherId: userId,
+        isLive: false
       });
     }
+
+    socket?.emit("leave-class", { roomId, userId });
     navigate(-1);
   };
 
@@ -198,22 +232,47 @@ const LiveVidStream = () => {
       const id = currRole === "Student" ? sessionDetails.studentId : sessionDetails.teacherId;
       socket?.emit("addUser", id);
     }
-  }, [sessionDetails, currRole, socket]);
+    // Auto-start media for join preview
+    getMedia().catch(() => { });
+  }, [sessionDetails, currRole, socket, getMedia]);
+
+  // Listen for teacher status (Needs to run before joining call)
+  useEffect(() => {
+    if (!socket || currRole !== "Student" || !sessionDetails?.teacherId) return;
+
+    socket.emit("get-teacher-status", { teacherId: sessionDetails.teacherId });
+
+    const handleStatus = ({ senderId, isTeacherLive }) => {
+      if (senderId === sessionDetails.teacherId) {
+        setIsTeacherLive(isTeacherLive);
+      }
+    };
+
+    socket.on("getIsTeacherLive", handleStatus);
+    return () => socket.off("getIsTeacherLive", handleStatus);
+  }, [socket, currRole, sessionDetails]);
+
+  useEffect(() => {
+    localStreamRef.current = localStream;
+  }, [localStream]);
 
   useEffect(() => {
     const cleanup = () => {
-      console.log("Performing WebRTC cleanup...");
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach(track => track.stop());
         localStreamRef.current = null;
       }
-      if (remoteStreamRef.current) {
-        remoteStreamRef.current.getTracks().forEach(track => track.stop());
-      }
-      if (peerRef.current) {
-        peerRef.current.close();
-        peerRef.current = null;
-      }
+
+      // Stop all remote tracks too
+      setRemoteStreams(prev => {
+        Object.values(prev).forEach(stream => {
+          if (stream) stream.getTracks().forEach(track => track.stop());
+        });
+        return {};
+      });
+
+      Object.values(peers.current).forEach(peer => peer.close());
+      peers.current = {};
     };
     window.addEventListener('beforeunload', cleanup);
     return () => {
@@ -226,63 +285,114 @@ const LiveVidStream = () => {
     if (localStream && localVideoRef.current) {
       localVideoRef.current.srcObject = localStream;
     }
-  }, [localStream]);
+  }, [localStream, inCall]);
 
   useEffect(() => {
-    if (inCall && remoteVideoRef.current && remoteStream) {
-      remoteVideoRef.current.srcObject = remoteStream;
-      remoteVideoRef.current.play().catch(() => { });
-    }
-  }, [inCall, remoteStream]);
+    if (!socket || !inCall) return;
 
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("getIsTeacherLive", (data) => setIsTeacherLive(data.isTeacherLive));
-    socket.on("call-made", async ({ offer }) => {
-      if (currRole !== "Teacher") return;
-      setIsConnecting(true);
-      const peer = createPeer();
-      await peer.setRemoteDescription(new RTCSessionDescription(offer));
-      while (candidateQueue.current.length) {
-        const cand = candidateQueue.current.shift();
-        await peer.addIceCandidate(new RTCIceCandidate(cand));
+    socket.on("room-participants", async ({ participants }) => {
+      if (currRole === "Teacher") {
+        for (const part of participants) {
+          if (part.role === "Student") {
+            const userId = part.userId;
+            const peer = createPeer(userId, localStreamRef.current);
+            const offer = await peer.createOffer();
+            await peer.setLocalDescription(offer);
+            socket.emit("call-user", {
+              to: userId,
+              offer,
+              from: sessionDetails.teacherId
+            });
+          }
+        }
       }
-      const stream = await getMedia();
-      stream.getTracks().forEach(track => peer.addTrack(track, stream));
+    });
+
+    socket.on("user-joined", async ({ userId, role }) => {
+      if (currRole === "Teacher" && role === "Student") {
+        // Teacher calls the new student
+        const peer = createPeer(userId, localStreamRef.current);
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        socket.emit("call-user", {
+          to: userId,
+          offer,
+          from: sessionDetails.teacherId
+        });
+      }
+    });
+
+    socket.on("call-made", async ({ offer, from }) => {
+      const peer = createPeer(from, localStreamRef.current);
+      await peer.setRemoteDescription(new RTCSessionDescription(offer));
+
+      const q = candidateQueues.current[from] || [];
+      while (q.length) {
+        await peer.addIceCandidate(new RTCIceCandidate(q.shift()));
+      }
+
       const answer = await peer.createAnswer();
       await peer.setLocalDescription(answer);
-      socket.emit("make-answer", { to: sessionDetails.studentId, answer });
-      setIsConnecting(false);
-      setInCall(true);
+      socket.emit("make-answer", {
+        to: from,
+        answer,
+        from: currRole === "Teacher" ? sessionDetails.teacherId : sessionDetails.studentId
+      });
     });
-    socket.on("answer-made", async ({ answer }) => {
-      if (currRole !== "Student" || !peerRef.current) return;
-      try {
-        await peerRef.current.setRemoteDescription(new RTCSessionDescription(answer));
-        while (candidateQueue.current.length) {
-          const cand = candidateQueue.current.shift();
-          await peerRef.current.addIceCandidate(new RTCIceCandidate(cand));
+
+    socket.on("answer-made", async ({ answer, from }) => {
+      const peer = peers.current[from];
+      if (peer) {
+        await peer.setRemoteDescription(new RTCSessionDescription(answer));
+        const q = candidateQueues.current[from] || [];
+        while (q.length) {
+          await peer.addIceCandidate(new RTCIceCandidate(q.shift()));
         }
-        setIsConnecting(false);
-        setInCall(true);
-      } catch (err) { console.error("Error setting remote description:", err); }
-    });
-    socket.on("ice-candidate", async ({ candidate }) => {
-      const peer = peerRef.current;
-      if (peer && peer.remoteDescription) {
-        try { await peer.addIceCandidate(new RTCIceCandidate(candidate)); }
-        catch (e) { console.error("Error adding ice candidate", e); }
-      } else {
-        candidateQueue.current.push(candidate);
       }
     });
+
+    socket.on("ice-candidate", async ({ candidate, from }) => {
+      const peer = peers.current[from];
+      if (peer && peer.remoteDescription) {
+        await peer.addIceCandidate(new RTCIceCandidate(candidate));
+      } else {
+        if (!candidateQueues.current[from]) candidateQueues.current[from] = [];
+        candidateQueues.current[from].push(candidate);
+      }
+    });
+
+    socket.on("force-mute", () => {
+      if (currRole === "Student" && localStreamRef.current) {
+        localStreamRef.current.getAudioTracks().forEach(t => t.enabled = false);
+        setIsMuted(true);
+        toast.info("Teacher has muted everyone");
+      }
+    });
+
+    socket.on("user-left", ({ userId }) => {
+      if (peers.current[userId]) {
+        peers.current[userId].close();
+        delete peers.current[userId];
+      }
+      setRemoteStreams(prev => {
+        const updated = { ...prev };
+        delete updated[userId];
+        return updated;
+      });
+    });
+
+
+
     return () => {
-      socket.off("getIsTeacherLive");
+      socket.off("room-participants");
+      socket.off("user-joined");
       socket.off("call-made");
       socket.off("answer-made");
       socket.off("ice-candidate");
+      socket.off("force-mute");
+      socket.off("user-left");
     };
-  }, [socket, currRole, sessionDetails, createPeer, getMedia]);
+  }, [socket, inCall, currRole, sessionDetails, createPeer]);
 
   if (!location.state) return null;
 
@@ -291,128 +401,187 @@ const LiveVidStream = () => {
   const canJoin = diff <= 120000;
 
   if (inCall) {
+    const remoteUserIds = Object.keys(remoteStreams);
+
     return (
-      <div className={styles.VideoContainer} style={{ background: "#202124", height: "100vh", position: "fixed", top: 0, left: 0, width: "100%", zIndex: 1000, display: "flex", flexDirection: "column" }}>
-        <div style={{ flex: 1, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          {remoteStream ? (
-            <video ref={remoteVideoRef} autoPlay playsInline style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-          ) : (
-            <div style={{ color: "white", textAlign: "center" }}>
-              <div className="loader"></div>
-              <p>{currRole === "Teacher" ? "Waiting for student to join..." : "Connecting to teacher..."}</p>
-            </div>
-          )}
+      <div className={styles.VideoContainer}>
+        {/* Main Stage */}
+        <div className={styles.mainStage}>
+          <div className={styles.videoWrapper}>
+            {remoteUserIds.length > 0 ? (
+              <div className={styles.videoGrid} data-count={remoteUserIds.length}>
+                {remoteUserIds.map(uid => (
+                  <div key={uid} className={styles.videoSlot}>
+                    <video
+                      autoPlay
+                      playsInline
+                      ref={el => { if (el) el.srcObject = remoteStreams[uid]; }}
+                      className={styles.remoteVideo}
+                    />
+                    <div className={styles.participantName}>
+                      {uid === sessionDetails.teacherId ? teacherName : "Student"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.previewPlaceholder}>
+                <div className={styles.loader}></div>
+                <p>{currRole === "Teacher" ? "Waiting for students to join..." : "Connecting to teacher..."}</p>
+              </div>
+            )}
 
-          <div style={{ position: "absolute", bottom: "20px", right: "20px", width: "240px", borderRadius: "12px", overflow: "hidden", border: "2px solid #51addc", boxShadow: "0 10px 20px rgba(0,0,0,0.3)" }}>
-            <video ref={localVideoRef} autoPlay muted playsInline style={{ width: "100%", display: isVideoOff ? "none" : "block" }} />
-            {isVideoOff && <div style={{ background: "#3c4043", height: "135px", display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}>Camera Off</div>}
+            {/* Local PIP */}
+            <div className={styles.localPIP}>
+              <video
+                ref={localVideoRef}
+                className={styles.localVideo}
+                autoPlay
+                muted
+                playsInline
+                style={{ display: isVideoOff ? "none" : "block" }}
+              />
+              {isVideoOff && (
+                <div className={styles.videoOffPlaceholder}>
+                  <i className="fas fa-video-slash" style={{ fontSize: '24px', opacity: 0.5 }}></i>
+                </div>
+              )}
+            </div>
+
+            {isConnecting && (
+              <div className={styles.connectingBadge}>
+                <div className={styles.loader}></div>
+                <span className={styles.connectionText}>Connecting...</span>
+              </div>
+            )}
           </div>
-
-          {isConnecting && (
-            <div style={{ position: "absolute", top: "20px", left: "20px", background: "rgba(0,0,0,0.6)", color: "white", padding: "8px 15px", borderRadius: "20px", fontSize: "0.8rem" }}>
-              Connecting...
-            </div>
-          )}
         </div>
 
-        <div style={{ background: "#202124", padding: "20px", display: "flex", justifyContent: "center", gap: "20px", alignItems: "center" }}>
-          <button onClick={toggleMute} style={{ background: isMuted ? "#ea4335" : "#3c4043", border: "none", color: "white", padding: "15px", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px" }}>
-            <i className={`fas ${isMuted ? "fa-microphone-slash" : "fa-microphone"}`}></i>
-          </button>
-          <button onClick={toggleVideo} style={{ background: isVideoOff ? "#ea4335" : "#3c4043", border: "none", color: "white", padding: "15px", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px" }}>
-            <i className={`fas ${isVideoOff ? "fa-video-slash" : "fa-video"}`}></i>
-          </button>
-          <button onClick={endCall} style={{ background: "#ea4335", border: "none", color: "white", padding: "15px", borderRadius: "30px", cursor: "pointer", width: "120px", height: "56px", fontWeight: "bold" }}>
-            Leave Call
-          </button>
+        {/* Floating Controls Bar */}
+        <div className={styles.controlBar}>
+          <div className={styles.callInfo}>
+            <div className={styles.timeText}>{currentTime.format("h:mm A")}</div>
+            <div className={styles.divider}></div>
+            <div className={styles.meetingName}>
+              {courseDetails?.title?.data || courseDetails?.title || "Live Class"}
+            </div>
+          </div>
+
+          <div className={styles.mainControls}>
+            <button
+              onClick={toggleMute}
+              className={`${styles.iconBtn} ${isMuted ? styles.active : ''}`}
+              title={isMuted ? "Unmute" : "Mute"}
+            >
+              <i className={`fas ${isMuted ? "fa-microphone-slash" : "fa-microphone"}`}></i>
+            </button>
+            <button
+              onClick={toggleVideo}
+              className={`${styles.iconBtn} ${isVideoOff ? styles.active : ''}`}
+              title={isVideoOff ? "Turn on camera" : "Turn off camera"}
+            >
+              <i className={`fas ${isVideoOff ? "fa-video-slash" : "fa-video"}`}></i>
+            </button>
+
+            {currRole === "Teacher" && (
+              <button
+                onClick={muteAllStudents}
+                className={styles.iconBtn}
+                title="Mute All Students"
+                style={{ background: '#5f6368' }}
+              >
+                <i className="fas fa-volume-mute"></i>
+              </button>
+            )}
+
+            <button onClick={endCall} className={styles.endCallBtn} title="Leave call">
+              <i className="fas fa-phone-alt" style={{ transform: 'rotate(135deg)' }}></i>
+              <span>Leave Call</span>
+            </button>
+          </div>
+
+          <div className={styles.secondaryControls}>
+            <div className={styles.participantCount}>
+              <i className="fas fa-users"></i>
+              <span>{remoteUserIds.length + 1}</span>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Preview / Join Screen UI
   return (
-    <div className={styles.joinScreen} style={{ minHeight: "80vh", width: "100%", background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)", padding: "2rem" }}>
+    <div className={styles.joinScreen}>
       <div className={styles.cardSection}>
-        <div style={{ maxWidth: "600px", width: "100%" }}>
-          {currRole === "Student" && (
-            <div className={styles.msgForStu} style={{ borderRadius: "12px", borderLeft: "6px solid #51addc", backgroundColor: "white", padding: "15px", marginBottom: "20px" }}>
-              {isTeacherLive ? (
-                <div style={{ color: "#2dce89", fontWeight: "bold", display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span className="liveDot"></span>
-                  The teacher is live! You can join the call now.
-                </div>
-              ) : (
-                <div style={{ color: "#8898aa" }}>
-                  <i className="fas fa-clock"></i> Waiting for the teacher to start the class...
-                </div>
-              )}
+        {/* Left Side: Preview */}
+        <div className={styles.previewContainer}>
+          <video
+            ref={localVideoRef}
+            className={styles.previewVideo}
+            autoPlay
+            muted
+            playsInline
+            style={{ display: localStream ? "block" : "none" }}
+          />
+          {!localStream && (
+            <div className={styles.previewPlaceholder}>
+              <i className="fas fa-user-circle" style={{ fontSize: "80px", marginBottom: "16px", opacity: 0.1 }}></i>
+              <p>Camera is starting...</p>
             </div>
           )}
 
-          <div className={styles.joinCallWrapper} style={{ borderRadius: "20px", overflow: "hidden", backgroundColor: "white", boxShadow: "0 15px 35px rgba(50,50,93,0.1)" }}>
-            <div style={{ background: "#51addc", padding: "1.5rem", color: "white" }}>
-              <h2 style={{ margin: 0, fontSize: "1.5rem" }}>Live Classroom</h2>
-              <p style={{ margin: "5px 0 0 0", opacity: 0.8 }}>Secure WebRTC Video Session</p>
+          <div className={styles.previewControls}>
+            <button onClick={toggleMute} className={`${styles.iconBtn} ${isMuted ? styles.active : ''}`} style={{ background: 'rgba(60,64,67,0.9)' }}>
+              <i className={`fas ${isMuted ? "fa-microphone-slash" : "fa-microphone"}`}></i>
+            </button>
+            <button onClick={toggleVideo} className={`${styles.iconBtn} ${isVideoOff ? styles.active : ''}`} style={{ background: 'rgba(60,64,67,0.9)' }}>
+              <i className={`fas ${isVideoOff ? "fa-video-slash" : "fa-video"}`}></i>
+            </button>
+          </div>
+        </div>
+
+        {/* Right Side: Join Info */}
+        <div className={styles.joinInfoSection}>
+          <h1 className={styles.joinTitle}>Ready to join?</h1>
+          <p className={styles.joinSubtitle}>
+            {currRole === "Teacher" ? "Your student is waiting for you." : "Check your audio and video before entering."}
+          </p>
+
+          <div className={styles.detailsCard}>
+            <div className={styles.detailRow}>
+              <span className={styles.detailLabel}>Course</span>
+              <span className={styles.detailValue}>{courseDetails?.title?.data || courseDetails?.title || "Class Session"}</span>
+            </div>
+            <div className={styles.detailRow}>
+              <span className={styles.detailLabel}>{currRole === "Student" ? "Teacher" : "Student"}</span>
+              <span className={styles.detailValue}>{currRole === "Student" ? teacherName : studentName}</span>
             </div>
 
-            <div style={{ padding: "2rem" }}>
-              <div className={styles.detailsOfCall}>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #eee", paddingBottom: "12px" }}>
-                  <span style={{ color: "#8898aa", fontWeight: "600" }}>Course</span>
-                  <span style={{ color: "#32325d", fontWeight: "bold" }}>{courseDetails?.title?.data || courseDetails?.title || "Class Session"}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #eee", paddingBottom: "12px", marginTop: "15px" }}>
-                  <span style={{ color: "#8898aa", fontWeight: "600" }}>{currRole === "Student" ? "Teacher" : "Student"}</span>
-                  <span style={{ color: "#32325d", fontWeight: "bold" }}>{currRole === "Student" ? teacherName : studentName}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "15px" }}>
-                  <span style={{ color: "#8898aa", fontWeight: "600" }}>Starting</span>
-                  <span style={{ color: "#51addc", fontWeight: "bold" }}>{classTime.format("hh:mm A, dddd")}</span>
-                </div>
+            {currRole === "Student" && (
+              <div className={styles.statusRow}>
+                {isTeacherLive ? (
+                  <div className={styles.liveBadge}><span className={styles.liveDot}></span> Live</div>
+                ) : (
+                  <div className={styles.waitingBadge}><i className="fas fa-clock"></i> Waiting...</div>
+                )}
               </div>
+            )}
+          </div>
 
-              <div style={{ marginTop: "2rem", padding: "1.5rem", backgroundColor: "#f6f9fc", borderRadius: "15px", textAlign: "center" }}>
-                <i className="fas fa-shield-alt" style={{ color: "#2dce89", fontSize: "1.2rem", marginBottom: "10px" }}></i>
-                <p style={{ margin: 0, fontSize: "0.9rem", color: "#525f7f" }}>This call is end-to-end encrypted and hosted within the application.</p>
-              </div>
-
-              <button
-                onClick={startCall}
-                disabled={!canJoin || (currRole === "Student" && !isTeacherLive)}
-                style={{
-                  width: "100%",
-                  marginTop: "2rem",
-                  padding: "1.2rem",
-                  borderRadius: "12px",
-                  border: "none",
-                  backgroundColor: (canJoin && (currRole === "Teacher" || isTeacherLive)) ? "#51addc" : "#cbd5e0",
-                  color: "white",
-                  fontSize: "1.1rem",
-                  fontWeight: "bold",
-                  cursor: (canJoin && (currRole === "Teacher" || isTeacherLive)) ? "pointer" : "not-allowed",
-                  transition: "all 0.2s"
-                }}
-              >
-                {currRole === "Teacher" ? (canJoin ? "Start Class" : "Too Early to Start") : (isTeacherLive ? "Join Class" : "Teacher Offline")}
-              </button>
-
-              <button onClick={() => navigate(-1)} style={{ width: "100%", marginTop: "1rem", background: "none", border: "none", color: "#8898aa", cursor: "pointer", fontSize: "0.9rem" }}>
-                Cancel and Go Back
-              </button>
-            </div>
+          <div className={styles.joinActionGroup}>
+            <button
+              onClick={startCall}
+              disabled={!canJoin || (currRole === "Student" && !isTeacherLive)}
+              className={styles.joinBtn}
+            >
+              {currRole === "Teacher" ? "Start now" : "Join now"}
+            </button>
+            <button onClick={() => navigate(-1)} className={styles.backBtn}>Back</button>
           </div>
         </div>
       </div>
-      <style>{`
-        .liveDot { display: inline-block; height: 10px; width: 10px; background: #2dce89; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse {
-          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 206, 137, 0.7); }
-          70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(45, 206, 137, 0); }
-          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 206, 137, 0); }
-        }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #51addc; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto 15px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 };

@@ -26,7 +26,7 @@ function Incompleted(props) {
     // ]
 
     arr = arr?.filter((item) => item.status === "Incompleted")
-    console.log(arr)
+
 
     const dropDownArr = [
         { text: 'Request to Reschedule', modal: setRescheduleModal },

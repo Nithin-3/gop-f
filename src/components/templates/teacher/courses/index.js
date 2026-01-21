@@ -74,7 +74,7 @@ const TeacherCourses = () => {
       }
       try {
         const result = await dispatch(getMyCourses(userObj?._id));
-        console.log(result);
+
         if (result?.data) setMyCourses(result.data);
       } catch (e) {
         console.error("Failed to fetch courses:", e);

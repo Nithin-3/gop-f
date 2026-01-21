@@ -154,19 +154,23 @@ const Onboard = () => {
         data.append("workExperienceFiles", workExperienceFiles);
         data.append("certificateFiles", certificateFile);
         const result = await dispatch(getTeacherOnboardData(data));
-        console.log("board",result);
-        if (result && result.msg === "Teacher Onboard process completed.") { toast.success("Onboarding Completed");
+
+        if (result && result.msg === "Teacher Onboard process completed.") {
+            toast.success("Onboarding Completed");
             let profile = JSON.parse(window.localStorage.getItem("profile"));
             profile.isOnBoarding = true;
             window.localStorage.setItem("profile", JSON.stringify(profile));
             history("/teacher/dashboard");
             document.getElementById("loader").style.display = "none";
         }
-        else if (result && result.msg === "Teacher Onboard process already completed.") { toast.error("You have already onBoarded");
+        else if (result && result.msg === "Teacher Onboard process already completed.") {
+            toast.error("You have already onBoarded");
             document.getElementById("loader").style.display = "none";
         }
-        else { toast.error(`Failed to OnBoard,${result?.message}, please try again later`);
-            document.getElementById("loader").style.display = "none"; }
+        else {
+            toast.error(`Failed to OnBoard,${result?.message}, please try again later`);
+            document.getElementById("loader").style.display = "none";
+        }
     };
 
     return (<div className="container"><SideNav pageNumber={pageNumber} setPageNumber={setPageNumber} /><div className="right-container"><TopNav pageNumber={pageNumber} setPageNumber={setPageNumber} /><div className="right"><div className="rightTop"><div className="formHeadlineView"><h1 className="formHeadline">{SUB_FORMS[pageNumber]}</h1>{pageNumber === 7 && <p style={{ fontWeight: '100', fontSize: '18px', paddingTop: "5px" }} className="formText">how you teach, what you teach and talking about your language</p>}</div></div><div className="rightCenter">{renderForm()}</div><div className="bottomSection"><div className={pageNumber === 0 ? "buttonFooterCenter" : "buttonFooter"}>{pageNumber !== 0 && <FormButton title="Previous" onClick={onClickPrev} icon={{ position: "left", src: leftIcon }} theme="primary-icon-left" />}{pageNumber !== 12 && <FormButton title="Next" onClick={onClickNext} icon={{ position: "right", src: rightIcon }} theme="primary-icon-right" />}{pageNumber === 12 && <button className="submitOnBoardForm" onClick={handleSubmit}>Submit</button>}</div></div></div></div></div>);

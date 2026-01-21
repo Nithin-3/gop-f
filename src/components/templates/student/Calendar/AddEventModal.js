@@ -15,7 +15,6 @@ const AddEventModal = (props) => {
 
   React.useEffect(() => {
     if (props.selectionType === "select") {
-      console.log(props.selectedTimeSlots);
       if (props.selectedTimeSlots.length) setSlots(props.selectedTimeSlots);
     }
   }, []);
@@ -25,7 +24,6 @@ const AddEventModal = (props) => {
   }
 
   function handleChange(name, value, index) {
-    console.log(name, value, index);
     let newSlot = [...slots];
     newSlot[index][name] = value;
     setSlots(newSlot);
@@ -33,7 +31,6 @@ const AddEventModal = (props) => {
 
   const deleteSlot = (i) => {
     let temp = [...slots];
-    console.log(temp);
     if (temp.length > 0) temp.splice(i, 1);
     setSlots(temp);
   };
@@ -45,7 +42,6 @@ const AddEventModal = (props) => {
       let startTime = new Date(2022, 1, 1, parseInt(slot.start.slice(0, 2)), parseInt(slot.start.slice(3, 5)));
       let endTime = new Date(2022, 1, 1, parseInt(slot.end.slice(0, 2)), parseInt(slot.end.slice(3, 5)));
 
-      console.log((endTime - startTime) / 1000 / 60);
       if (slot.start === "" || slot.end === "") {
         toast.warn("Please select start and end time");
         status = false;
@@ -78,7 +74,6 @@ const AddEventModal = (props) => {
       const p = s.split(":").map(Number);
       return p[0] * 60 + p[1];
     };
-    console.log(getMinutes(a.end), getMinutes(b.start));
     return getMinutes(a.end) > getMinutes(b.start) && getMinutes(b.end) > getMinutes(a.start);
   };
 
@@ -109,10 +104,7 @@ const AddEventModal = (props) => {
     }
 
     props.setAvailability([...props.availability, ...temp]);
-    // console.log(props.selectedDate);
-    // console.log(slots24HourFormat, "Temp2");
-    console.log(temp, "Temp1");
-    // return;
+
     let body;
     /// FOR Multiple dates selection
     if (props.selectedDateSlots.length) {
@@ -124,11 +116,12 @@ const AddEventModal = (props) => {
             slots: temp,
           },
         };
-        // console.log(body);
+
+
 
         try {
           const result = await dispatch(addAvailability(body));
-          console.log(result);
+
           if (result.status) {
             // toast.success(result.message);
             props.setAddEventModal(false);
@@ -137,7 +130,7 @@ const AddEventModal = (props) => {
             response.message = result.message;
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
           toast.error("Failed to Save availability");
         }
       });
@@ -157,7 +150,7 @@ const AddEventModal = (props) => {
       };
       try {
         const result = await dispatch(addAvailability(body));
-        console.log(result);
+
         if (result.status) {
           toast.success(result.message);
           props.setAddEventModal(false);
@@ -165,7 +158,7 @@ const AddEventModal = (props) => {
           toast.error(result.message);
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
         toast.error("Failed to Save availability");
       }
     }
@@ -174,7 +167,6 @@ const AddEventModal = (props) => {
 
   return (
     <>
-      {/* {console.log("zxzx", slotsArr, availability)} */}
       <div className={modalStyles.modalBackdrop}>
         <div className={modalStyles.modal}>
           {/* Header */}

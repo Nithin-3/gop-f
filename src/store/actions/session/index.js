@@ -41,7 +41,7 @@ export const getTeacherFreeSessions = async () => {
     let API = createAxios();
 
     const { data } = await API.get("/getMyFreeSessions");
-    console.log(data);
+
     return data;
   } catch (e) {
     console.error("getTeacherFreeSessions error:", e);

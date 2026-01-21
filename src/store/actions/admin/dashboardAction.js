@@ -21,7 +21,7 @@ export const getTeachers = (payload) => async (dispatch) => {
     // console.log(data);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     if (e.response.data.message === "No teacher found") {
       return "No Teacher Found!"
     }
@@ -46,12 +46,10 @@ export const approveTeacher = (payload) => async (dispatch) => {
   try {
     let API = createAxios()
 
-    console.log(payload, "payload");
     const { data } = await API.post("/approveTeacher", payload);
-    console.log(data, "DaTA");
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response.message;
   }
 }
@@ -64,7 +62,7 @@ export const deleteUsers = (payload) => async (dispatch) => {
     // console.log(data);
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     if (e.response.data.message === "No teacher found") {
       return "No Teacher Found!"
     }

@@ -14,7 +14,7 @@ const Transactions = () => {
     }
   };
 
-  console.log(transactions);
+
 
   useEffect(() => {
     getPayments();

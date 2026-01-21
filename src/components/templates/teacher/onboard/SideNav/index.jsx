@@ -13,15 +13,7 @@ function SideNav({ pageNumber, setPageNumber, dispatchCall }) {
     { item: "Resume", path: "resume", div: [10, 11, 12] },
   ];
 
-  const handlePageChange = (page) => {
-    if (page) {
-      const section = nav_list.filter((obj) => obj.item === page);
-      console.log(section);
-      if (!isEmpty(section[0])) {
-        setPageNumber(section[0].div[0]);
-      }
-    }
-  };
+
 
   return (
     <div className="sidenavContainer">

@@ -37,7 +37,7 @@ function TeacherSessions() {
     async function getSessions() {
       try {
         const result = await dispatch(getTeacherSessions());
-        console.log("Teacher Sessions API result:", result);
+
         if (result?.success) {
           setSessions(result.data);
         } else if (Array.isArray(result)) {

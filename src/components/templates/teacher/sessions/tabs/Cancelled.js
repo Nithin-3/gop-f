@@ -48,7 +48,7 @@ function Cancelled(props) {
   //     },
   //   ];
   arr = arr?.filter((item) => item.status === "Cancelled")
-  console.log(arr)
+
 
   return (
     <>

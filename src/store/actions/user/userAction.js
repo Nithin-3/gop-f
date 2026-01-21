@@ -12,14 +12,15 @@ function createAxios() {
   });
 }
 
-export const getUser = (userId) => async(dispatch) => {
-  try { 
+export const getUser = (userId) => async (dispatch) => {
+  try {
     let API = createAxios();
-    // console.log("payload", userId)
-    const {data} = await API.get(`/${userId}`)
+
+
+    const { data } = await API.get(`/${userId}`)
     return data
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return error.response.message;
   }
 };

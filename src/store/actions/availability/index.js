@@ -16,9 +16,8 @@ export const addTeacherAvailability = (payload) => async (dispatch) => {
   try {
     let API = createAxios();
 
-    console.log(payload, "payload");
     const { data } = await API.post("/addAvailability", payload);
-    console.log(data, "DaTA");
+
     // dispatch({ type: "Create_Course", payload: { ...data } });
     return data;
   } catch (e) {
@@ -32,7 +31,7 @@ export const getAvailByTeacher = async (id) => {
     let API = createAxios();
 
     const { data } = await API.get(`/${id}`);
-    console.log(data, "DaTA");
+
     return data;
   } catch (e) {
     console.error(e);
@@ -55,9 +54,8 @@ export const getTeacherAvailability = (payload) => async (dispatch) => {
   try {
     let API = createAxios();
 
-    console.log(payload, "payload");
     const { data } = await API.get("/myAvails");
-    console.log(data, "DaTA");
+
     return data;
   } catch (e) {
     console.error(e);

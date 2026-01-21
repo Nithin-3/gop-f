@@ -31,7 +31,7 @@ const AdminTeachers = () => {
       // Show Loader
       document.getElementById('loader').style.display = 'flex'
       const result = await dispatch(getTeachers(searchInput));
-      console.log(result)
+
       // Hide Loader
       document.getElementById('loader').style.display = 'none'
       if (result?.status === 200) {
@@ -43,7 +43,7 @@ const AdminTeachers = () => {
         setSelectedTeacher(null);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       toast.error("Failed to fetch data");
     }
   }

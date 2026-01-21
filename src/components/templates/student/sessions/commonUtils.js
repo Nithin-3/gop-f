@@ -66,13 +66,13 @@ export const Card = ({ width, cardInfo, dropDown }) => {
         const teacher = await dispatch(getTeacherDetailByTId(tid));
         setTeacherDetails(teacher);
         setTeacherName(teacher?.firstName?.data + " " + teacher?.lastName?.data);
-      } catch (error) { console.log(error); }
+      } catch (error) { console.error(error); }
     }
     async function getCourseDetails(cid) {
       try {
         const res = await dispatch(getCourseById(cid));
         setCourseDetails(res);
-      } catch (error) { console.log(error); }
+      } catch (error) { console.error(error); }
     }
     async function getAvailTime(aid) {
       try {
@@ -81,7 +81,7 @@ export const Card = ({ width, cardInfo, dropDown }) => {
         let todayDate = moment();
         if (classDate.isBefore(todayDate)) setDisableBtn(true);
         setAvailDetails(availTime);
-      } catch (error) { console.log(error); }
+      } catch (error) { console.error(error); }
     }
 
     if (cardInfo?.availabilityIds?.length > 0) getAvailTime(cardInfo.availabilityIds[0]);
@@ -174,8 +174,10 @@ export const Card = ({ width, cardInfo, dropDown }) => {
 export const CardMobile = ({ width, cardInfo, dropDown }) => {
   const [courseDetails, setCourseDetails] = React.useState();
   const [availDetails, setAvailDetails] = React.useState();
-  const [teacherDetails, setTeacherDetails] = React.useState();
   const [cancelModal, setCancelModal] = React.useState(false);
+
+
+
   const [teacherName, setTeacherName] = React.useState("");
   const [disableBtn, setDisableBtn] = React.useState(false);
   const [btnName, setBtnName] = React.useState("Join Class");
@@ -214,14 +216,14 @@ export const CardMobile = ({ width, cardInfo, dropDown }) => {
       try {
         const res = await dispatch(getCourseById(cid));
         setCourseDetails(res);
-      } catch (error) { console.log(error); }
+      } catch (error) { console.error(error); }
     }
     async function getTeacherInfo(tid) {
       try {
         const teacher = await dispatch(getTeacherDetailByTId(tid));
-        setTeacherDetails(teacher);
+
         setTeacherName(teacher?.firstName?.data + " " + teacher?.lastName?.data);
-      } catch (error) { console.log(error); }
+      } catch (error) { console.error(error); }
     }
     async function getAvailTime(aid) {
       try {
@@ -230,7 +232,7 @@ export const CardMobile = ({ width, cardInfo, dropDown }) => {
         let todayDate = moment();
         if (classDate.isBefore(todayDate)) setDisableBtn(true);
         setAvailDetails(availTime);
-      } catch (error) { console.log(error); }
+      } catch (error) { console.error(error); }
     }
     if (cardInfo?.availabilityIds?.length > 0) getAvailTime(cardInfo.availabilityIds[0]);
     getCourseDetails(cardInfo.courseId);

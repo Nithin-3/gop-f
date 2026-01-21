@@ -27,7 +27,8 @@ const Messages = () => {
   const [conversations, setConversations] = useState();
   const [newMsg, setNewMsg] = useState("")
   const [othersDetails, setOthersDetails] = useState(null);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat] = useState(null);
+
   const [messages, setMessages] = useState();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [userRole, setUserRole] = useState("")
@@ -37,10 +38,8 @@ const Messages = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // console.log("getmsg useeffect running")
-    // socket = io("http://localhost:8080");
     socket?.on("getMessage", (data) => {
-      // console.log("getting messages")
+
       setArrivalMessage({
         sender: data.senderId,
         message: data.message,
@@ -58,10 +57,7 @@ const Messages = () => {
   // Fetching Current User Id
   useEffect(() => {
     let userProfile = JSON.parse(window.localStorage.getItem("profile"));
-    // console.log(userProfile._id, userProfile.roleModel)
-    socket?.emit("addUser", userProfile._id)
     socket?.on("getUsers", users => {
-      // console.log(users)
     })
     setCurrUserId(userProfile?._id)
     setUserRole(userProfile?.roleModel)
@@ -75,7 +71,7 @@ const Messages = () => {
         // console.log(res)
         setConversations(res)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
     getConvs();
@@ -89,7 +85,7 @@ const Messages = () => {
         // console.log(res)
         setMessages(res)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
     getMsgs();
@@ -103,17 +99,16 @@ const Messages = () => {
         // console.log(res[0].teacherProfilePic?.data)
         setProfilePic(res[0].teacherProfilePic?.data)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
 
     async function getSPP() {
       try {
         const res = await dispatch(getStudentDetailById(othersDetails?._id))
-        console.log(res)
         setProfilePic(res[0]?.profilePic.data)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
 
@@ -129,17 +124,14 @@ const Messages = () => {
 
   // Handle Chat Click
   const handleChatClick = async (ch) => {
-    // console.log(ch)
-    setCurrentChat(ch)
-    setChatMobileClick(true)
     const othersId = ch?.members.find((m) => m !== currUserId)
-    console.log(othersId)
+
     try {
       const res = await dispatch(getUser(othersId));
       // console.log(res)
       setOthersDetails(res)
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -151,11 +143,8 @@ const Messages = () => {
       message: newMsg,
       conversationId: currentChat._id,
     }
-console.log(msgObj);
-console.log(currentChat.members);
     const receiverId = currentChat.members.find((m) => m !== currUserId)
-console.log(receiverId);
-console.log(socket);
+
     socket?.emit("sendMessage", {
       senderId: currUserId,
       receiverId,
@@ -174,14 +163,14 @@ console.log(socket);
       setMessages([...messages, response])
       setNewMsg("")
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
   //open chat directly from student current teacher 
   useEffect(() => {
-    console.log(location.state?.cchat)
-    if (location.pathname === "/student/messages"){
+
+    if (location.pathname === "/student/messages") {
       handleChatClick(location.state?.cchat)
     }
   }, [location])
@@ -198,7 +187,7 @@ console.log(socket);
     msSearch: userRole === "Student" ? "#fcb1c4" : "#76bbe0",
   }
 
-  console.log(userRole)
+
   return (
     <>
       <main className={styles.mainSection}>
@@ -259,7 +248,7 @@ console.log(socket);
               </div>
               <div className={styles.AC_results}>
                 {conversations?.map((item) => {
-                  console.log(item)
+
                   return (
                     <div onClick={() => handleChatClick(item)}>
                       <ACField conversation={item} currentUser={currUserId} color={color} adminId={adminId} />
@@ -292,7 +281,7 @@ console.log(socket);
                 </div>
                 <div className={styles.AC_results}>
                   {conversations?.map((item) => {
-                    // console.log(item)
+
                     return (
                       <div onClick={() => handleChatClick(item)}>
                         <ACField conversation={item} currentUser={currUserId} color={color} adminId={adminId} />
@@ -370,22 +359,22 @@ const Msg = ({ text, time, ownMsg, color }) => {
 }
 
 const ACField = ({ conversation, currentUser, color, adminId }) => {
-  // console.log(conversation, currentUser)
-  const [otherName, setOtherName] = useState()
+
+
   const [otherUser, setOtherUser] = useState()
   const dispatch = useDispatch()
   useEffect(() => {
     const othersId = conversation.members.find((m) => m !== currentUser)
-    // console.log(othersId)
+
     async function getPartUser(id) {
-      // console.log(id)
+
       try {
         const res = await dispatch(getUser(id));
-        // console.log(res)
+
         setOtherUser(res)
         // setOtherName(res.fullName)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
     getPartUser(othersId);

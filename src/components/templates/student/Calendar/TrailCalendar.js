@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import PropTypes from "prop-types";
+
 import { Calendar, dateFnsLocalizer, Navigate } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import TimeGrid from "react-big-calendar/lib/TimeGrid";
@@ -13,20 +13,20 @@ import { toast } from "react-toastify";
 
 import { useWindowDimensions } from "../../../../utils/util";
 import { getAvailByTeacher } from "../../../../store/actions/availability";
+import { getAllSessions } from "../../../../store/actions/session";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import modalStyles from "./popupModal/styles.module.css";
 import "./calendar.css";
 
-const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const locales = { "en-US": require("date-fns/locale/en-US") };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 function TrailCalendar({ teacherData: propTeacherData, course }) {
   const [availability, setAvailability] = useState([]);
-  const [popupModal, setPopupModal] = useState("");
+
   const [eventPopup, setEventPopup] = useState(null);
 
   const { width } = useWindowDimensions();
@@ -34,30 +34,49 @@ function TrailCalendar({ teacherData: propTeacherData, course }) {
 
   useEffect(() => {
     async function fetchAvailability() {
-      const result = await getAvailByTeacher(propTeacherData?._id);
-      if (result?.success) {
-        const slots = result.data
+      // Fetch both availability and student sessions to check for existing bookings
+      const availPromise = getAvailByTeacher(propTeacherData?._id);
+
+      // getAllSessions is a thunk returning a promise, calling it with dummy dispatch
+      const sessionsPromise = getAllSessions()(() => { });
+
+      const [availResult, sessionsResult] = await Promise.all([availPromise, sessionsPromise]);
+
+      if (availResult?.success) {
+        const bookedIds = new Set();
+        if (sessionsResult?.success && sessionsResult.data) {
+          sessionsResult.data.forEach(session => {
+            if (session.status !== "Cancelled" && session.availabilityIds) {
+              session.availabilityIds.forEach(id => bookedIds.add(id));
+            }
+          });
+        }
+
+        const slots = availResult.data
           .filter(slot => new Date(slot.from) > new Date())
-          .map(slot => ({
-            id: slot.id,
-            title: "My Availability",
-            start: new Date(slot.from),
-            end: new Date(slot.to),
-          }));
+          .map(slot => {
+            const isBooked = bookedIds.has(slot._id || slot.id);
+            return {
+              id: slot.id || slot._id,
+              title: isBooked ? "Already Booked" : `Available (${10 - (slot.bookedCount || 0)} left)`,
+              start: new Date(slot.from),
+              end: new Date(slot.to),
+              booked: isBooked
+            };
+          });
         setAvailability(slots);
       }
     }
     fetchAvailability();
   }, [propTeacherData]);
 
-  const convertFrom24To12Format = (time24) => {
-    const [sHours, minutes] = time24.match(/([0-9]{1,2}):([0-9]{2})/).slice(1);
-    const period = +sHours < 12 ? "am" : "pm";
-    const hours = +sHours % 12 || 12;
-    return `${hours}:${minutes} ${period}`;
-  };
+
 
   const handleSelect = (e) => {
+    if (e.booked) {
+      toast.info("You have already booked this session.");
+      return;
+    }
     setEventPopup(e);
   };
 
@@ -118,14 +137,15 @@ function TrailCalendar({ teacherData: propTeacherData, course }) {
         selectable
         onSelectEvent={handleSelect}
         components={{ event: Event }}
-        eventPropGetter={() => ({
+        eventPropGetter={(event) => ({
           style: {
-            backgroundColor: "#3174ad",
+            backgroundColor: event.booked ? "#9e9e9e" : "#3174ad",
             borderRadius: "5px",
             border: "none",
             boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
             color: "white",
-            fontSize: "0.8rem"
+            fontSize: "0.8rem",
+            cursor: event.booked ? "not-allowed" : "pointer"
           }
         })}
       />

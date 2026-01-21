@@ -18,7 +18,7 @@ function StudentSessions() {
   const [mobileDropdown, setMobileDropdown] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("All");
   const [sessions, setSessions] = React.useState();
-  const tabs = ["All", "Upcoming", "Trial", "Completed", "Cancelled", "Issue Reported", "Needs Scheduling"];
+  const tabs = ["All", "Upcoming", "Trial", "Completed", "Cancelled", "Needs Scheduling"];
 
   React.useEffect(() => {
     const load = async () => {

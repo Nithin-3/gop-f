@@ -26,7 +26,7 @@ const Notifications = ({ myDetails }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(notificationOptions);
+
   };
 
   return (

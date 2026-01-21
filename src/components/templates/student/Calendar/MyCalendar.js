@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { Calendar, dateFnsLocalizer, Navigate, Views } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, Navigate } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import TimeGrid from "react-big-calendar/lib/TimeGrid";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -10,7 +10,7 @@ import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import * as dates from "date-arithmetic";
-import moment from "moment";
+
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ import { reSchedule } from "../../../../store/actions/student";
 import modalStyles from "./popupModal/styles.module.css";
 import "./calendar.css";
 
-const DragAndDropCalendar = withDragAndDrop(Calendar);
+
 
 // Date-fns locales
 const locales = { "en-US": require("date-fns/locale/en-US") };
@@ -34,7 +34,6 @@ function MyCalendar({ teacherData: propTeacherData, course, coupon }) {
 
   const [availability, setAvailability] = useState([]);
   const [popupModal, setPopupModal] = useState(null); // event id
-  const [eventPopup, setEventPopup] = useState(null);
 
   const rescheduleObj = JSON.parse(localStorage.getItem("rescheduleObj") || "null");
 
@@ -46,7 +45,7 @@ function MyCalendar({ teacherData: propTeacherData, course, coupon }) {
         (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime()
       );
       const slots = sortedData.map((slot) => ({
-        title: "My Availability",
+        title: `Available (${10 - (slot.bookedCount || 0)} left)`,
         id: slot._id,
         start: new Date(slot.from),
         end: new Date(slot.to),

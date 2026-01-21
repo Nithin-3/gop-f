@@ -74,7 +74,7 @@ export const Card = ({ width, cardInfo, dropDown = [] }) => {
                     setStudentName("Student Details Not Found");
                 }
             } catch (error) {
-                console.log("getStudentInfo error:", error);
+                console.error("getStudentInfo error:", error);
                 setStudentName("Error Loading Student");
             }
         }
@@ -83,14 +83,14 @@ export const Card = ({ width, cardInfo, dropDown = [] }) => {
                 const res = await dispatch(getCourseById(cid));
                 const course = res?.success ? res.data : res;
                 setCourseDetails(course);
-            } catch (error) { console.log("getCourseDetails error:", error); }
+            } catch (error) { console.error("getCourseDetails error:", error); }
         }
         async function getTeacherInfo(tid) {
             try {
                 const res = await dispatch(getTeacherDetailByTId(tid));
                 const teacher = res?.success ? res.data : res;
                 setTeacherDetails(teacher);
-            } catch (error) { console.log("getTeacherInfo error:", error); }
+            } catch (error) { console.error("getTeacherInfo error:", error); }
         }
         async function getAvailTime(aid) {
             try {
@@ -100,7 +100,7 @@ export const Card = ({ width, cardInfo, dropDown = [] }) => {
                 let todayDate = moment();
                 if (classDate.isBefore(todayDate)) setDisableBtn(true);
                 setAvailDetails(availTime);
-            } catch (error) { console.log("getAvailTime error:", error); }
+            } catch (error) { console.error("getAvailTime error:", error); }
         }
 
         if (cardInfo?.availabilityIds?.length > 0) getAvailTime(cardInfo.availabilityIds[0]);
@@ -181,7 +181,7 @@ export const Card = ({ width, cardInfo, dropDown = [] }) => {
 export const CardMobile = ({ width, cardInfo, dropDown = [] }) => {
     const [courseDetails, setCourseDetails] = React.useState();
     const [availDetails, setAvailDetails] = React.useState();
-    const [teacherDetails, setTeacherDetails] = React.useState();
+
     const [cancelModal, setCancelModal] = React.useState(false);
     const [studentName, setStudentName] = React.useState("");
     const [disableBtn, setDisableBtn] = React.useState(false);
@@ -198,14 +198,14 @@ export const CardMobile = ({ width, cardInfo, dropDown = [] }) => {
                 const res = await dispatch(getCourseById(cid));
                 const course = res?.success ? res.data : res;
                 setCourseDetails(course);
-            } catch (error) { console.log(error); }
+            } catch (error) { console.error(error); }
         }
         async function getTeacherInfo(tid) {
             try {
                 const res = await dispatch(getTeacherDetailByTId(tid));
                 const teacher = res?.success ? res.data : res;
-                setTeacherDetails(teacher);
-            } catch (error) { console.log(error); }
+
+            } catch (error) { console.error(error); }
         }
         async function getStudentInfo() {
             if (!cardInfo?.studentId) {
@@ -223,7 +223,7 @@ export const CardMobile = ({ width, cardInfo, dropDown = [] }) => {
                     setStudentName("Student Details Not Found");
                 }
             } catch (error) {
-                console.log("getStudentInfo error:", error);
+                console.error("getStudentInfo error:", error);
                 setStudentName("Error Loading Student");
             }
         }
@@ -235,7 +235,7 @@ export const CardMobile = ({ width, cardInfo, dropDown = [] }) => {
                 let todayDate = moment();
                 if (classDate.isBefore(todayDate)) setDisableBtn(true);
                 setAvailDetails(availTime);
-            } catch (error) { console.log(error); }
+            } catch (error) { console.error(error); }
         }
         if (cardInfo?.availabilityIds?.length > 0) getAvailTime(cardInfo.availabilityIds[0]);
         getCourseDetails(cardInfo.courseId);

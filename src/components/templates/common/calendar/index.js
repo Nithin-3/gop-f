@@ -7,11 +7,11 @@ function CalendarScreen(props) {
     const course = JSON.parse(localStorage.getItem("chosenCourse"))
 
     return (
-        <div style={{paddingTop: '100px'}}>
+        <div style={{ paddingTop: '100px' }}>
             <div>
                 <Navigation />
             </div>
-            <TrailCalendar teacherData={course.userId.onType} />
+            <TrailCalendar teacherData={course.userId.onType} course={course} />
         </div>
     )
 }

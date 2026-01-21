@@ -1,7 +1,7 @@
 import axios from "axios";
 import { baseURL } from "../../../utils/api";
 
-function createAxios(){
+function createAxios() {
   const token = JSON.parse(localStorage.getItem("profile"))?.token;
   return axios.create({
     baseURL: `${baseURL}/teacher`,
@@ -16,20 +16,19 @@ export const getTeacherOnboardData = (payload) => async (dispatch) => {
   try {
     let API = createAxios()
 
-    console.log(payload, 'payload')
     const { data } = await API.post("/personaldetail", payload);
     dispatch({ type: "GET_TEACHER_ONBOARD_DATA", payload: { ...data } });
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     // return e.response.message;
   }
 };
 
-export const setTeacher=(user)=>{
+export const setTeacher = (user) => {
   return {
-      type:"SET_TEACHER",
-      payload:user
+    type: "SET_TEACHER",
+    payload: user
   }
 }
 

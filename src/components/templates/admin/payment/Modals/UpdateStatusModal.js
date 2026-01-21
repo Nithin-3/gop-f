@@ -9,7 +9,7 @@ const UpdateStatusModal = ({
   setPaymentStatusModal,
   setPayouts,
 }) => {
-  console.log(data);
+
   const [paymentStatus, setPaymentStatus] = useState(data?.paymentStatus || "");
 
   const handleClick = async () => {
@@ -34,7 +34,7 @@ const UpdateStatusModal = ({
 
   const handleChange = (e) => {
     setPaymentStatus(e.target.value);
-    console.log(e.target.value);
+
   };
 
   return (

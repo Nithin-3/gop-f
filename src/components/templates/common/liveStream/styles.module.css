@@ -1,204 +1,621 @@
-/* Join Page  */
-.joinScreen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5rem;
+/* Google Meet Inspired Design System */
+
+:root {
+  --gm-bg: #202124;
+  --gm-surface: #3c4043;
+  --gm-surface-variant: #5f6368;
+  --gm-primary: #8ab4f8;
+  --gm-error: #f28b82;
+  --gm-success: #81c995;
+  --gm-text: #e8eaed;
+  --gm-text-secondary: #bdc1c6;
+  --gm-radius: 8px;
+  --gm-radius-lg: 16px;
+  --gm-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.msgForStu {
-  background-color: rgb(245, 245, 245);
-  padding: 1.5rem;
+.joinScreen {
+  min-height: 100dvh;
+  width: 100%;
+  background: #f8f9fa;
   display: flex;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  padding: 24px;
+  overflow-x: hidden;
 }
 
 .cardSection {
+  width: 100%;
+  max-width: 1100px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: center;
-  height: 100%;
+  gap: 48px;
+}
+
+@media (max-width: 992px) {
+  .cardSection {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+}
+
+.previewContainer {
+  flex: 1;
   width: 100%;
-}
-
-.joinCallWrapper {
-  height: 45%;
-  width: 30%;
-  background-color: rgb(245, 245, 245);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  border-radius: 0.4rem;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
-}
-
-.field {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.fieldName {
-  font-weight: 900;
-  font-size: 1.3rem;
-  color: gray;
-  margin-bottom: 0.2rem;
-}
-
-.fieldValue {
-  font-weight: 700;
-  font-size: 1.5rem;
-  /* color: aliceblue; */
-  margin-bottom: 1.2rem;
-}
-
-/* Controls Component css */
-.Ccontainer {
-  display: grid;
-  grid-template-columns: 0.2fr 0.2fr 1fr;
-  gap: 1rem;
-}
-
-.Citem > button {
-  border: none;
-  padding: 1rem;
-  cursor: pointer;
-  border-radius: 50%;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-.Citem > button:hover {
-  cursor: pointer;
-}
-
-.Citem:nth-child(3) > button {
-  border-radius: 0.4rem;
-}
-
-/* Video Call Page Css */
-.VCPage {
-  height: 100%;
-  width: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  /* padding-top: 3rem; */
-}
-
-.heading {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  border-radius: 0 0 0.5rem 0.5rem;
-  color: black;
-  font-size: 1.5rem;
-  padding: 0.8rem;
-  margin-bottom: 0.2rem;
-}
-
-.vidCallPortion {
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
-
-.VideoContainer {
-  background-color: brown;
-  height: 100%;
-  width: 77%;
-}
-
-.vidHolder {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  background-color: black;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.remoteVideo {
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.localVideo {
-  position: absolute;
-  top: 5%;
-  left: 76%;
-  height: 175px;
-  width: 250px;
-  background-color: blue;
-  z-index: 4;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: var(--gm-radius-lg);
   overflow: hidden;
-  border-radius: 0.5rem;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
 }
 
-.controlsWrapper {
-  display: flex;
-  background-color: transparent;
-  position: absolute;
+.previewVideo {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.previewPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 1.5rem;
-  z-index: 4;
+  color: white;
+  background: #202124;
 }
 
-.rightPortion {
-  padding: 1rem;
-  height: 100%;
-  width: 23%;
+.joinInfoSection {
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
 }
 
-.rightCard {
-  background-color: rgb(255, 251, 251);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
-  height: 100%;
-  width: 100%;
-  border-radius: 0.5rem;
-}
-@media only screen and (max-width: 679px) {
-  .VideoContainer {
+@media (max-width: 992px) {
+  .joinInfoSection {
     width: 100%;
+    max-width: 450px;
+    text-align: center;
   }
-  .localVideo {
-    position: absolute;
-    top: 5%;
-    left: 40%;
-    height: 175px;
-    width: 250px;
-    background-color: blue;
-    z-index: 4;
-    overflow: hidden;
-    border-radius: 0.5rem;
-  }
-  .rightPortion {
-    display: none;
-  }
-  .joinCallWrapper {
-    width: 90%;
-  }
+}
+
+.joinTitle {
+  font-size: 28px;
+  font-weight: 400;
+  color: #3c4043;
+  margin-bottom: 8px;
+}
+
+.joinSubtitle {
+  font-size: 16px;
+  color: #5f6368;
+  margin-bottom: 32px;
+}
+
+.detailsCard {
+  background: white;
+  border-radius: var(--gm-radius);
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #dadce0;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.detailRow:last-child {
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  color: #70757a;
+  font-size: 14px;
+}
+
+.detailValue {
+  color: #3c4043;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .joinBtn {
-  transition: all 0.3s ease;
+  background: #1a73e8;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--gm-transition);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
-.joinBtn:not(:disabled):hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(81, 173, 220, 0.4);
+.joinBtn:hover:not(:disabled) {
+  background: #185abc;
+  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
 }
 
-.joinBtn:not(:disabled):active {
-  transform: translateY(0);
+.joinBtn:disabled {
+  background: #e8eaed;
+  color: #9aa0a6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.backBtn {
+  background: white;
+  border: 1px solid #dadce0;
+  border-radius: 24px;
+  padding: 0 24px;
+  color: #1a73e8;
+  font-weight: 500;
+  cursor: pointer;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--gm-transition);
+}
+
+.backBtn:hover {
+  background: #f1f3f4;
+}
+
+.joinActionGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (max-width: 480px) {
+  .joinActionGroup {
+    flex-direction: column;
+  }
+}
+
+.statusRow {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f3f4;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.waitingBadge {
+  color: #5f6368;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Video Call Interface */
+.VideoContainer {
+  background: var(--gm-bg);
+  height: 100dvh;
+  width: 100vw;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+}
+
+.mainStage {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.videoWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: var(--gm-radius-lg);
+  overflow: hidden;
+  background: #000;
+  position: relative;
+}
+
+.connectingBadge {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+.connectionText {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.previewControls {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.remoteVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.localPIP {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 280px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--gm-radius);
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #3c4043;
+  transition: var(--gm-transition);
+}
+
+@media (max-width: 768px) {
+  .localPIP {
+    width: 160px;
+  }
+}
+
+.localVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.videoOffPlaceholder {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3c4043;
+  color: white;
+  font-size: 14px;
+}
+
+/* Controls Bar */
+.controlBar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gm-bg);
+  padding: 0 24px;
+  position: relative;
+}
+
+.callInfo {
+  position: absolute;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .callInfo {
+    display: none;
+  }
+}
+
+.timeText {
+  font-size: 18px;
+  font-weight: 500;
+  color: white;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: var(--gm-surface-variant);
+}
+
+.meetingName {
+  font-size: 14px;
+  color: white;
+}
+
+.mainControls {
+  display: flex;
+  gap: 12px;
+}
+
+.iconBtn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--gm-surface);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--gm-transition);
+  font-size: 20px;
+}
+
+.iconBtn:hover {
+  background: var(--gm-surface-variant);
+}
+
+.iconBtn.active {
+  background: var(--gm-error);
+}
+
+.iconBtn.active:hover {
+  background: #d93025;
+}
+
+.endCallBtn {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 24px;
+  border: none;
+  background: var(--gm-error);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--gm-transition);
+  font-weight: 500;
+}
+
+.endCallBtn:hover {
+  background: #d93025;
+}
+
+.secondaryControls {
+  position: absolute;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 1100px) {
+  .secondaryControls {
+    display: none;
+  }
+}
+
+.utilityBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--gm-transition);
+  font-size: 18px;
+}
+
+.utilityBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(138, 180, 248, 0.4);
+  }
+
+  100% {
+    box-shadow: 0 0 0 10px rgba(138, 180, 248, 0);
+  }
+}
+
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--gm-primary);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(129, 201, 149, 0.1);
+  color: var(--gm-success);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid rgba(129, 201, 149, 0.2);
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  background: var(--gm-success);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Multi-user additions */
+.participantCount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gm-surface);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.videoGrid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: 16px;
+  padding: 16px;
+}
+
+.videoGrid[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+
+.videoGrid[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+
+.videoGrid[data-count="3"],
+.videoGrid[data-count="4"] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.videoGrid[data-count="5"],
+.videoGrid[data-count="6"] {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.videoGrid[data-count="7"],
+.videoGrid[data-count="8"],
+.videoGrid[data-count="9"] {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.videoGrid[data-count="10"],
+.videoGrid[data-count="11"],
+.videoGrid[data-count="12"] {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.videoSlot {
+  position: relative;
+  background: #000;
+  border-radius: var(--gm-radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.participantName {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: white;
+  z-index: 5;
+}
+
+.remoteVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.waitingBadge {
+  color: #5f6368;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusRow {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f3f4;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.joinActionGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.previewControls {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.connectionText {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
 }

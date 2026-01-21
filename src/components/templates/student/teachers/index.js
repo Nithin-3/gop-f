@@ -58,7 +58,7 @@ function StudentTeachers() {
                 {activeTab === "Current" ?
                     <div>
                         {currentTeachers?.map((item) => {
-                            console.log(item);
+
                             return (<CurrTeacherCard tinfo={item} />)
                         })}
                     </div>

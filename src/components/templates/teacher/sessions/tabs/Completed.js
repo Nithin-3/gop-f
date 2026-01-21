@@ -31,7 +31,7 @@ function Completed(props) {
     ]
 
     arr = arr?.filter((item) => item.status === "Completed")
-    console.log(arr)
+
 
     return (
         <>

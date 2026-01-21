@@ -12,24 +12,24 @@ function createAxios() {
   });
 }
 
-export const getMessages = (userId) => async(dispatch) => {
-  try { 
+export const getMessages = (userId) => async (dispatch) => {
+  try {
     let API = createAxios();
-    // console.log("payload", userId)
-    const {data} = await API.get(`/${userId}`)
+
+    const { data } = await API.get(`/${userId}`)
     return data
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return error.response.message;
   }
 };
 
-export const addMessage = (payload) => async(dispatch) => {
-  try{
+export const addMessage = (payload) => async (dispatch) => {
+  try {
     let API = createAxios();
-    const {data} = await API.post("/", payload)
+    const { data } = await API.post("/", payload)
     return data
-  } catch (err){
-    console.log(err);
+  } catch (err) {
+    console.error(err);
   }
 }

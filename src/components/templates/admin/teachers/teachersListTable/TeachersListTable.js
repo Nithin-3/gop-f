@@ -6,18 +6,18 @@ import { useDispatch } from "react-redux"
 
 import axios from "axios"
 import { setTeacher } from '../../../../../store/actions/teacherOnboard/teacherOnboardAction'
-export default function TeachersListTable({searchInput}) {
-      const dispatch = useDispatch()
+export default function TeachersListTable({ searchInput }) {
+    const dispatch = useDispatch()
     const [teacherList, setTeacherList] = useState([])
     const [activeTeacher, setActiveTeacher] = useState([])
-    
+
     useEffect(() => {
         const getAllTeachers = async () => {
             try {
                 const teacherList = await axios.get("/teacherManagement/")
                 setTeacherList(teacherList.data)
             } catch (err) {
-                console.log("error in getting all teacher", err)
+                console.error("error in getting all teacher", err)
             }
         }
         getAllTeachers()
@@ -28,7 +28,7 @@ export default function TeachersListTable({searchInput}) {
                 const teacher = await axios.get(`/teacherManagement/specific/${activeTeacher}`)
                 dispatch(setTeacher(teacher.data))
             } catch (err) {
-                console.log("error in getting a teacher", err)
+                console.error("error in getting a teacher", err)
             }
         }
         getTeacher()
@@ -57,10 +57,10 @@ export default function TeachersListTable({searchInput}) {
                 <tbody className="my-auto">
                     {
                         teacherList?.map((teacher) =>
-                            teacher?.teacherName?.toLowerCase().includes(searchInput.toLowerCase())&&<Teacher key={teacher._id} activeTeacher={activeTeacher} setActiveTeacher={(active)=>setActiveTeacher(active)} teacher={teacher}/>
+                            teacher?.teacherName?.toLowerCase().includes(searchInput.toLowerCase()) && <Teacher key={teacher._id} activeTeacher={activeTeacher} setActiveTeacher={(active) => setActiveTeacher(active)} teacher={teacher} />
                         )
                     }
-                   
+
                 </tbody>
             </table>
         </div>

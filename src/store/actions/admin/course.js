@@ -17,14 +17,14 @@ export const getCourses = (payload) => async (dispatch) => {
     let API = createAxios();
 
     const data = await API.get(`/getCourses?page=1&limit=100&search=${payload}`);
-    // console.log(data);
+
     return data;
   } catch (e) {
-    console.log(e);
-    if(e.response.data.message === "No Course found") {
+    console.error(e);
+    if (e.response.data.message === "No Course found") {
       return "No Course Found!"
     }
-    
+
     // toast(e.response.data.errors[0].msg);
     return e;
   }
@@ -34,12 +34,10 @@ export const approveCourse = (payload) => async (dispatch) => {
   try {
     let API = createAxios();
 
-    console.log(payload, "payload");
     const { data } = await API.post("/approveCourse", payload);
-    console.log(data, "DaTA");
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.response.message;
   }
 };

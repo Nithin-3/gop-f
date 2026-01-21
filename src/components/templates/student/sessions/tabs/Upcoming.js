@@ -6,11 +6,11 @@ const Upcoming = ({ width, arr }) => {
   if (!Array.isArray(arr)) arr = [];
   const [rescheduleModal, setRescheduleModal] = React.useState(false);
   const dropDownArr = [{ text: "Request to Reschedule", modal: setRescheduleModal }];
-  const today = new Date();
 
-  const upcomingArr = arr
-    .filter(i => i.status === "Upcoming" && new Date(i.to) >= today)
-    .sort((a, b) => new Date(a.from) - new Date(b.from));
+
+
+  const now = new Date();
+  const upcomingArr = arr.filter(item => new Date(item.from) > now).sort((a, b) => new Date(a.from) - new Date(b.from));
 
   return (
     <>

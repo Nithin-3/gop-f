@@ -2,11 +2,10 @@ import React from "react";
 import styles from "../styles.module.css";
 
 const TransactionDetailsModal = ({ data, setTransactionModal }) => {
-  console.log(data);
 
-  const teacherName = `${
-    data?.teacherId.firstName?.data ? data.teacherId.firstName.data : ""
-  } ${data?.teacherId.lastName?.data ? data.teacherId.lastName.data : ""}`;
+
+  const teacherName = `${data?.teacherId.firstName?.data ? data.teacherId.firstName.data : ""
+    } ${data?.teacherId.lastName?.data ? data.teacherId.lastName.data : ""}`;
 
   return (
     <div className={styles.modalBackdrop}>

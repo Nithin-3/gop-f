@@ -26,8 +26,8 @@ const IssueModal = ({ setIssueModal, width }) => {
   };
 
   const handleSubmit = () => {
-    console.log("Selected Issues:", selectedIssues);
-    console.log("Comment:", comment);
+
+
     alert("Issue submitted!");
     setIssueModal(false);
   };

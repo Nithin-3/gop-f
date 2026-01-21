@@ -15,7 +15,7 @@ import Navigation from "../../../../landing/components/Nav";
 import Flag from "../../../../assets/icons/flag_icon.svg";
 
 function FindTeacher() {
-  const navigate = useNavigate();
+
   const location = useLocation();
   const { width } = useWindowDimensions();
 
