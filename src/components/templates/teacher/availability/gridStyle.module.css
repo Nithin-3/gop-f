@@ -1,0 +1,116 @@
+.gridContainer {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.header button {
+    padding: 8px 20px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.header button:hover {
+    background: #e0e0e0;
+}
+
+.gridWrapper {
+    display: table;
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+.timeHeader {
+    display: table-row;
+}
+
+.cornerCell {
+    display: table-cell;
+    width: 100px;
+    min-width: 100px;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 10;
+    border-bottom: 2px solid #eee;
+}
+
+.timeLabel {
+    display: table-cell;
+    min-width: 80px;
+    padding: 10px 5px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 2px solid #eee;
+    border-right: 1px solid #f5f5f5;
+    white-space: nowrap;
+}
+
+.dayRow {
+    display: table-row;
+}
+
+.dayLabel {
+    display: table-cell;
+    padding: 15px 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 5;
+    border-right: 2px solid #eee;
+    border-bottom: 1px solid #eee;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.cell {
+    display: table-cell;
+    height: 50px;
+    border-right: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #fff;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.7rem;
+    color: white;
+}
+
+.cell:hover {
+    background: #f9f9f9;
+}
+
+.available {
+    background-color: #3174ad !important;
+}
+
+.booked {
+    background-color: #888 !important;
+    cursor: not-allowed;
+}
+
+.empty {
+    background-color: transparent;
+}

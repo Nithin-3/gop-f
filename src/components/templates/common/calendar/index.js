@@ -1,5 +1,5 @@
 import React from 'react';
-import TrailCalendar from '../../student/Calendar/TrailCalendar';
+import StudentBookingGrid from '../../student/Calendar/StudentBookingGrid';
 import Navigation from '../../../../landing/components/Nav';
 
 function CalendarScreen(props) {
@@ -11,7 +11,9 @@ function CalendarScreen(props) {
             <div>
                 <Navigation />
             </div>
-            <TrailCalendar teacherData={course.userId.onType} course={course} />
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+                <StudentBookingGrid teacherData={course.userId.onType} course={course} />
+            </div>
         </div>
     )
 }

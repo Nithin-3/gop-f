@@ -96,9 +96,6 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
       form.append("courseImage", formValues.courseImage);
     }
 
-    // Comprehensive logging to verify what's being sent
-    // Comprehensive logging to verify what's being sent
-
 
     try {
       document.getElementById("loader").style.display = "flex";

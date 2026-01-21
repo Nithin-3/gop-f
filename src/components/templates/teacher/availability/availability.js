@@ -1,5 +1,6 @@
 import React from "react";
-import MyCalendar from "../Calendar/MyCalendar";
+// import AvailabilityCalendar from "../Calendar/AvailabilityCalendar";
+import AvailabilityGrid from "./AvailabilityGrid";
 import styles from "./styles.module.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +25,8 @@ const Availability = () => {
 
   return (
     <>
-      <main className={styles.mainSection} style={{ display: 'flex', justifyContent: 'center' }}>
-        <MyCalendar />
+      <main className={styles.mainSection}>
+        <AvailabilityGrid />
       </main>
     </>
   );

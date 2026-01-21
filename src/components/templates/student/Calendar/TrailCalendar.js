@@ -85,7 +85,7 @@ function TrailCalendar({ teacherData: propTeacherData, course }) {
     if (!token) return toast.warn("Please Login to continue");
 
     localStorage.setItem("chosenEvent", JSON.stringify(event));
-    navigate("/payment", { state: { course, teacherData: propTeacherData, event, trail: true } });
+    navigate("/payment", { state: { course, teacherData: propTeacherData, event, } });
   };
 
   const Event = ({ event }) => (

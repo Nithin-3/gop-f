@@ -127,6 +127,28 @@ export const makePayment = (payload) => async (dispatch) => {
   }
 };
 
+export const verifyPayment = (payload) => async (dispatch) => {
+  try {
+    let API = createAxios();
+    const { data } = await API.post("/student/payment/verification", payload);
+    return data;
+  } catch (e) {
+    console.error("verifyPayment error:", e);
+    return { success: false, message: e.response?.data?.message || "Payment verification failed" };
+  }
+};
+
+export const bookTrial = (payload) => async (dispatch) => {
+  try {
+    let API = createAxios();
+    const { data } = await API.post("/student/bookTrial", payload);
+    return data;
+  } catch (e) {
+    console.error("bookTrial error:", e);
+    return { success: false, message: e.response?.data?.message || "Trial booking failed" };
+  }
+};
+
 export const getCurrentTeachers = (stuid) => async (dispatch) => {
 
   try {

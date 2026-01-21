@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import modalStyles from "./styles.module.css";
-import moment from "moment";
 import { updateSessionRefund } from "../../../../../store/actions/student";
 
 const CancelModal = ({ setCancelModal, width, cancelSession, availDetails, cardInfo }) => {
