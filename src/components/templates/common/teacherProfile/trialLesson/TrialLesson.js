@@ -14,10 +14,10 @@ function TrialLesson(props) {
                     <br />
                     30 min
                     <br />
-                    <div style={{marginTop: '15px'}}></div>
-                    <BookFreeTrialButton />
+                    <div style={{ marginTop: '15px' }}></div>
+                    <BookFreeTrialButton course={props.course} />
                 </div>
-                <div style={{ color: '#fe1848' }}>$ 0</div>
+                <div style={{ color: '#fe1848' }}>₹ 0</div>
             </div>
         </div>
     )

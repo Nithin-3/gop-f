@@ -10,6 +10,7 @@ import Select from "./filterTeacher/select/Select";
 
 import { useWindowDimensions } from "../../../../utils/util";
 import { langOptions } from "./filterTeacher/filterUtils";
+import { DEFAULT_FILTERS } from "../../../../utils/constants";
 
 import Navigation from "../../../../landing/components/Nav";
 import Flag from "../../../../assets/icons/flag_icon.svg";
@@ -30,15 +31,7 @@ function FindTeacher() {
   // Save default filters to localStorage if not already present
   React.useEffect(() => {
     if (!localStorage.getItem("allFilters")) {
-      const allFilters = {
-        lang: "Language",
-        courseT: "Course",
-        availability: "Availability",
-        minPrice: 0,
-        motherT: "Mother Tongue",
-        from: "Country",
-      };
-      localStorage.setItem("allFilters", JSON.stringify(allFilters));
+      localStorage.setItem("allFilters", JSON.stringify(DEFAULT_FILTERS));
     }
   }, []);
 

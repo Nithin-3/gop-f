@@ -19,7 +19,7 @@ function TeacherCard(props) {
   };
 
   const getYTVideoId = (url) => {
-    if (!url) return "";
+    if (typeof url !== "string") return "";
     if (url.includes("v=")) return url.split("v=")[1].split("&")[0];
     if (url.includes("youtu.be/")) return url.split("youtu.be/")[1].split("?")[0];
     return "";

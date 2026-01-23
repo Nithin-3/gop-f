@@ -16,7 +16,7 @@ import Payment from '../../components/templates/common/payment/Payment';
 import TeacherProfile from '../../components/templates/common/teacherProfile/TeacherProfile';
 import CalendarScreen from "../../components/templates/common/calendar";
 import BookScreen from "../../components/templates/common/book";
-import Contact from "./conact";
+import Contact from "./contact";
 import LiveVidStream from '../../components/templates/common/liveStream/liveVidStream';
 
 const Main = () => {

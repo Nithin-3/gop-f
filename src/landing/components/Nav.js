@@ -15,7 +15,14 @@ const Nav = ({ setPage, roleModal }) => {
   const [click, setClick] = useState(false);
 
   const authData = useSelector((state) => state.auth.authData);
-  const profile = authData || JSON.parse(window.localStorage.getItem("profile"));
+  const profile = authData || (() => {
+    try {
+      const stored = window.localStorage.getItem("profile");
+      return stored ? JSON.parse(stored) : null;
+    } catch (e) {
+      return null;
+    }
+  })();
 
   const signOut = () => {
     dispatch({ type: "LOGOUT" });
@@ -25,17 +32,17 @@ const Nav = ({ setPage, roleModal }) => {
   function DefaultNav() {
     return (
       <>
-        <NavLink className="nav_link_find" exact to="/find-teacher">
+        <NavLink className="nav_link_find" end to="/find-teacher">
           <li className="nav_teacher" style={{ paddingTop: "10px" }}>
             Find a Teacher
           </li>
         </NavLink>
-        <NavLink className="nav_link" exact to="/auth/login">
+        <NavLink className="nav_link" end to="/auth/login">
           <li className="nav_log">Log in</li>
         </NavLink>
         <NavLink
           className="nav_link0"
-          exact
+          end
           to="/auth/signup"
           onClick={() => {
             if (roleModal) roleModal(true);
@@ -51,12 +58,12 @@ const Nav = ({ setPage, roleModal }) => {
     return (
       <>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/find-teacher">
+          <NavLink className="nav_link_find" end to="/find-teacher">
             Find a Teacher
           </NavLink>
         </li>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/student/dashboard">
+          <NavLink className="nav_link_find" end to="/student/dashboard">
             Dashboard
           </NavLink>
         </li>
@@ -78,12 +85,12 @@ const Nav = ({ setPage, roleModal }) => {
     return (
       <>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/teacher/dashboard">
+          <NavLink className="nav_link_find" end to="/teacher/dashboard">
             Dashboard
           </NavLink>
         </li>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/teacher/courses">
+          <NavLink className="nav_link_find" end to="/teacher/courses">
             Courses
           </NavLink>
         </li>
@@ -105,7 +112,7 @@ const Nav = ({ setPage, roleModal }) => {
     return (
       <>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/teacher/onboard">
+          <NavLink className="nav_link_find" end to="/teacher/onboard">
             Onboarding
           </NavLink>
         </li>
@@ -127,12 +134,12 @@ const Nav = ({ setPage, roleModal }) => {
     return (
       <>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/admin/dashboard">
+          <NavLink className="nav_link_find" end to="/admin/dashboard">
             Dasboard
           </NavLink>
         </li>
         <li className="nav_teacher">
-          <NavLink className="nav_link_find" exact to="/admin/courses">
+          <NavLink className="nav_link_find" end to="/admin/courses">
             Courses
           </NavLink>
         </li>
@@ -153,7 +160,7 @@ const Nav = ({ setPage, roleModal }) => {
   return (
     <div className="nav_section">
       <div className="nav_left">
-        <NavLink className="nav_lg" exact to="/">
+        <NavLink className="nav_lg" end to="/">
           <img src={logo} alt="logo" />
         </NavLink>
       </div>

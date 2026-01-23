@@ -121,7 +121,7 @@ const ViewCourse = ({ courseData, modalType, setModal, activeTab, setApiCalled }
               <div>
                 <h4>Course:</h4>
                 <select name="course" value={formValues.course} onChange={handleChange} disabled={modalType === "View"}>
-                  {["Academics","Spoken Languages","Test Preparation"].map((c) => <option key={c} value={c}>{c}</option>)}
+                  {["Academics", "Spoken Languages", "Test Preparation"].map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>

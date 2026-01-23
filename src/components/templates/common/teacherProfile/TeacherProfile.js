@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import TeacherCard from "./teacherCard/TeacherCard";
 import TeacherStats from "./teacherStats/TeacherStats";
@@ -20,41 +22,67 @@ import { viewCouponByCourse } from "../../../../store/actions/coupon";
 import { getTeacherRatings } from "../../../../store/actions/course";
 
 function TeacherProfile() {
-  // const {course} = history.location.state;
+  const location = useLocation();
   const dispatch = useDispatch();
-  const course = JSON.parse(localStorage.getItem("chosenCourse"));
+
+  const getInitialCourse = () => {
+    try {
+      if (location.state?.course) return location.state.course;
+      const stored = localStorage.getItem("chosenCourse");
+      return stored ? JSON.parse(stored) : null;
+    } catch (e) {
+      console.error("Error accessing localStorage:", e);
+      return null;
+    }
+  };
+
+  const course = getInitialCourse();
   const [coupons, setCoupons] = React.useState([]);
-  const [ratings, setRatings] = React.useState([]);
+  const [ratings, setRatings] = React.useState(null);
   const [selectedCoupon, setSelectedCoupon] = React.useState();
   const { width } = useWindowDimensions();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
-    async function getCourses() {
+    if (!course?._id) {
+      toast.error("Course details not found");
+      navigate("/find-teacher");
+      return;
+    }
+
+    async function getCouponsData() {
       try {
         const result = await dispatch(viewCouponByCourse(course._id));
-        if (result) {
+        if (Array.isArray(result)) {
           setCoupons(result);
+        } else {
+          setCoupons([]);
         }
       } catch (e) {
-        console.error(e);
+        console.error("viewCouponByCourse error:", e);
+        setCoupons([]);
       }
     }
 
-    async function getRatings() {
+    async function getRatingsData() {
       try {
-        const result = await dispatch(getTeacherRatings(course.userId.onType._id));
-        if (result) {
-          setRatings(result);
+        if (course.userId?.onType?._id) {
+          const result = await dispatch(getTeacherRatings(course.userId.onType._id));
+          if (result && typeof result === 'object') {
+            setRatings(result);
+          }
         }
       } catch (e) {
-        console.error(e);
+        console.error("getTeacherRatings error:", e);
       }
     }
 
+    getCouponsData();
+    getRatingsData();
+  }, [dispatch, course?._id, navigate]);
 
-    getCourses();
-    getRatings();
-  }, [dispatch]);
+  if (!course) return null;
+  const teacherData = course.userId?.onType;
 
   const handleSelectCoupon = (coupon) => {
     setSelectedCoupon(coupon);
@@ -83,13 +111,13 @@ function TeacherProfile() {
               selectedCoupon={selectedCoupon}
             />
 
-            <AboutMe width={width} teacherData={course.userId.onType} />
+            <AboutMe width={width} teacherData={teacherData} />
 
-            <MyCalendar teacherData={course.userId.onType} />
+            <MyCalendar teacherData={teacherData} course={course} />
 
             <TeachingExperties
               width={width}
-              teacherData={course.userId.onType}
+              teacherData={teacherData}
             />
 
             <Ratings
@@ -100,9 +128,9 @@ function TeacherProfile() {
           </div>
 
           <div style={{ width: "30%", marginLeft: "20px" }}>
-            <TeacherStats width={width} teacherData={course.userId.onType} />
+            <TeacherStats width={width} teacherData={teacherData} ratings={ratings} />
 
-            <TrialLesson width={width} teacherData={course.userId.onType} />
+            <TrialLesson width={width} teacherData={teacherData} course={course} />
 
             <PrivateLesson
               width={width}
@@ -125,10 +153,10 @@ function TeacherProfile() {
           <TeacherCard
             course={course}
             width={width}
-            teacherData={course.userId.onType}
+            teacherData={teacherData}
           />
 
-          <AboutMe width={width} teacherData={course.userId.onType} />
+          <AboutMe width={width} teacherData={teacherData} />
 
           <Coupons
             width={width}
@@ -137,11 +165,11 @@ function TeacherProfile() {
             selectedCoupon={selectedCoupon}
           />
 
-          <MyCalendar teacherData={course.userId.onType} />
+          <MyCalendar teacherData={teacherData} course={course} />
 
-          <TeacherStats width={width} teacherData={course.userId.onType} />
+          <TeacherStats width={width} teacherData={teacherData} ratings={ratings} />
 
-          <TrialLesson width={width} teacherData={course.userId.onType} />
+          <TrialLesson width={width} teacherData={teacherData} course={course} />
 
           <PrivateLesson
             width={width}
@@ -149,7 +177,7 @@ function TeacherProfile() {
             selectedCoupon={selectedCoupon}
           />
 
-          <TeachingExperties width={width} teacherData={course.userId.onType} />
+          <TeachingExperties width={width} teacherData={teacherData} />
 
           <Ratings width={width} teacherData={ratings} />
         </div>

@@ -1,25 +1,211 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { addTeacherAvailability, getTeacherAvailability } from "../../../../store/actions/availability";
 import { getTeacherData } from "../../../../store/actions/teacher";
+import { format, addDays, subDays, isSameDay } from "date-fns";
 import moment from "moment";
 import { toast } from "react-toastify";
-import styles from "./gridStyle.module.css";
+import styled from "styled-components";
 import AddEventModal from "../Calendar/AddEventModal";
+import EditEventModal from "../Calendar/EditEventModal";
+
+// Same Styled Components for Consistency
+const MatrixContainer = styled.div`
+  background: #fefeff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+  overflow: hidden;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const Toolbar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+  background: #fcfcfc;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+const NavButton = styled.button`
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid ${props => props.active ? "transparent" : "#ddd"};
+  background: ${props => props.active ? "#dc3545" : "#fff"};
+  color: ${props => props.active ? "#fff" : "#444"};
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    background: ${props => props.active ? "#c82333" : "#f5f5f5"};
+  }
+`;
+
+const DateDisplay = styled.div`
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+`;
+
+const GridWrapper = styled.div`
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid #f1f1f1;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 100%;
+  max-height: 650px;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  box-sizing: border-box;
+  &::-webkit-scrollbar { width: 10px; height: 10px; }
+  &::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 10px; border: 2px solid #fff; }
+`;
+
+const MatrixTable = styled.table`
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 2500px;
+  table-layout: fixed;
+
+  @media (max-width: 768px) {
+    min-width: 2000px;
+  }
+`;
+
+const Th = styled.th`
+  padding: 20px 15px;
+  background: #f9fafb;
+  border-bottom: 2px solid #eee;
+  border-right: 1px solid #f0f0f0;
+  font-size: 1.1rem;
+  color: #444;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  width: 120px;
+`;
+
+const TdDate = styled.td`
+  padding: 20px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 2px solid #eee;
+  font-weight: 800;
+  color: #1a1a1a;
+  width: 220px;
+  font-size: 1.2rem;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.03);
+`;
+
+const SlotCell = styled.td`
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  padding: 6px;
+  height: 70px;
+  background: ${props => props.isWeekend ? "#fafafa" : "#fff"};
+`;
+
+const SlotButton = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 65px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  font-weight: 900;
+  cursor: pointer;
+  background: ${props => {
+        if (props.isBooked) return "#dc3545"; // Red for Booked
+        if (props.exists) return "linear-gradient(135deg, #28a745 0%, #34ce57 100%)"; // Green for Available
+        return "#f0f0f0";
+    }};
+  color: ${props => props.exists || props.isBooked ? "#fff" : "#ccc"};
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.12);
+  }
+`;
+
+const DurationToggle = styled.div`
+  display: flex;
+  background: #eee;
+  padding: 4px;
+  border-radius: 8px;
+  gap: 4px;
+`;
+
+const DurationBtn = styled.button`
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: ${props => props.active ? "#dc3545" : "transparent"};
+  color: ${props => props.active ? "#fff" : "#666"};
+  transition: all 0.2s;
+`;
+
+const CustomDateInput = styled.input`
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-family: inherit;
+`;
+
+const TIME_SLOTS = [];
+for (let hour = 0; hour < 24; hour++) {
+    for (let min of ["00", "30"]) {
+        const h12 = hour % 12 || 12;
+        const ampm = hour < 12 ? "AM" : "PM";
+        TIME_SLOTS.push({
+            id: `${hour.toString().padStart(2, "0")}:${min}`,
+            label: `${h12}:${min} ${ampm}`
+        });
+    }
+}
 
 const AvailabilityGrid = () => {
     const dispatch = useDispatch();
     const [availability, setAvailability] = useState([]);
     const [teacherData, setTeacherData] = useState({});
-    const [weekStart, setWeekStart] = useState(moment().startOf('day'));
-    const [duration, setDuration] = useState(60); // default 60 minutes
+    const [duration, setDuration] = useState(60);
     const [addEventModal, setAddEventModal] = useState(false);
+    const [editEventModal, setEditEventModal] = useState(false);
     const [pendingSlots, setPendingSlots] = useState([]);
-
-    // Grid config
-    const startTime = 0; // 0:00
-    const endTime = 24; // 24:00
-    const interval = 30; // minutes
+    const [selectedSlot, setSelectedSlot] = useState({});
+    const [baseDate, setBaseDate] = useState(new Date());
 
     useEffect(() => {
         dispatch(getTeacherData()).then(res => setTeacherData(res));
@@ -29,117 +215,107 @@ const AvailabilityGrid = () => {
     const fetchAvailability = async () => {
         const res = await dispatch(getTeacherAvailability());
         if (res?.success) {
-            setAvailability(res.data.map(el => ({ ...el, from: new Date(el.from), to: new Date(el.to) })));
+            setAvailability(res.data.map(el => ({
+                id: el.id,
+                start: new Date(el.from),
+                end: new Date(el.to),
+                isBooked: el.isBooked
+            })));
         }
     };
 
     const addTeacherAvail = async (slots) => {
-        const result = await dispatch(addTeacherAvailability(slots));
-        return result;
+        return await dispatch(addTeacherAvailability(slots));
     };
 
-    const getSlots = () => {
-        const slots = [];
-        for (let i = 0; i < (endTime - startTime) * 60 / interval; i++) {
-            const time = moment().startOf('day').add(startTime * 60 + i * interval, 'minutes');
-            slots.push(time);
-        }
-        return slots;
-    };
+    const handleCellClick = (cellStart) => {
+        if (cellStart < new Date()) return;
 
-    const timeSlots = getSlots();
-
-    const days = [];
-    for (let i = 0; i < 7; i++) {
-        days.push(moment(weekStart).add(i, 'days'));
-    }
-
-    const isAvailable = (day, timeStr) => {
-        // day is moment object, timeStr is "HH:mm" from grid
-        // Construct check date
-        const checkStart = moment(day).format('YYYY-MM-DD') + ' ' + timeStr;
-        const start = new Date(checkStart);
-
-        return availability.some(slot => {
-            const slotStart = new Date(slot.from);
-            // define loose equality or range check
-            return Math.abs(slotStart - start) < 60000; // within 1 min
-        });
-    };
-
-    const getSlotStatus = (day, time) => {
-        const checkDate = moment(day).set({
-            hour: time.hour(),
-            minute: time.minute(),
-            second: 0,
-            millisecond: 0
-        }).toDate();
-
-        const found = availability.find(slot => Math.abs(slot.from - checkDate) < 1000);
-        if (found) {
-            return found.isBooked ? 'booked' : 'available';
-        }
-        return 'empty';
-    };
-
-    const toggleSlot = async (day, time) => {
-        const start = moment(day).set({
-            hour: time.hour(),
-            minute: time.minute(),
-            second: 0,
-            millisecond: 0
-        }).toDate();
-
-        // Calculate end time based on selected duration
-        const end = moment(start).add(duration, 'minutes').toDate();
-
-        // We need to break this duration into 30-minute slots
-        const slotsToAdd = [];
-        let curr = moment(start);
-        const endMoment = moment(end);
-
-        while (curr.isBefore(endMoment)) {
-            const slotStart = curr.toDate();
-            const slotEnd = curr.clone().add(30, 'minutes').toDate();
-
-            // Check if this specific 30-min slot exists
-            const existing = availability.find(s => Math.abs(new Date(s.from) - slotStart) < 1000);
-
-            if (existing) {
-                if (existing.isBooked) {
-                    toast.warn(`Slot ${moment(slotStart).format("HH:mm")} is already booked.`);
-                    return; // Stop if we hit a booked slot or skip? Best to stop.
-                }
-                // If exists but available, we just skip re-adding.
-            } else {
-                slotsToAdd.push({
-                    from: slotStart,
-                    to: slotEnd,
-                    sessionDate: slotStart,
+        const existing = availability.find(s => Math.abs(s.start - cellStart) < 1000);
+        if (existing) {
+            if (existing.isBooked) return;
+            setSelectedSlot({ id: existing.id, from: existing.start, to: existing.end });
+            setEditEventModal(true);
+        } else {
+            // Logic to add slot with duration
+            let slots = [];
+            let curr = moment(cellStart);
+            const end = moment(cellStart).add(duration, 'minutes');
+            while (curr.isBefore(end)) {
+                slots.push({
+                    from: curr.toDate(),
+                    to: curr.clone().add(30, 'minutes').toDate(),
+                    sessionDate: curr.toDate(),
                     teacherId: teacherData?.teacherId
                 });
+                curr.add(30, 'minutes');
             }
-            curr.add(30, 'minutes');
+            setPendingSlots(slots);
+            setAddEventModal(true);
         }
-
-        if (slotsToAdd.length === 0) {
-            // Check if user clicked on an existing available slot to REMOVE it?
-            const checkFirst = availability.find(s => Math.abs(new Date(s.from) - start) < 1000);
-            if (checkFirst && !checkFirst.isBooked) {
-                toast.info("Slot removal not implemented in this grid demo yet");
-            }
-            return;
-        }
-
-        setPendingSlots(slotsToAdd);
-        setAddEventModal(true);
     };
 
-    const handlePrevWeek = () => setWeekStart(prev => moment(prev).subtract(1, 'week'));
-    const handleNextWeek = () => setWeekStart(prev => moment(prev).add(1, 'week'));
+    const dateRange = useMemo(() => Array.from({ length: 7 }).map((_, i) => addDays(baseDate, i)), [baseDate]);
 
     return (
-        <div className={styles.gridContainer}>
+        <MatrixContainer>
+            <div style={{ marginBottom: "15px", fontWeight: "800", fontSize: "1.1rem", color: "#dc3545" }}>AVAILABILITY MANAGEMENT</div>
+            <Toolbar>
+                <DateDisplay>{format(baseDate, "MMMM yyyy")}</DateDisplay>
+                <ButtonGroup>
+                    <NavButton onClick={() => setBaseDate(subDays(new Date(), 1))}>Yesterday</NavButton>
+                    <NavButton active={isSameDay(baseDate, new Date())} onClick={() => setBaseDate(new Date())}>Today</NavButton>
+                    <NavButton onClick={() => setBaseDate(addDays(new Date(), 1))}>Tomorrow</NavButton>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "10px", borderLeft: "1px solid #eee", paddingLeft: "15px" }}>
+                        <span style={{ fontSize: "0.8rem", fontWeight: "bold", color: "#888" }}>DURATION:</span>
+                        <DurationToggle>
+                            <DurationBtn active={duration === 30} onClick={() => setDuration(30)}>30M</DurationBtn>
+                            <DurationBtn active={duration === 60} onClick={() => setDuration(60)}>60M</DurationBtn>
+                        </DurationToggle>
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "10px", borderLeft: "1px solid #eee", paddingLeft: "15px" }}>
+                        <CustomDateInput type="date" value={format(baseDate, "yyyy-MM-dd")} onChange={(e) => setBaseDate(new Date(e.target.value))} />
+                    </div>
+                </ButtonGroup>
+            </Toolbar>
+
+            <GridWrapper>
+                <MatrixTable>
+                    <thead>
+                        <tr>
+                            <Th style={{ position: "sticky", left: 0, top: 0, zIndex: 4, background: "#f8f9fa" }}>Day / Time</Th>
+                            {TIME_SLOTS.map(slot => <Th key={slot.id}>{slot.label}</Th>)}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dateRange.map(date => (
+                            <tr key={date.toISOString()}>
+                                <TdDate>{format(date, "EEE, MMM dd")}</TdDate>
+                                {TIME_SLOTS.map(timeSlot => {
+                                    const [h, m] = timeSlot.id.split(":").map(Number);
+                                    const cellStart = new Date(date);
+                                    cellStart.setHours(h, m, 0, 0);
+                                    const slot = availability.find(s => Math.abs(s.start - cellStart) < 1000);
+                                    return (
+                                        <SlotCell key={timeSlot.id} isWeekend={date.getDay() === 0 || date.getDay() === 6}>
+                                            <SlotButton
+                                                exists={!!slot}
+                                                isBooked={slot?.isBooked}
+                                                onClick={() => handleCellClick(cellStart)}
+                                            >
+                                                {slot ? (slot.isBooked ? "BOOKED" : "AVAIL") : "+"}
+                                            </SlotButton>
+                                        </SlotCell>
+                                    );
+                                })}
+                            </tr>
+                        ))}
+                    </tbody>
+                </MatrixTable>
+            </GridWrapper>
+
             {addEventModal &&
                 <AddEventModal
                     setAddEventModal={setAddEventModal}
@@ -148,72 +324,15 @@ const AvailabilityGrid = () => {
                     getAvailability={fetchAvailability}
                 />
             }
-            <div className={styles.header}>
-                <button onClick={handlePrevWeek}>Prev</button>
-                <h3>{weekStart.format("MMM DD")} - {moment(weekStart).add(6, 'days').format("MMM DD")}</h3>
-
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '0.9rem' }}>
-                        <input
-                            type="radio"
-                            name="dur"
-                            checked={duration === 30}
-                            onChange={() => setDuration(30)}
-                            style={{ marginRight: '5px' }}
-                        />
-                        30 Min
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '0.9rem' }}>
-                        <input
-                            type="radio"
-                            name="dur"
-                            checked={duration === 60}
-                            onChange={() => setDuration(60)}
-                            style={{ marginRight: '5px' }}
-                        />
-                        60 Min
-                    </label>
-                </div>
-
-                <button onClick={handleNextWeek}>Next</button>
-            </div>
-
-            <div className={styles.gridWrapper}>
-                {/* Time Header Row */}
-                <div className={styles.timeHeader}>
-                    <div className={styles.cornerCell}></div>
-                    {timeSlots.map((time, i) => (
-                        <div key={i} className={styles.timeLabel}>
-                            {time.format("h : mm A")}
-                        </div>
-                    ))}
-                </div>
-
-                {/* Days Rows */}
-                {days.map((day, d) => (
-                    <div key={d} className={styles.dayRow}>
-                        <div className={styles.dayLabel}>
-                            <strong>{day.format("ddd")}</strong><br />
-                            {day.format("MMM DD")}
-                        </div>
-                        {timeSlots.map((time, t) => {
-                            const status = getSlots ? getSlotStatus(day, time) : 'empty';
-                            return (
-                                <div
-                                    key={t}
-                                    className={`${styles.cell} ${styles[status]}`}
-                                    onClick={() => toggleSlot(day, time)}
-                                    title={`${day.format("MMM DD")} ${time.format("HH:mm")}`}
-                                >
-                                    {status === 'booked' && 'Booked'}
-                                    {status === 'available' && 'Available'}
-                                </div>
-                            );
-                        })}
-                    </div>
-                ))}
-            </div>
-        </div>
+            {editEventModal &&
+                <EditEventModal
+                    setEditEventModal={setEditEventModal}
+                    selectedSlot={selectedSlot}
+                    availability={availability}
+                    setAvailability={setAvailability}
+                />
+            }
+        </MatrixContainer>
     );
 };
 

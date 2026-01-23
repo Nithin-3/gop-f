@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { filterCourse } from "../../../../../store/actions/student/index";
 // import Flag from '../../../../../../assets/icons/flag_icon.svg';
 import Flag from "../../../../../assets/icons/flag_icon.svg";
+import { PRICE_CONFIG, DEFAULT_FILTERS } from "../../../../../utils/constants";
 
 function Filters(props) {
     const dispatch = useDispatch();
@@ -41,8 +42,8 @@ function Filters(props) {
 
     const [courseType, setCourseType] = React.useState(allFilters?.courseT || "Course");
     const [availability, setAvailability] = React.useState(allFilters?.availability || "Availability");
-    const [minPrice, setMinPrice] = React.useState(allFilters?.minPrice || 0);
-    const [maxPrice, setMaxPrice] = React.useState(allFilters?.maxPrice || 200);
+    const [minPrice, setMinPrice] = React.useState(allFilters?.minPrice || PRICE_CONFIG.MIN);
+    const [maxPrice, setMaxPrice] = React.useState(allFilters?.maxPrice || PRICE_CONFIG.MAX);
     const [motherTongue, setMotherTongue] = React.useState(allFilters?.motherT || "Mother Tongue");
     const [from, setFrom] = React.useState(allFilters?.from || "Country");
     // const [courseType, setCourseType] = React.useState("Course");
@@ -56,15 +57,22 @@ function Filters(props) {
     const [countryOptions, setCountryOptions] = React.useState([]);
 
     React.useEffect(() => {
-        setLang("Language");
-        setCourseType("Course");
-        setAvailability("Availability");
-        setMinPrice(0);
-        setMaxPrice(2000);
-        setMotherTongue("Mother Tongue");
-        setFrom("Country");
-        setFlagSrc(Flag);
-    }, [reset]);
+        if (reset) {
+            setLang("Language");
+            setCourseType("Course");
+            setAvailability("Availability");
+            setMinPrice(PRICE_CONFIG.MIN);
+            setMaxPrice(PRICE_CONFIG.MAX);
+            setMotherTongue("Mother Tongue");
+            setFrom("Country");
+            setFlagSrc(Flag);
+        }
+    }, [reset, setLang, setCourseType, setAvailability, setMinPrice, setMaxPrice, setMotherTongue, setFrom, setFlagSrc]);
+
+    const handlePriceChange = React.useCallback(({ min, max }) => {
+        setMinPrice(min);
+        setMaxPrice(max);
+    }, []);
 
     React.useEffect(() => {
         const currFilters = {
@@ -74,6 +82,7 @@ function Filters(props) {
             endPrice: maxPrice,
             country: from === "Country" ? "" : from,
             motherT: motherTongue === "Mother Tongue" ? "" : motherTongue,
+            availability: availability === "Availability" ? "" : availability,
             page: 1,
             limit: 100,
         };
@@ -90,7 +99,7 @@ function Filters(props) {
 
         localStorage.setItem("allFilters", JSON.stringify(filtersToSave));
 
-        const apiStr = `?language=${encodeURIComponent(currFilters.language)}&courseType=${encodeURIComponent(currFilters.courseT)}&startPrice=${currFilters.startPrice}&endPrice=${currFilters.endPrice}&motherTongue=${encodeURIComponent(currFilters.motherT)}&country=${encodeURIComponent(currFilters.country)}&page=${currFilters.page}&limit=${currFilters.limit}`;
+        const apiStr = `?language=${encodeURIComponent(currFilters.language)}&courseType=${encodeURIComponent(currFilters.courseT)}&startPrice=${currFilters.startPrice}&endPrice=${currFilters.endPrice}&motherTongue=${encodeURIComponent(currFilters.motherT)}&country=${encodeURIComponent(currFilters.country)}&availability=${encodeURIComponent(currFilters.availability)}&page=${currFilters.page}&limit=${currFilters.limit}`;
 
 
 
@@ -185,12 +194,9 @@ function Filters(props) {
             {/* Select Price */}
             <div style={{ marginTop: width >= 992 ? "25px" : "0" }}>
                 <PriceFilter
-                    min={0}
-                    max={200}
-                    onChange={({ min, max }) => {
-                        setMinPrice(min);
-                        setMaxPrice(max);
-                    }}
+                    min={PRICE_CONFIG.MIN}
+                    max={PRICE_CONFIG.MAX}
+                    onChange={handlePriceChange}
                     width={width}
                 />
             </div>

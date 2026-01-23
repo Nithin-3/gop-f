@@ -32,6 +32,7 @@ function Payment() {
   const trail = state.trail || false;
   const teacherData = state.teacherData || null;
   const [paymentDetails, setPaymentDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
   const couponDetails = state.couponDetails || null;
 
   const couponDiscountPercentage = couponDetails?.discountAmt || 0;
@@ -42,11 +43,15 @@ function Payment() {
   const studentData = JSON.parse(localStorage.getItem("studentData")) || {};
   const rescheduleObj = state.rescheduleObj || JSON.parse(localStorage.getItem("rescheduleObj")) || null;
 
+  useEffect(() => {
+    if (!teacherData || !chosenEvent.start || !course._id) {
+      toast.error("Session data missing. Redirecting...");
+      navigate("/find-teacher");
+    }
+  }, [teacherData, chosenEvent, course, navigate]);
 
-
-  const [slotStart] = useState(new Date(chosenEvent.start));
-  const [slotEnd] = useState(new Date(chosenEvent.end));
-
+  const [slotStart] = useState(new Date(chosenEvent.start || Date.now()));
+  const [slotEnd] = useState(new Date(chosenEvent.end || Date.now()));
 
   const [selectedPlan, setSelectedPlan] = useState({});
   const platformFeesPercentage = 6;
@@ -60,9 +65,21 @@ function Payment() {
       }
 
       const packageType = selectedPlan.number ? selectedPlan.number.split(" ")[0] : "1";
+      const lessonType = selectedPlan?.number ? selectedPlan.number.split(" ")[0] : "1";
+
+      const bookingData = {
+        teacherId: teacherData?._id,
+        courseId: course?._id,
+        availabilityIds: [chosenEvent?.id || chosenEvent?._id],
+        type: lessonType === "Course" ? "1" : lessonType,
+        from: chosenEvent?.start,
+        to: chosenEvent?.end
+      };
+
       const result = await dispatch(makePayment({
         courseId: course._id,
-        packageType: packageType === "Course" ? "1" : packageType
+        packageType: packageType === "Course" ? "1" : packageType,
+        bookingData
       }));
 
       if (result?.success) {
@@ -127,6 +144,9 @@ function Payment() {
 
 
   const pay = async () => {
+    if (loading) return;
+    setLoading(true);
+
     if (trail) {
       try {
         const payload = {
@@ -140,13 +160,16 @@ function Payment() {
         const res = await dispatch(bookTrial(payload));
         if (res.success) {
           toast.success("Free trial booked successfully!");
-          navigate("/dashboard");
+          const role = JSON.parse(localStorage.getItem("profile"))?.role.toLowerCase() || "student";
+          navigate(`/${role}/dashboard`);
         } else {
           toast.error(res.message || "Failed to book trial");
+          setLoading(false);
         }
       } catch (err) {
         console.error("Trial booking error:", err);
         toast.error("An error occurred during booking");
+        setLoading(false);
       }
       return;
     }
@@ -163,13 +186,16 @@ function Payment() {
         const res = await dispatch(reSchedule(payload));
         if (res.success) {
           toast.success("Session rescheduled successfully!");
-          navigate("/dashboard");
+          const role = JSON.parse(localStorage.getItem("profile"))?.role.toLowerCase() || "student";
+          navigate(`/${role}/dashboard`);
         } else {
           toast.error(res.message || "Failed to reschedule");
+          setLoading(false);
         }
       } catch (err) {
         console.error("Reschedule error:", err);
         toast.error("An error occurred during rescheduling");
+        setLoading(false);
       }
       return;
     }
@@ -178,6 +204,7 @@ function Payment() {
     const sdkLoaded = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
     if (!sdkLoaded) {
       toast.error("Razorpay SDK failed to load.");
+      setLoading(false);
       return;
     }
 
@@ -200,15 +227,17 @@ function Payment() {
         bookingData
       }));
 
+      console.log("initiateRes", initiateRes);
       if (!initiateRes?.success) {
-        toast.error(initiateRes?.message || "Payment initiation failed");
+        toast.error(initiateRes?.message || initiateRes?.error || "Payment initiation failed");
+        setLoading(false);
         return;
       }
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_NFQu7j9qsd4IfM",
+        key: "rzp_test_S6QKvXn0ZwRZsY",
         amount: initiateRes.amount,
-        currency: initiateRes.currency,
+        currency: initiateRes.currency || "INR",
         name: "Neurolingua",
         description: `Booking for ${course?.title?.data || course?.title}`,
         image: razorpayLogo,
@@ -224,15 +253,22 @@ function Payment() {
           const verifyResult = await dispatch(verifyPayment(verifyData));
           if (verifyResult.success) {
             toast.success("Payment successful and session booked!");
-            const role = JSON.parse(localStorage.getItem("profile"))?.role.toLowerCase();
+            const profile = JSON.parse(localStorage.getItem("profile"));
+            const role = profile?.role?.toLowerCase() || "student";
             navigate(`/${role}/dashboard`);
           } else {
             toast.error(verifyResult.message || "Booking verification failed");
+            setLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
           }
         },
         prefill: {
-          name: studentData?.fullName,
-          email: studentData?.email,
+          name: studentData?.fullName || studentData?.firstName || "",
+          email: studentData?.email || "",
         },
         theme: { color: "#fe1848" },
       };
@@ -243,6 +279,7 @@ function Payment() {
     } catch (err) {
       console.error("Payment error:", err);
       toast.error("An error occurred during payment");
+      setLoading(false);
     }
   };
 
@@ -365,7 +402,7 @@ function Payment() {
 
               <button
                 onClick={pay}
-                disabled={!trail && !rescheduleObj && !selectedPlan.number}
+                disabled={loading || (!trail && !rescheduleObj && !selectedPlan.number)}
                 style={{
                   width: '100%',
                   padding: '18px',
@@ -375,15 +412,15 @@ function Payment() {
                   color: 'white',
                   fontSize: '1.1rem',
                   fontWeight: '700',
-                  cursor: (trail || rescheduleObj || selectedPlan.number) ? 'pointer' : 'not-allowed',
+                  cursor: (loading || (!trail && !rescheduleObj && !selectedPlan.number)) ? 'not-allowed' : 'pointer',
                   boxShadow: '0 10px 20px rgba(254, 24, 72, 0.3)',
                   transition: 'transform 0.2s',
-                  opacity: (trail || rescheduleObj || selectedPlan.number) ? 1 : 0.6
+                  opacity: (loading || (!trail && !rescheduleObj && !selectedPlan.number)) ? 0.6 : 1
                 }}
-                onMouseOver={e => { if (trail || rescheduleObj || selectedPlan.number) e.target.style.transform = 'translateY(-2px)' }}
+                onMouseOver={e => { if (!loading && (trail || rescheduleObj || selectedPlan.number)) e.target.style.transform = 'translateY(-2px)' }}
                 onMouseOut={e => { e.target.style.transform = 'translateY(0)' }}
               >
-                {totalAmount > 0 ? "PAY SECURELY" : (trail ? "BOOK FREE TRIAL" : "CONFIRM BOOKING")}
+                {loading ? "PROCESSING..." : (totalAmount > 0 ? "PAY SECURELY" : (trail ? "BOOK FREE TRIAL" : "CONFIRM BOOKING"))}
               </button>
 
               <div style={{ marginTop: '20px', textAlign: 'center' }}>

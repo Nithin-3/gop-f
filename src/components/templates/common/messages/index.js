@@ -68,14 +68,22 @@ const Messages = () => {
     async function getConvs() {
       try {
         const res = await dispatch(getConversations(currUserId));
-        // console.log(res)
-        setConversations(res)
+        if (res && Array.isArray(res)) {
+          const sorted = [...res].sort((a, b) => {
+            const aHasAdmin = a.members.includes(adminId);
+            const bHasAdmin = b.members.includes(adminId);
+            if (aHasAdmin && !bHasAdmin) return -1;
+            if (!aHasAdmin && bHasAdmin) return 1;
+            return 0;
+          });
+          setConversations(sorted);
+        }
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
     }
-    getConvs();
-  }, [currUserId])
+    if (currUserId) getConvs();
+  }, [currUserId, dispatch, adminId]);
 
   // Fetching Messages
   useEffect(() => {
@@ -230,15 +238,7 @@ const Messages = () => {
                   </>
               }
             </div>
-            {currUserId !== adminId ? conversations?.map((item) => {
-              if (item.members.find((ad) => ad === adminId)) {
-                const fromIndex = conversations.indexOf(item);
-                const toIndex = 0;
-                const element = conversations.splice(fromIndex, 1)[0];
-                // console.log(element);
-                conversations.splice(toIndex, 0, element);
-              }
-            }) : null}
+
             {/* AllChats */}
             <div className={styles.AC_wrapper} style={{ backgroundColor: color.msWrapper }}>
               <div className={styles.AC_heading} style={{ backgroundColor: color.msHead }}>All Chats</div>
@@ -261,15 +261,7 @@ const Messages = () => {
           </div>
         ) : (
           <div className={styles.mainWrapper}>
-            {currUserId !== adminId ? conversations?.map((item) => {
-              if (item.members.find((ad) => ad === adminId)) {
-                const fromIndex = conversations.indexOf(item);
-                const toIndex = 0;
-                const element = conversations.splice(fromIndex, 1)[0];
-                // console.log(element);
-                conversations.splice(toIndex, 0, element);
-              }
-            }) : null}
+
 
             {!chatMobileClick ? (
               /* AllChats */
@@ -385,10 +377,10 @@ const ACField = ({ conversation, currentUser, color, adminId }) => {
       {currentUser !== adminId ?
         <div className={styles.AC_field} style={{ backgroundColor: color.msMsg, }}>
           {otherUser?.fullName}
-          <img src={pinIcon} style={{ display: otherUser?.fullName === "Admin" ? "flex" : "none" }} />
+          <img src={pinIcon} alt="pin" style={{ display: otherUser?.fullName === "Admin" ? "flex" : "none" }} />
         </div> : <div className={styles.AC_field} style={{ backgroundColor: otherUser?.roleModel === "Teacher" ? "#3eaeea" : "#ff97b1" }}>
           {otherUser?.fullName}
-          <img src={pinIcon} style={{ display: otherUser?.fullName === "Admin" ? "flex" : "none" }} />
+          <img src={pinIcon} alt="pin" style={{ display: otherUser?.fullName === "Admin" ? "flex" : "none" }} />
         </div>
       }
     </>

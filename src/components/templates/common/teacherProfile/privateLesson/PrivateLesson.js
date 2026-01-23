@@ -48,7 +48,7 @@ function PrivateLesson(props) {
         >
           <div>1 Lesson</div>
           <div style={{ color: "#fe587a" }}>
-            $ {data && data.price.data}/hr
+            ₹ {data?.price?.data || data?.price || "N/A"}/hr
           </div>
         </div>
 

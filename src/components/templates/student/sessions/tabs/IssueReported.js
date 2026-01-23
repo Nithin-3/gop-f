@@ -3,6 +3,7 @@ import { Card, CardMobile } from "../commonUtils";
 
 const IssueReported = ({ width, arr }) => {
   if (!Array.isArray(arr)) arr = [];
+  arr = [...arr].sort((a, b) => new Date(b.from) - new Date(a.from));
 
   return (
     <>

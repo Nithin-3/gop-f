@@ -14,7 +14,9 @@ const Completed = ({ width, arr }) => {
     { text: "Complete HW", modal: setHomeworkModal },
   ];
 
-  arr = arr.filter((item) => item.status === "Completed");
+  arr = arr
+    .filter((item) => item.status === "Completed")
+    .sort((a, b) => new Date(b.from) - new Date(a.from));
 
   return (
     <>

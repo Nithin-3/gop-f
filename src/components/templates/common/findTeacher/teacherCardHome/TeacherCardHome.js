@@ -86,7 +86,7 @@ function TeacherCardHome({ course, width }) {
             )}
           </div>
           <div style={{ marginTop: "10px", color: "#fe1848", textAlign: "center" }}>
-            ${course.price?.data || course.price} <br /> USD/hr
+            ₹{course.price?.data || course.price} <br /> INR/hr
           </div>
         </div>
 

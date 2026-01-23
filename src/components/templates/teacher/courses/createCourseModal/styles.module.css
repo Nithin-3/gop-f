@@ -59,9 +59,11 @@
 
   padding: 0 3em;
 }
+
 .createCourseForm2 {
   grid-template-columns: repeat(2, 1fr);
 }
+
 .createCourseForm1 input,
 .createCourseForm2 input,
 .createCourseForm2 textarea,
@@ -132,6 +134,7 @@
 }
 
 @media screen and (max-width: 768px) {
+
   .createCourseForm1,
   .createCourseForm2 {
     grid-template-columns: repeat(1, minmax(200px, 1fr));

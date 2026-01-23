@@ -4,7 +4,9 @@ import { Card, CardMobile } from "../commonUtils";
 const Cancelled = ({ width, arr }) => {
   if (!Array.isArray(arr)) arr = [];
 
-  arr = arr.filter((item) => item.status === "Cancelled");
+  arr = arr
+    .filter((item) => item.status === "Cancelled")
+    .sort((a, b) => new Date(b.from) - new Date(a.from));
 
   return (
     <>

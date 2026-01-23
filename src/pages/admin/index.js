@@ -21,48 +21,48 @@ const Admin = () => {
     <>
       <LeftSideBar list={adminSidebar} />
       <Routes>
-        <Route 
-          path="/dashboard" 
+        <Route
+          path="dashboard"
           element={
             <ProtectedRoute authRole={["Admin", "Tutor", "Payment"]}>
               <AdminDashboard />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/teachers" 
+        <Route
+          path="teachers"
           element={
             <ProtectedRoute authRole={["Admin", "Tutor"]}>
               <AdminTeachers />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/courses" 
+        <Route
+          path="courses"
           element={
             <ProtectedRoute authRole={["Admin", "Tutor"]}>
               <AdminCourses />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/languages" 
+        <Route
+          path="languages"
           element={
             <ProtectedRoute authRole={["Admin", "Tutor"]}>
               <AdminLanguages />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route path="/students" element={<AdminStudents />} />
-        <Route path="/booked-courses" element={<AdminBookedCourses />} />
-        <Route path="/cancelledSessions" element={<AdminCancelledSessions />} />
-        <Route path="/payment" element={<AdminPayment />} />
-        <Route path="/blog" element={<AdminBlog />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/notification" element={<AdminNotification />} />
+        <Route path="students" element={<AdminStudents />} />
+        <Route path="booked-courses" element={<AdminBookedCourses />} />
+        <Route path="cancelledSessions" element={<AdminCancelledSessions />} />
+        <Route path="payment" element={<AdminPayment />} />
+        <Route path="blog" element={<AdminBlog />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="notification" element={<AdminNotification />} />
 
         {/* Redirect unknown admin routes to dashboard */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Routes>
     </>
   );

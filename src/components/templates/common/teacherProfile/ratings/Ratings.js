@@ -31,29 +31,30 @@ function Ratings(props) {
 
             <div></div>
 
-            {teacherData.data != null && teacherData.data.data != null && teacherData.data.data.length > 0 ?
-
+            {teacherData?.data?.data && teacherData.data.data.length > 0 ? (
                 teacherData.data.data.map((item, index) => (
-                    <div style={{ borderRadius: '10px', border: '3px solid #f9f9f8', padding: '10px', margin: '2%', display: 'inline-block', width: width >= 992 ? '40%' : '70vw' }}>
-                        <div style={{}}>
+                    <div key={index} style={{ borderRadius: '10px', border: '3px solid #f9f9f8', padding: '10px', margin: '2%', display: 'inline-block', width: width >= 992 ? '40%' : '70vw' }}>
+                        <div>
                             <div>{item.comments}</div>
                             <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', justifyCotnent: 'space-between', alignItems: 'center' }}>
                                     <img src={Person} alt="person_img" style={{ marginRight: '5px', width: '30px', height: '30px' }} />
                                     <span>
-                                        {item.user_details.fullName}
+                                        {item.user_details?.fullName || "Anonymous Student"}
                                         <br />
-                                        {item.course_details != null && item.course_details.course != null ? item.course_details.course.data : ''}
+                                        {item.course_details?.course?.data || ''}
                                     </span>
                                 </div>
                                 <div>
-                                    Sep 26, 2021
+                                    {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Sep 26, 2021'}
                                 </div>
                             </div>
                         </div>
                     </div>
-                )) : null
-            }
+                ))
+            ) : (
+                <div style={{ marginTop: '10px', color: '#999' }}>No ratings yet</div>
+            )}
         </div >
     )
 }

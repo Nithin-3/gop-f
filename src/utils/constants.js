@@ -3,6 +3,26 @@ export const ROLE_STUDENT = "Student";
 export const ROLE_ADMIN = "Admin";
 export const ROLE_PAYMENT = "Payment";
 export const ROLE_TUTOR = "Tutor";
+
+// Price configuration (in INR)
+export const PRICE_CONFIG = {
+  MIN: 10,
+  MAX: 10000,
+  CURRENCY_SYMBOL: '₹',
+  CURRENCY_CODE: 'INR',
+};
+
+// Default filter values
+export const DEFAULT_FILTERS = {
+  lang: 'Language',
+  courseT: 'Course',
+  availability: 'Availability',
+  minPrice: PRICE_CONFIG.MIN,
+  maxPrice: PRICE_CONFIG.MAX,
+  motherT: 'Mother Tongue',
+  from: 'Country',
+};
+
 export const LANGUAGES = [
   { value: "English", label: "English" },
   { value: "Chinese", label: "Chinese" },

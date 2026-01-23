@@ -23,7 +23,7 @@ export const addCouponSlot = (payload) => async (dispatch) => {
     return data;
   } catch (e) {
     console.error(e);
-    return e.response.message;
+    return e.response?.data?.message || e.message;
   }
 };
 export const viewCouponByUser = (payload, page) => async (dispatch) => {
@@ -36,7 +36,7 @@ export const viewCouponByUser = (payload, page) => async (dispatch) => {
     return data;
   } catch (e) {
     console.error(e);
-    return e.response.message;
+    return e.response?.data?.message || e.message;
   }
 };
 
@@ -48,7 +48,7 @@ export const viewCouponByCourse = (courseId, page) => async (dispatch) => {
     return data.coupons;
   } catch (e) {
     console.error(e);
-    return e.response.message;
+    return e.response?.data?.message || e.message;
   }
 };
 
@@ -65,7 +65,7 @@ export const deleteCouponSlot = (id) => async (dispatch) => {
     return data;
   } catch (e) {
     console.error(e);
-    return e.response.message;
+    return e.response?.data?.message || e.message;
   }
 };
 export const editCouponSlot = (payload, id) => async (dispatch) => {
@@ -78,6 +78,6 @@ export const editCouponSlot = (payload, id) => async (dispatch) => {
     return data;
   } catch (e) {
     console.error(e);
-    return e.response.message;
+    return e.response?.data?.message || e.message;
   }
 };

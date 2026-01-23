@@ -10,15 +10,21 @@ function Coupons(props) {
   const dispatch = useDispatch()
   const [teacherName, setTeacherName] = React.useState()
   // const [coupon, setCoupon] = React.useState()
-  React.useEffect(async () => {
-    try {
-      const teacher = await dispatch(getTeacherDetailByTId(coupons[0].generatedBy));
-
-      setTeacherName(teacher.firstName.data)
-    } catch (error) {
-      console.error(error);
+  React.useEffect(() => {
+    async function fetchTeacher() {
+      if (coupons && coupons.length > 0 && coupons[0].generatedBy) {
+        try {
+          const teacher = await dispatch(getTeacherDetailByTId(coupons[0].generatedBy));
+          if (teacher?.firstName?.data) {
+            setTeacherName(teacher.firstName.data);
+          }
+        } catch (error) {
+          console.error("fetchTeacher in Coupons error:", error);
+        }
+      }
     }
-  }, [coupons]);
+    fetchTeacher();
+  }, [coupons, dispatch]);
   return (
     <div
       style={{
@@ -36,12 +42,13 @@ function Coupons(props) {
           paddingBottom: "10px",
           gap: "15px",
         }}>
-        {coupons && coupons.length === 0 ? (
+        {!Array.isArray(coupons) || coupons.length === 0 ? (
           <p>No Coupons</p>
         ) : (
-          coupons.map((coupon) => {
+          coupons.map((coupon, index) => {
             return (
               <CouponCard
+                key={index}
                 CourseName={coupon.couponCode}
                 teacherName={teacherName}
                 expDate={moment(coupon.validTill).format("MMMM DD, YYYY")}
@@ -51,7 +58,6 @@ function Coupons(props) {
                 margin="0"
               />
             );
-
           })
         )}
       </div>

@@ -4,7 +4,9 @@ import { Card, CardMobile } from "../commonUtils";
 const NeedScheduling = ({ width, arr }) => {
   if (!Array.isArray(arr)) arr = [];
 
-  arr = arr.filter((item) => item.status === "Need Scheduling");
+  arr = arr
+    .filter((item) => item.status === "Need Scheduling")
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <>

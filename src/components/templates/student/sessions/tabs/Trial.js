@@ -5,7 +5,9 @@ const Trial = ({ width, arr }) => {
   if (!Array.isArray(arr)) arr = [];
   const today = new Date();
 
-  const trialArr = arr.filter(i => i.isFree && new Date(i.from) >= today);
+  const trialArr = arr
+    .filter(i => i.isFree && new Date(i.from) >= today)
+    .sort((a, b) => new Date(a.from) - new Date(b.from));
 
   return (
     <>

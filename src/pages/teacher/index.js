@@ -25,20 +25,20 @@ const Teacher = () => {
     <>
       {showSidebar && <LeftSideBar list={teacherSidebar} />}
       <Routes>
-        <Route path="/dashboard" element={<TeacherDashboard />} />
-        <Route path="/courses" element={<TeacherCourses />} />
-        <Route path="/sessions" element={<TeacherSessions />} />
-        <Route path="/availability" element={<Availability />} />
-        <Route path="/students" element={<TeacherStudents />} />
-        <Route path="/blogs" element={<TeacherBlogs />} />
-        <Route path="/coupons" element={<TeacherCoupons />} />
-        <Route path="/earnings" element={<TeacherEarnings />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/settings" element={<TeacherSettings />} />
-        <Route path="/onboard" element={<TeacherOnBoard />} />
+        <Route path="dashboard" element={<TeacherDashboard />} />
+        <Route path="courses" element={<TeacherCourses />} />
+        <Route path="sessions" element={<TeacherSessions />} />
+        <Route path="availability" element={<Availability />} />
+        <Route path="students" element={<TeacherStudents />} />
+        <Route path="blogs" element={<TeacherBlogs />} />
+        <Route path="coupons" element={<TeacherCoupons />} />
+        <Route path="earnings" element={<TeacherEarnings />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="settings" element={<TeacherSettings />} />
+        <Route path="onboard" element={<TeacherOnBoard />} />
 
         {/* Catch-all redirect */}
-        <Route path="*" element={<Navigate to="/teacher/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Routes>
     </>
   );

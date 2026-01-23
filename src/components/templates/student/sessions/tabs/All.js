@@ -13,7 +13,7 @@ const All = ({ width, arr = [] }) => {
     issue: false,
     homework: false,
   });
- const all = arr.sort((a, b) => new Date(b.from) - new Date(a.from)) 
+  const all = [...arr].sort((a, b) => new Date(b.from) - new Date(a.from));
   // Dropdown actions
   const dropDownArr = [
     { text: "Request to Reschedule", modal: (val) => setModals({ ...modals, reschedule: val }) },

@@ -30,12 +30,17 @@ function AvailabilityFilter(props) {
     };
 
     React.useEffect(() => {
-        time !== "" && day !== "" && setValue(time + " " + day);
+        if (time !== "" && day !== "") {
+            setValue(time + " " + day);
+        }
+    }, [time, day, setValue]);
+
+    React.useEffect(() => {
         document.addEventListener('click', handleClickOutside, true);
         return () => {
             document.removeEventListener('click', handleClickOutside, true);
         };
-    }, [time, day]);
+    }, []);
 
     return (
         <>
@@ -118,7 +123,6 @@ function AvailabilityFilter(props) {
                                     {timeOptions.map((item, index) => (
                                         <SelectOption onClick={() => {
                                             setTime(item.label);
-                                            setValue(time + " " + day);
                                             if (day !== "") {
                                                 setShow(false);
                                             }
@@ -137,7 +141,6 @@ function AvailabilityFilter(props) {
                                         {dayOptions.map((item, index) => (
                                             <SelectOption style={{ borderRadius: '10px' }} onClick={() => {
                                                 setDay(item);
-                                                setValue(time + " " + day);
                                                 if (time !== "") {
                                                     setShow(false)
                                                 }

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { createCourse } from "../../../../../store/actions/course/index";
 import styles from "./styles.module.css";
-import { languages } from "../../../../../utils/constants";
+import { languages, PRICE_CONFIG } from "../../../../../utils/constants";
 // Removed require("form-data") to use native browser FormData
 
 
@@ -43,7 +43,14 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (["price", "price1", "price2"].includes(name) && value <= 0) return;
+    if (["price", "price1", "price2"].includes(name)) {
+      const numValue = Number(value);
+      if (numValue < 0) return;
+      if (numValue > PRICE_CONFIG.MAX) {
+        toast.warn(`Price cannot exceed ${PRICE_CONFIG.CURRENCY_SYMBOL}${PRICE_CONFIG.MAX}`);
+        return;
+      }
+    }
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -65,6 +72,15 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
 
   const handleSubmit = async () => {
     if (!formValues.price) return toast.warn("Please mention price");
+
+    const priceNum = Number(formValues.price);
+    if (priceNum < PRICE_CONFIG.MIN) {
+      return toast.warn(`Price must be at least ${PRICE_CONFIG.CURRENCY_SYMBOL}${PRICE_CONFIG.MIN}`);
+    }
+    if (priceNum > PRICE_CONFIG.MAX) {
+      return toast.warn(`Price cannot exceed ${PRICE_CONFIG.CURRENCY_SYMBOL}${PRICE_CONFIG.MAX}`);
+    }
+
     if (!formValues.description) return toast.warn("Please describe the course");
     if (!formValues.courseImage) return toast.warn("Please upload cover photo");
     if (!["image/png", "image/jpg", "image/jpeg"].includes(formValues.courseImage.type)) {
@@ -177,22 +193,28 @@ const CreateCourseModal = ({ showModal, setModal, setApiCalled }) => {
           <form className={styles.createCourseForm2}>
             <input
               type="number"
-              placeholder="1 Lesson Price"
+              placeholder={`1 Lesson Price (${PRICE_CONFIG.CURRENCY_SYMBOL}${PRICE_CONFIG.MIN}-${PRICE_CONFIG.MAX})`}
               name="price"
+              min={PRICE_CONFIG.MIN}
+              max={PRICE_CONFIG.MAX}
               value={formValues.price}
               onChange={handleChange}
             />
             <input
               type="number"
-              placeholder="5 Lesson Price"
+              placeholder={`5 Lesson Price (${PRICE_CONFIG.CURRENCY_SYMBOL})`}
               name="price1"
+              min={0}
+              max={PRICE_CONFIG.MAX}
               value={formValues.price1}
               onChange={handleChange}
             />
             <input
               type="number"
-              placeholder="10 Lesson Price"
+              placeholder={`10 Lesson Price (${PRICE_CONFIG.CURRENCY_SYMBOL})`}
               name="price2"
+              min={0}
+              max={PRICE_CONFIG.MAX}
               value={formValues.price2}
               onChange={handleChange}
             />

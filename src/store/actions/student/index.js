@@ -123,7 +123,10 @@ export const makePayment = (payload) => async (dispatch) => {
     return data;
   } catch (e) {
     console.error("makePayment error:", e);
-    return { success: false, message: e.response?.data?.message || "Payment initialization failed" };
+    return {
+      success: false,
+      message: e.response?.data?.message || e.response?.data?.error || "Payment initialization failed"
+    };
   }
 };
 
@@ -134,7 +137,10 @@ export const verifyPayment = (payload) => async (dispatch) => {
     return data;
   } catch (e) {
     console.error("verifyPayment error:", e);
-    return { success: false, message: e.response?.data?.message || "Payment verification failed" };
+    return {
+      success: false,
+      message: e.response?.data?.message || e.response?.data?.error || "Payment verification failed"
+    };
   }
 };
 

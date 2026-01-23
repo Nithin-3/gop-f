@@ -3,21 +3,50 @@ import React from 'react';
 import styles from './styles.module.css';
 
 function TeacherStats(props) {
+    const { width, teacherData, ratings } = props;
 
-    const { width, teacherData } = props;
+    // console.log("TeacherStats ratings:", ratings);
 
-    const d = new Date(teacherData.createdAt);
+    const d = teacherData?.createdAt ? new Date(teacherData.createdAt) : new Date();
     const final_d = new Date(d.getTime() + d.getTimezoneOffset() * 60000);
 
-    const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const joinedDate = teacherData?.createdAt
+        ? `${monthNames[final_d.getMonth()]} ${final_d.getDate()}, ${final_d.getFullYear()}`
+        : "N/A";
 
     const stats = [
-        { icon: 'far fa-clock', stat: 'Response Time', details: 'Within a few hours' },
-        { icon: 'far fa-calendar', stat: 'Joined Neurolingua', details: `${month[final_d.getMonth()]} ${final_d.getDate()}, ${final_d.getFullYear()}` },
-        { icon: 'fas fa-map-marker-alt', stat: 'Attendance Rate', details: '100.00%' },
-        { icon: 'fas fa-desktop', stat: 'Total Lessons', details: '182' },
-        { icon: 'fas fa-chalkboard-teacher', stat: 'Lessons per Student', details: '10.7 lesson average' },
-        { icon: 'far fa-star', stat: 'Average Rating', details: '5.0' }
+        {
+            icon: 'far fa-clock',
+            stat: 'Response Time',
+            details: teacherData?.responseTime || 'Within a few hours'
+        },
+        {
+            icon: 'far fa-calendar',
+            stat: 'Joined Neurolingua',
+            details: joinedDate
+        },
+        {
+            icon: 'fas fa-map-marker-alt',
+            stat: 'Attendance Rate',
+            details: teacherData?.attendanceRate ? `${teacherData.attendanceRate}%` : '100.00%'
+        },
+        {
+            icon: 'fas fa-desktop',
+            stat: 'Total Lessons',
+            details: teacherData?.numClassesTaken || ratings?.totalLessons || '0'
+        },
+        {
+            icon: 'fas fa-chalkboard-teacher',
+            stat: 'Lessons per Student',
+            details: teacherData?.lessonsPerStudent || `${ratings?.lessonsPerStudent || '0'} lesson average`
+        },
+        {
+            icon: 'far fa-star',
+            stat: 'Average Rating',
+            details: teacherData?.avgRating || ratings?.avgRating || '5.0'
+        }
     ]
 
     return (
